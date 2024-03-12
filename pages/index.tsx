@@ -19,7 +19,8 @@ import { Footer } from "@/components/ui/footer";
 const Home: NextPage = () => {
   return (
     <>
-      <div className="relative h-auto ">
+      {/* // TODO: Uncomment below line to use the new design */}
+      {/* <div className="relative h-auto ">
         <Header />
         <div className=" z-10 ">
           <HeroSection />
@@ -41,6 +42,9 @@ const Home: NextPage = () => {
           className="absolute -top-0 -z-10 -ml-5 h-[100%] opacity-80 md:hidden"
         />
         <Footer />
+      </div> */}
+      <div className="flex justify-center items-center pt-8">
+        There's nothing here yet, but the devs are building something amazing!
       </div>
       {/* <HeadComponent />
       <Hero />
