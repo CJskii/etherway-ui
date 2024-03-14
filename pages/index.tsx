@@ -44,7 +44,7 @@ const Home: NextPage = () => {
         <Footer />
       </div>
       {/* <div className="flex justify-center items-center pt-8">
-        There's nothing here yet, but the devs are building something amazing!
+        {"There's nothing here yet, but the devs are building something amazing!"}
       </div> */}
       {/* <HeadComponent />
       <Hero />

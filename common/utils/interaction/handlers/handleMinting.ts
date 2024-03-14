@@ -19,8 +19,8 @@ export const handleMinting = async ({
 
   if (contractProvider.type == "layerzero") {
     return handleLayerZeroMinting({ mintNetwork, mintGasLimit });
-  } else if (contractProvider.type == "wormhole") {
-    return handleWormholeMinting({ mintNetwork, mintGasLimit });
+  } else if (contractProvider.type == "hyperlane") {
+    return handleHyperlaneMinting({ mintNetwork, mintGasLimit });
   }
 };
 
@@ -50,7 +50,7 @@ const handleLayerZeroMinting = async ({
       mintNetwork.deployedContracts.layerzero.ONFT.ABI,
       signer as any,
     );
-    const contractFeeInWei = await contract.fee();
+    const contractFeeInWei = await contract.mintFee();
     const feeInEther = ethers.utils.formatEther(contractFeeInWei);
 
     let tx = await (
@@ -70,7 +70,7 @@ const handleLayerZeroMinting = async ({
   }
 };
 
-const handleWormholeMinting = async ({
+const handleHyperlaneMinting = async ({
   mintNetwork,
   mintGasLimit,
 }: {
@@ -92,16 +92,15 @@ const handleWormholeMinting = async ({
 
     // Initiate contract instance and get fee
     const contract = new Contract(
-      mintNetwork.deployedContracts.wormhole.NFT.address,
-      mintNetwork.deployedContracts.wormhole.NFT.ABI,
+      mintNetwork.deployedContracts.hyperlane.ONFT.address,
+      mintNetwork.deployedContracts.hyperlane.ONFT.ABI,
       signer as any,
     );
-    const contractFeeInWei = await contract.fee();
-    const feeInEther = ethers.utils.formatEther(contractFeeInWei);
+    const fee = await contract.fee();
 
     let tx = await (
       await contract.mint({
-        value: ethers.utils.parseEther(feeInEther),
+        value: fee,
         gasLimit: mintGasLimit,
       })
     ).wait();
