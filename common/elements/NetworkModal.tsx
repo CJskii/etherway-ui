@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { NetworkModalProps } from "../../../types/network";
-import { dummyNetwork } from "../../../../constants/customChains/dummyNetwork";
+import { NetworkModalProps } from "../types/network";
+import { dummyNetwork } from "../../constants/customChains/dummyNetwork";
 
 const NetworkModal = ({
   selectedNetwork,

@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { activeChains } from "../../constants/config/chainsConfig";
 import { useNetwork } from "wagmi";
 import { checkIfReferredUser } from "../../common/utils/validators/checkIfReferredUser";
-import { useNetworkSelection } from "../../common/components/hooks/useNetworkSelection";
+import { useNetworkSelection } from "../../common/hooks/useNetworkSelection";
 import dynamic from "next/dynamic";
 import { ExtendedNetwork } from "../../common/types/network";
 import CardImage from "./CardImage";
 import DashboardCard from "../dashboard/dashboard-card";
 
 const NetworkModal = dynamic(
-  () => import("../../common/components/elements/modals/NetworkModal"),
+  () => import("../../common/elements/NetworkModal"),
   {
     loading: () => <span className="loading loading-dots loading-lg"></span>,
     ssr: true,

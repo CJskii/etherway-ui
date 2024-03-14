@@ -1,10 +1,10 @@
 import Headline from "./Headline";
-import { newsLetterData } from "../../common/modules/data/newsLetter";
+import { newsLetterData } from "../../common/data/newsLetter";
 import { useState } from "react";
 import { isValidEmail } from "../../common/utils/validators/isValidEmail";
 import { useAccount } from "wagmi";
-import useToast from "../../common/components/hooks/useToast";
-import Toast from "../../common/components/elements/Toast";
+import useToast from "../../common/hooks/useToast";
+import Toast from "../../common/elements/Toast";
 import { callEmailSubscribeAPI } from "../../common/utils/api/subscribeEmail";
 
 const NewsLetter = () => {

@@ -1,4 +1,4 @@
-import HeadComponent from "../common/components/elements/HeadComponent";
+import HeadComponent from "../common/elements/HeadComponent";
 import dynamic from "next/dynamic";
 
 const LeaderboardComponent = dynamic(
@@ -6,7 +6,7 @@ const LeaderboardComponent = dynamic(
   {
     loading: () => <span className="loading loading-dots loading-lg"></span>,
     ssr: true,
-  }
+  },
 );
 
 const Leaderboard = () => {

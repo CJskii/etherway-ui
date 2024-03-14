@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 // import Bridging from "../components/Bridge/Bridging";
 import dynamic from "next/dynamic";
-import HeadComponent from "../../common/components/elements/HeadComponent";
+import HeadComponent from "../../common/elements/HeadComponent";
 import { Layout } from "@/components/dashboard/layout";
 
 const Bridging = dynamic(() => import("../../components/Bridge/Bridging"), {

@@ -12,7 +12,7 @@ import Image from "next/image";
 import Hero from "../components/Landing/Hero";
 import Process from "../components/Landing/Process";
 import NewsLetter from "../components/Landing/NewsLetter";
-import HeadComponent from "../common/components/elements/HeadComponent";
+import HeadComponent from "../common/elements/HeadComponent";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/ui/footer";
 

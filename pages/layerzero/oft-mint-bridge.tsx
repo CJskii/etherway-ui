@@ -1,4 +1,4 @@
-import HeadComponent from "../../common/components/elements/HeadComponent";
+import HeadComponent from "../../common/elements/HeadComponent";
 import TokenBridge from "../../components/Token/TokenBridge";
 import { Layout } from "@/components/dashboard/layout";
 

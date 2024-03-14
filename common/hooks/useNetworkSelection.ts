@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { activeChains } from "../../../constants/config/chainsConfig";
+import { activeChains } from "../../constants/config/chainsConfig";
 import { useNetwork } from "wagmi";
-import { Network, ExtendedNetwork } from "../../types/network";
+import { Network, ExtendedNetwork } from "../types/network";
 
 export const useNetworkSelection = (
   contractProviders: { type: string; contract: string },
-  filterFn: (network: Network) => boolean = () => true
+  filterFn: (network: Network) => boolean = () => true,
 ) => {
   const { chain } = useNetwork();
 
@@ -21,7 +21,7 @@ export const useNetworkSelection = (
     });
 
   const [networksByProvider, setNetworksByProvider] = useState(
-    filterNetworksByContractProvider(activeChains)
+    filterNetworksByContractProvider(activeChains),
   );
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export const useNetworkSelection = (
     (network) =>
       filterFn(network as Network) &&
       filterNetworksByContractProvider([network]).length > 0 &&
-      network.name.toLowerCase().includes(searchTerm.toLowerCase())
+      network.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const onNetworkSelect = (network: Network) => {

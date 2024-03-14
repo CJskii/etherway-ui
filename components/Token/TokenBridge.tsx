@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { IoSwapHorizontalSharp } from "react-icons/io5";
 import dynamic from "next/dynamic";
 import { Network } from "../../common/types/network";
-import { useNetworkSelection } from "../../common/components/hooks/useNetworkSelection";
+import { useNetworkSelection } from "../../common/hooks/useNetworkSelection";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import { getValidToNetworks } from "../../common/utils/getters/getValidToNetworks";
 import { useNetwork } from "wagmi";
 import { activeChains } from "../../constants/config/chainsConfig";
-import NetworkModal from "../../common/components/elements/modals/NetworkModal";
+import NetworkModal from "../../common/elements/NetworkModal";
 
 const TokenBridge = ({
   contractProvider,
@@ -66,7 +66,7 @@ const TokenBridge = ({
         contract,
       }) as string[];
       const defaultNetwork = activeChains.find(
-        (chain) => chain.name === validNetworks[0]
+        (chain) => chain.name === validNetworks[0],
       );
       defaultNetwork
         ? setToNetwork(defaultNetwork as Network)

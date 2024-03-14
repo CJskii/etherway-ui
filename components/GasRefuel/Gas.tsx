@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { IoSwapHorizontalSharp } from "react-icons/io5";
 import dynamic from "next/dynamic";
 import { Network } from "../../common/types/network";
-import { useNetworkSelection } from "../../common/components/hooks/useNetworkSelection";
+import { useNetworkSelection } from "../../common/hooks/useNetworkSelection";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import { activeChains } from "../../constants/config/chainsConfig";
 import { estimateGasRequest } from "../../common/utils/interaction/handlers/estimateGas";
@@ -15,14 +15,14 @@ import { requestNetworkSwitch } from "../../common/utils/requestNetworkSwitch";
 import { handleErrors } from "../../common/utils/interaction/handlers/handleErrors";
 import Preview from "./Preview";
 import Confirm from "./ConfirmTransaction";
-import DiscordLink from "../../common/components/elements/DiscordLink";
+import DiscordLink from "../../common/elements/DiscordLink";
 
 const NetworkModal = dynamic(
-  () => import("../../common/components/elements/modals/NetworkModal"),
+  () => import("../../common/elements/NetworkModal"),
   {
     loading: () => <span className="loading loading-dots loading-lg"></span>,
     ssr: true,
-  }
+  },
 );
 
 const GasModal = dynamic(() => import("../Modals/GasModal"), {
@@ -87,7 +87,7 @@ const Gas = ({
         contract,
       }) as string[];
       const defaultNetwork = activeChains.find(
-        (chain) => chain.name === validNetworks[0]
+        (chain) => chain.name === validNetworks[0],
       );
       defaultNetwork
         ? setToNetwork(defaultNetwork as Network)
