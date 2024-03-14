@@ -1,10 +1,3 @@
-import CONTRACT_ADDRESS_JSON from "../../../constants/contracts/contractAddress.json";
-import CHAIN_ID_LZ from "../../../constants/contracts/layerzeroChainId.json";
-import CHAIN_ID_WH from "../../../constants/contracts/wormholeChainId.json";
-import { getNFTEnvVarName } from "./contracts/wNFT";
-import { getONFTEnvVarName } from "./contracts/onft";
-import { getRefuelEnvVarName } from "./contracts/refuel";
-import { getOFTEnvVarName } from "./contracts/oft";
 import LZ_ENDPOINT_JSON from "../../../constants/contracts/layerZeroEndpointv1.json";
 
 interface ContractAddressMap {
@@ -15,72 +8,11 @@ interface ChainIdMap {
   [key: string]: number;
 }
 
-const LZ_CHAIN_ID: ChainIdMap = CHAIN_ID_LZ as ChainIdMap;
-const WH_CHAIN_ID: ChainIdMap = CHAIN_ID_WH as ChainIdMap;
-
-const CONTRACT_ADDRESS: ContractAddressMap =
-  CONTRACT_ADDRESS_JSON as ContractAddressMap;
 const LZ_ENDPOINT: ContractAddressMap = LZ_ENDPOINT_JSON as ContractAddressMap;
-
-export const getContractAddress = (fromNetwork: string, contract: string) => {
-  try {
-    let address = "";
-    fromNetwork = transformNetworkName(fromNetwork).toUpperCase();
-    const env = process.env.NEXT_PUBLIC_ENVIRONMENT;
-
-    if (env === "mainnet") {
-      const envVarName = getEnvVarName(fromNetwork, contract);
-      address = envVarName ? envVarName : "";
-
-      if (!address) {
-        // throw new Error(`Environment variable ${envVarName} is not set`);
-        return "";
-      }
-    } else {
-      address = CONTRACT_ADDRESS[fromNetwork.toLowerCase()];
-
-      if (!address) {
-        return "";
-        // throw new Error(`Environment variable ${envVarName} is not set`);
-      }
-    }
-
-    return address as string;
-  } catch (error) {
-    console.error(`Cannot read contract for ${fromNetwork} `, error);
-  }
-};
-
-export const getLayerZeroChainId = (targetNetwork: string) => {
-  targetNetwork = transformNetworkName(targetNetwork);
-  const remoteChainId = LZ_CHAIN_ID[targetNetwork.toLowerCase()];
-  return remoteChainId;
-};
-
-export const getWormholeChainId = (targetNetwork: string) => {
-  targetNetwork = transformNetworkName(targetNetwork);
-  const remoteChainId = WH_CHAIN_ID[targetNetwork.toLowerCase()];
-  return remoteChainId;
-};
 
 export const getLayerZeroEndpoint = (targetNetwork: string) => {
   targetNetwork = transformNetworkName(targetNetwork);
   return LZ_ENDPOINT[targetNetwork.toLowerCase()];
-};
-
-const getEnvVarName = (fromNetwork: string, contract: string) => {
-  if (contract === "ONFT") {
-    return getONFTEnvVarName(fromNetwork);
-  }
-  if (contract === "REFUEL") {
-    return getRefuelEnvVarName(fromNetwork);
-  }
-  if (contract === "NFT") {
-    return getNFTEnvVarName(fromNetwork);
-  }
-  if (contract === "OFT") {
-    return getOFTEnvVarName(fromNetwork);
-  }
 };
 
 export const transformNetworkName = (networkName: string) => {
@@ -120,6 +52,9 @@ export const transformNetworkName = (networkName: string) => {
       break;
     case "goerli":
       networkName = "goerli";
+      break;
+    case "avalanche fuji":
+      networkName = "fuji";
       break;
     case "polygon zkevm":
       networkName = "zkevm";
