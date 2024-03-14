@@ -14,6 +14,9 @@ dependencies:
   '@hookform/resolvers':
     specifier: ^3.3.4
     version: 3.3.4(react-hook-form@7.49.3)
+  '@layerzerolabs/lz-v2-utilities':
+    specifier: ^2.1.18
+    version: 2.1.18
   '@prisma/client':
     specifier: ^5.2.0
     version: 5.2.0(prisma@5.2.0)
@@ -1681,6 +1684,43 @@ packages:
     dependencies:
       '@json-rpc-tools/types': 1.7.6
       '@pedrouid/environment': 1.0.1
+    dev: false
+
+  /@layerzerolabs/evm-sdks-core@2.1.18:
+    resolution: {integrity: sha512-pWdpPFuw0qdkyMHn3LMgaTyZjEIDx9+yts6d117NkH8l68ZeFMH56QCeKU3S/GsLttJxz+pduOD+NuTZ+xYMFA==}
+    dependencies:
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /@layerzerolabs/lz-evm-sdk-v2@2.1.18:
+    resolution: {integrity: sha512-ahh0XFtejtjej+8P9YNuvhfmtbqNG+yiQwhPMW6Sgm2horBipzTjVy6UsYeoZxkrbLHrh9fhTuiHAx9pB/9FEg==}
+    dependencies:
+      '@layerzerolabs/evm-sdks-core': 2.1.18
+      ethers: 5.7.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  /@layerzerolabs/lz-v2-utilities@2.1.18:
+    resolution: {integrity: sha512-XgUG44fImtBWbDk0uf8XcGnaLj5eQR9yKT7q1KQ/4pTVRqZWly0DezNtLeVWC7KQ87IEBvcWnwJC1B7mqcJ38g==}
+    dependencies:
+      '@ethersproject/abi': 5.7.0
+      '@ethersproject/address': 5.7.0
+      '@ethersproject/bignumber': 5.7.0
+      '@ethersproject/bytes': 5.7.0
+      '@ethersproject/keccak256': 5.7.0
+      '@ethersproject/solidity': 5.7.0
+      '@layerzerolabs/lz-evm-sdk-v2': 2.1.18
+      '@solana/web3.js': 1.89.1
+      tiny-invariant: 1.3.1
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
     dev: false
 
   /@ledgerhq/connect-kit-loader@1.1.8:
@@ -7354,6 +7394,7 @@ packages:
       is-hex-prefixed: 1.0.0
       strip-hex-prefix: 1.0.0
     dev: false
+    bundledDependencies: false
 
   /event-target-shim@5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
