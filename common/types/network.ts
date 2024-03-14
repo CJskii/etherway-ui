@@ -30,37 +30,17 @@ export interface Network {
     lzEndpointAddress?: string;
     remoteChainId?: number;
   };
-  whParams?: {
-    whEndpointAddress?: string;
-    remoteChainId?: number;
-  };
 }
 
 type DeployedContracts = {
   layerzero: {
-    ONFT: {
-      address: string;
-      ABI: any[];
-    };
-    REFUEL: {
-      address: string;
-      ABI: any[];
-    };
-    OFT: {
+    [key: number]: {
       address: string;
       ABI: any[];
     };
   };
-  wormhole: {
-    NFT: {
-      address: string;
-      ABI: any[];
-    };
-    ERC20: {
-      address: string;
-      ABI: any[];
-    };
-    REFUEL: {
+  hyperlane: {
+    [key: number]: {
       address: string;
       ABI: any[];
     };
