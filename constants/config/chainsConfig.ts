@@ -380,26 +380,6 @@ const getDeployedContracts = (chain: Network) => {
   return deployedContracts;
 };
 
-declare type networkParams = {
-  gasLimit: {
-    mint: number;
-    bridge: number;
-    lzOptionsGas?: number;
-  };
-  layerzero: {
-    remoteChainId: number;
-    maxRefuelGas: number;
-  };
-  hyperlane: {
-    remoteChainId: number;
-    maxRefuelGas: number;
-  };
-  polyhedra: {
-    remoteChainId: number;
-    maxRefuelGas: number;
-  };
-};
-
 const getNetworkParams = (chain: Network) => {
   const params = {
     gasLimit: GAS_LIMIT_JSON[chain.id],
@@ -418,7 +398,7 @@ const getNetworkParams = (chain: Network) => {
     },
   };
 
-  return params as networkParams;
+  return params;
 };
 
 export const activeChains: ExtendedNetwork[] = getSupportedChains();

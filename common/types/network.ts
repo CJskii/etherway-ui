@@ -26,21 +26,38 @@ export interface Network {
   remoteChainId?: number;
   lzEndpointAddress?: string;
   deployedContracts?: DeployedContracts;
-  lzParams?: {
-    lzEndpointAddress?: string;
-    remoteChainId?: number;
-  };
+  params?: NetworkParams;
 }
+
+type NetworkParams = {
+  gasLimit: {
+    mint: number | string;
+    bridge: number | string;
+    lzOptionsGas?: number | string;
+  };
+  layerzero: {
+    remoteChainId: number | string;
+    maxRefuelGas: number | string;
+  };
+  hyperlane: {
+    remoteChainId: number | string;
+    maxRefuelGas: number | string;
+  };
+  polyhedra: {
+    remoteChainId: number | string;
+    maxRefuelGas: number | string;
+  };
+};
 
 type DeployedContracts = {
   layerzero: {
-    [key: number]: {
+    [key: string]: {
       address: string;
       ABI: any[];
     };
   };
   hyperlane: {
-    [key: number]: {
+    [key: string]: {
       address: string;
       ABI: any[];
     };
