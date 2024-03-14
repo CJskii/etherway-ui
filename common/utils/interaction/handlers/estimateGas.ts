@@ -55,21 +55,21 @@ const estimateGasBridgeFee = async ({
   const contract = new Contract(
     fromNetwork.deployedContracts.layerzero.REFUEL.address,
     fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
-    signer
+    signer,
   );
 
   const gasInWei = ethers.utils.parseUnits(value, "ether");
   let adapterParams = ethers.utils.solidityPack(
     ["uint16", "uint", "uint", "address"],
-    [2, 200000, gasInWei.toString(), refundAddress]
+    [2, 200000, gasInWei.toString(), refundAddress],
   );
 
   try {
     const [_nativeFee, _zroFee, totalCost] = await contract.estimateSendFee(
-      targetNetwork.lzParams?.remoteChainId,
+      targetNetwork.params?.layerzero?.remoteChainId,
       refundAddress,
       gasInWei.toString(),
-      adapterParams
+      adapterParams,
     );
 
     return totalCost;
