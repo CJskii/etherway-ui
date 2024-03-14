@@ -136,4 +136,7 @@ export const maxGasValues: MaxGasValues = {
   goerli: {
     adapterParamMaxGas: 0.05,
   },
+  fuji: {
+    adapterParamMaxGas: 0.05,
+  },
 };
