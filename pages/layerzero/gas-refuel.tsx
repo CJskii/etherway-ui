@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import HeadComponent from "../../common/components/elements/HeadComponent";
+import HeadComponent from "../../common/elements/HeadComponent";
 
 const Gas = dynamic(() => import("../../components/GasRefuel/Gas"), {
   loading: () => <span className="loading loading-dots loading-lg"></span>,
@@ -13,7 +13,7 @@ const GasRefuel = () => {
         title="Mintly: Gas Refuel Service - Refuel Your Wallet with Native Tokens"
         description="Stay ahead in your blockchain transactions with Mintly's Gas Refuel service. Efficiently manage your gas reserves, ensuring uninterrupted cross-chain activities with LayerZero technology."
       />
-      <Gas contractProvider={{ type: "layerzero", contract: "REFUEL" }} />
+      <Gas contractProvider={{ type: "layerzero", contract: "OFT" }} />
     </>
   );
 };

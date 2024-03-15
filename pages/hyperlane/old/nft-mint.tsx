@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
-import Minting from "../../components/Minter/Minting";
-import HeadComponent from "../../common/components/elements/HeadComponent";
+import Minting from "../../../components/Minter/Minting";
+import HeadComponent from "../../../common/elements/HeadComponent";
 import { Layout } from "@/components/dashboard/layout";
 
 const Mint: NextPage = () => {
@@ -12,8 +12,8 @@ const Mint: NextPage = () => {
           description="Mintly's Mint page: Where seamless ONFT creation meets LayerZero's interoperability. Start minting and bridging your ONFTs across multiple chains effortlessly."
         />
         <Minting
-          contractProvider={{ type: "wormhole", contract: "NFT" }}
-          stepDescription="Mint wNFT"
+          contractProvider={{ type: "hyperlane", contract: "ONFT" }}
+          stepDescription="Mint hNFT"
         />
       </div>
     </Layout>

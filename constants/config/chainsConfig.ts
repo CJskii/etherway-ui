@@ -35,6 +35,7 @@ import {
   aurora,
   klaytn,
   manta,
+  avalancheFuji,
 } from "wagmi/chains";
 
 import { linea } from "../customChains/linea";
@@ -43,19 +44,14 @@ import { tenet } from "../customChains/tenet";
 import { astar } from "../customChains/astar";
 import { kava } from "../customChains/kava";
 import { pgn } from "../customChains/pgn";
-import { getContractAddress } from "../../common/utils/getters/getConstants";
-import {
-  getLayerZeroChainId,
-  getWormholeChainId,
-} from "../../common/utils/getters/getConstants";
-import { getMaxGasValue } from "../../common/utils/getters/getMaxGasValue";
-import {
-  CONTRACT_ABI,
-  REFUEL_CONTRACT_ABI,
-  OFT_CONTRACT_ABI,
-} from "../contracts/abi";
-import { NFT_CONTRACT_ABI } from "../contracts/wormhole";
 import { Network, ExtendedNetwork } from "../../common/types/network";
+
+//
+
+import CONTRACT_ADDRESS_JSON from "../contracts/address";
+import GAS_LIMIT_JSON from "./gasLimit";
+import GAS_REFUEL_VALUE_JSON from "./maxGasRefuelValue";
+import REMOTE_CHAIN_IDS from "./remoteChainIds";
 
 export const mainnetChains: Network[] = [
   {
@@ -252,48 +248,48 @@ export const mainnetChains: Network[] = [
 ];
 
 export const testnetChains: Network[] = [
-  {
-    ...goerli,
-    iconUrl: "/chain-icons/eth-logo.svg",
-    name: "Goerli",
-    remoteChainId: 10121,
-  },
+  // {
+  //   ...goerli,
+  //   iconUrl: "/chain-icons/eth-logo.svg",
+  //   name: "Goerli",
+  //   remoteChainId: 10121,
+  // },
   {
     ...sepolia,
     iconUrl: "/chain-icons/eth-logo.svg",
     remoteChainId: 10161,
   },
-  {
-    ...arbitrumGoerli,
-    iconUrl: "/chain-icons/arbitrum.svg",
-    remoteChainId: 10143,
-  },
-  {
-    ...optimismGoerli,
-    iconUrl: "/chain-icons/optimism.svg",
-    remoteChainId: 10132,
-  },
-  {
-    ...baseGoerli,
-    iconUrl: "/chain-icons/base.svg",
-    remoteChainId: 10160,
-  },
-  {
-    ...lineaTestnet,
-    iconUrl: "/chain-icons/linea.svg",
-    remoteChainId: 10157,
-  },
+  // {
+  //   ...arbitrumGoerli,
+  //   iconUrl: "/chain-icons/arbitrum.svg",
+  //   remoteChainId: 10143,
+  // },
+  // {
+  //   ...optimismGoerli,
+  //   iconUrl: "/chain-icons/optimism.svg",
+  //   remoteChainId: 10132,
+  // },
+  // {
+  //   ...baseGoerli,
+  //   iconUrl: "/chain-icons/base.svg",
+  //   remoteChainId: 10160,
+  // },
+  // {
+  //   ...lineaTestnet,
+  //   iconUrl: "/chain-icons/linea.svg",
+  //   remoteChainId: 10157,
+  // },
   {
     ...bscTestnet,
     iconUrl: "/chain-icons/bsc.svg",
     remoteChainId: 10102,
   },
 
-  {
-    ...polygonZkEvmTestnet,
-    iconUrl: "/chain-icons/polygon-zkevm.svg",
-    remoteChainId: 10158,
-  },
+  // {
+  //   ...polygonZkEvmTestnet,
+  //   iconUrl: "/chain-icons/polygon-zkevm.svg",
+  //   remoteChainId: 10158,
+  // },
   {
     ...polygonMumbai,
     iconUrl: "/chain-icons/polygon.svg",
@@ -304,15 +300,19 @@ export const testnetChains: Network[] = [
     },
   },
   {
-    ...mantleTestnet,
-    iconUrl: "/chain-icons/mantle.svg",
-    remoteChainId: 10181,
+    ...avalancheFuji,
+    iconUrl: "/chain-icons/avalanche.svg",
   },
-  {
-    ...metisGoerli,
-    iconUrl: "/chain-icons/metis.svg",
-    remoteChainId: 10151,
-  },
+  // {
+  //   ...mantleTestnet,
+  //   iconUrl: "/chain-icons/mantle.svg",
+  //   remoteChainId: 10181,
+  // },
+  // {
+  //   ...metisGoerli,
+  //   iconUrl: "/chain-icons/metis.svg",
+  //   remoteChainId: 10151,
+  // },
 ];
 
 export const getSupportedChains = () => {
@@ -323,63 +323,14 @@ export const getSupportedChains = () => {
         ...chain,
         deployedContracts: getDeployedContracts(chain),
         contractProviders: getContractProviders(chain),
-        lzParams: {
-          lzEndpointAddress: chain.lzEndpointAddress,
-          remoteChainId: getLayerZeroChainId(chain.name),
-          maxGas: getMaxGasValue(chain.name),
-        },
-        whParams: {
-          whEndpointAddress: "",
-          remoteChainId: getWormholeChainId(chain.name),
-        },
+        params: getNetworkParams(chain),
       }));
     case "testnet":
       return testnetChains.map((chain) => ({
         ...chain,
-        deployedContracts: {
-          // TODO: Change this to testnet contract as all of this will return null
-          layerzero: {
-            ONFT: {
-              address: getContractAddress(chain.name, "ONFT") as string,
-              ABI: CONTRACT_ABI,
-            },
-            REFUEL: {
-              address: getContractAddress(chain.name, "REFUEL") as string,
-              ABI: REFUEL_CONTRACT_ABI,
-            },
-            OFT: {
-              address: "" as string,
-              // getContractAddress(chain.name, "OFT"),
-              ABI: CONTRACT_ABI, // change to OFT abi
-            },
-          },
-          wormhole: {
-            NFT: {
-              address: getContractAddress(chain.name, "NFT") as string,
-              ABI: NFT_CONTRACT_ABI,
-            },
-            ERC20: {
-              address: "" as string,
-              // getContractAddress(chain.name, "ERC20"),
-              ABI: CONTRACT_ABI, // change to ERC20 abi
-            },
-            REFUEL: {
-              address: " " as string,
-              // getContractAddress(chain.name, "RefuelWormhole"),
-              ABI: CONTRACT_ABI, // change to Refuel abi
-            },
-          },
-        },
-        contractProviders: {
-          layerzero: ["ONFT", "REFUEL"],
-          wormhole: [],
-        },
-        lzParams: {
-          lzEndpointAddress: "",
-          remoteChainId: getLayerZeroChainId(chain.name),
-          maxGas: getMaxGasValue(chain.name),
-        },
-        // TODO: Add wormhole params
+        deployedContracts: getDeployedContracts(chain),
+        contractProviders: getContractProviders(chain),
+        params: getNetworkParams(chain),
       }));
     default:
       console.error(`Unsupported ENVIRONMENT value: ${env}`);
@@ -388,15 +339,18 @@ export const getSupportedChains = () => {
 };
 
 const getContractProviders = (chain: Network) => {
+  // NOTE: This function is used to get the contract providers for a given chain
+  // It checks the deployed contracts for each chain and returns an array of contract providers
+  // The contract providers are used to render network selection dropdown in the UI
   const deployedContracts = getDeployedContracts(chain);
 
   const contractProviders = {
     layerzero: [] as string[],
-    wormhole: [] as string[],
+    hyperlane: [] as string[],
   };
 
   const layerzeroContracts = deployedContracts.layerzero;
-  const wormholeContracts = deployedContracts.wormhole;
+  const hyperlaneContracts = deployedContracts.hyperlane;
 
   if (layerzeroContracts.OFT.address) {
     contractProviders.layerzero.push("OFT");
@@ -404,57 +358,47 @@ const getContractProviders = (chain: Network) => {
   if (layerzeroContracts.ONFT.address) {
     contractProviders.layerzero.push("ONFT");
   }
-  if (layerzeroContracts.REFUEL.address) {
-    contractProviders.layerzero.push("REFUEL");
+  if (hyperlaneContracts.OFT.address) {
+    contractProviders.hyperlane.push("OFT");
   }
-  if (wormholeContracts.NFT.address) {
-    contractProviders.wormhole.push("NFT");
-  }
-  if (wormholeContracts.ERC20.address) {
-    contractProviders.wormhole.push("ERC20");
-  }
-  if (wormholeContracts.REFUEL.address) {
-    contractProviders.wormhole.push("Refuel");
+  if (hyperlaneContracts.ONFT.address) {
+    contractProviders.hyperlane.push("ONFT");
   }
 
   return contractProviders;
 };
 
 const getDeployedContracts = (chain: Network) => {
+  // NOTE: This function is used to get the deployed contracts for a given chain
+  // It should return an object with the deployed contracts for different protocols
+  // Edit this function to add more contracts for different protocols
   const deployedContracts = {
-    layerzero: {
-      ONFT: {
-        address: getContractAddress(chain.name, "ONFT") as string,
-        ABI: CONTRACT_ABI,
-      },
-      REFUEL: {
-        address: getContractAddress(chain.name, "REFUEL") as string,
-        ABI: REFUEL_CONTRACT_ABI,
-      },
-      OFT: {
-        address: getContractAddress(chain.name, "OFT") as string,
-        ABI: OFT_CONTRACT_ABI,
-      },
-    },
-    wormhole: {
-      NFT: {
-        address: getContractAddress(chain.name, "NFT") as string,
-        ABI: NFT_CONTRACT_ABI, // change to NFT abi
-      },
-      ERC20: {
-        address: "" as string,
-        // getContractAddress(chain.name, "ERC20"),
-        ABI: CONTRACT_ABI, // change to ERC20 abi
-      },
-      REFUEL: {
-        address: " " as string,
-        // getContractAddress(chain.name, "RefuelWormhole"),
-        ABI: CONTRACT_ABI, // change to Refuel abi
-      },
-    },
+    layerzero: CONTRACT_ADDRESS_JSON.LAYERZERO[chain.id] || {},
+    hyperlane: CONTRACT_ADDRESS_JSON.HYPERLANE[chain.id] || {},
   };
 
   return deployedContracts;
+};
+
+const getNetworkParams = (chain: Network) => {
+  const params = {
+    gasLimit: GAS_LIMIT_JSON[chain.id],
+
+    layerzero: {
+      remoteChainId: REMOTE_CHAIN_IDS[chain.id]?.layerzero || 0,
+      maxRefuelGas: GAS_REFUEL_VALUE_JSON[chain.id]?.layerzero || 0,
+    },
+    hyperlane: {
+      remoteChainId: REMOTE_CHAIN_IDS[chain.id]?.hyperlane || 0,
+      maxRefuelGas: GAS_REFUEL_VALUE_JSON[chain.id]?.hyperlane || 0,
+    },
+    polyhedra: {
+      remoteChainId: REMOTE_CHAIN_IDS[chain.id]?.polyhedra || 0,
+      maxRefuelGas: GAS_REFUEL_VALUE_JSON[chain.id]?.polyhedra || 0,
+    },
+  };
+
+  return params;
 };
 
 export const activeChains: ExtendedNetwork[] = getSupportedChains();

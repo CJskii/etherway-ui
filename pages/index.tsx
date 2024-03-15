@@ -12,7 +12,7 @@ import Image from "next/image";
 import Hero from "../components/Landing/Hero";
 import Process from "../components/Landing/Process";
 import NewsLetter from "../components/Landing/NewsLetter";
-import HeadComponent from "../common/components/elements/HeadComponent";
+import HeadComponent from "../common/elements/HeadComponent";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/ui/footer";
 
@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   return (
     <>
       {/* // TODO: Uncomment below line to use the new design */}
-      <div className="relative h-auto ">
+      <div className="relative h-auto">
         <Header />
         <div className=" z-10 ">
           <HeroSection />
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
             <OnboardSection />
             <StatsSection />
             <FeaturesSection />
-            <ContactSection />
+            {/* <ContactSection /> */}
           </Container>
         </div>
         <Image
@@ -44,8 +44,7 @@ const Home: NextPage = () => {
         <Footer />
       </div>
       {/* <div className="flex justify-center items-center pt-8">
-        There&apos;s nothing here yet, but the devs are building something
-        amazing!
+        {"There's nothing here yet, but the devs are building something amazing!"}
       </div> */}
       {/* <HeadComponent />
       <Hero />

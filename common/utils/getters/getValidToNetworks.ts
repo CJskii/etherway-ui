@@ -12,7 +12,7 @@ export const getValidToNetworks = ({
 }) => {
   if (type == "layerzero") {
     return networkTransferMappings.layerzero[contract][fromNetwork.name] || [];
-  } else if (type == "wormhole") {
-    return networkTransferMappings.wormhole[contract][fromNetwork.name] || [];
+  } else if (type == "hyperlane") {
+    return networkTransferMappings.hyperlane[contract][fromNetwork.name] || [];
   }
 };

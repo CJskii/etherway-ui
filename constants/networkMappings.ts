@@ -7,7 +7,7 @@ type NetworkTransferMappings = {
       [network: string]: string[];
     };
   };
-  wormhole: {
+  hyperlane: {
     [contract: string]: {
       [network: string]: string[];
     };
@@ -17,12 +17,10 @@ type NetworkTransferMappings = {
 export const networkTransferMappings: NetworkTransferMappings = {
   layerzero: {
     OFT: layerZeroMapping,
-    REFUEL: layerZeroMapping,
     ONFT: layerZeroMapping,
   },
-  wormhole: {
-    ERC20: wormholeMapping,
-    NFT: wormholeMapping,
-    REFUEL: wormholeMapping,
+  hyperlane: {
+    ONFT: wormholeMapping,
+    OFT: wormholeMapping,
   },
 };

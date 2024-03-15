@@ -13,35 +13,8 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/dashboard/layout";
-import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
 
-
-export default function ONFTMint() {
-
-  const contractProvider = { type: "layerzero", contract: "ONFT" };
-
-
-  // TODO: The idea here is that we're going to display a custom network selection modal with search bar functionality to the user
-  // The user will select the network and click on the mint button
-  // If user is on the correct network we will call mint function and send metamask popup
-  // If user isn't connected to this network we will request network change
-  // If user wallet isn't connected we will request to connect a wallet
-
-  const {
-    selectedNetwork: mintNetwork,
-    onNetworkSelect: setMintNetwork,
-    searchTerm: fromSearchTerm,
-    onSearchChange: setFromSearchTerm,
-    filteredChains: fromFilteredChains,
-    onClose: onFromClose,
-  } = useNetworkSelection(contractProvider);
-
-
-  const handleMintButton = () => {
-    console.log("Mint button clicked");
-  }
-  
-
+export default function ONFT() {
   return (
     <Layout className="px-0 pt-28 pb-16 min-h-[90vh]">
       <div className=" z-10 py-10 md:py-16  flex items-center justify-center">
@@ -80,7 +53,7 @@ export default function ONFTMint() {
           </div>
           <div className="col-span-full md:col-span-7 px-8 py-10 md:p-14 space-y-6">
             <Typography variant={"h3"} className=" dark:text-black">
-              Step 1 : Mint ONFT
+              Step 1 : Mint hNFT
             </Typography>
             <Select>
               <SelectTrigger className="bg-white p-6 dark:bg-white dark:text-black dark:border-0">
@@ -92,7 +65,7 @@ export default function ONFTMint() {
                 <SelectItem value="polkadot">Polkadot</SelectItem>
               </SelectContent>
             </Select>
-            <Button className=" dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl" onClick={handleMintButton}>
+            <Button className=" dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl">
               Mint
             </Button>
           </div>

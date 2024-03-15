@@ -1,14 +1,9 @@
-export const NFT_CONTRACT_ABI = [
+export const abi = [
   {
     inputs: [
       {
         internalType: "address",
-        name: "_wormholeRelayer",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_wormhole",
+        name: "_mailbox",
         type: "address",
       },
       {
@@ -24,17 +19,6 @@ export const NFT_CONTRACT_ABI = [
     ],
     stateMutability: "nonpayable",
     type: "constructor",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
-    name: "NotAnEvmAddress",
-    type: "error",
   },
   {
     anonymous: false,
@@ -91,40 +75,15 @@ export const NFT_CONTRACT_ABI = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint16",
-        name: "targetChain",
-        type: "uint16",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "gasLimit",
-        type: "uint256",
-      },
-    ],
-    name: "GasSent",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: "uint256",
         name: "tokenId",
         type: "uint256",
       },
       {
         indexed: false,
-        internalType: "uint16",
+        internalType: "uint32",
         name: "senderChain",
-        type: "uint16",
+        type: "uint32",
       },
       {
         indexed: false,
@@ -147,12 +106,18 @@ export const NFT_CONTRACT_ABI = [
       },
       {
         indexed: false,
+        internalType: "uint32",
+        name: "targetChain",
+        type: "uint32",
+      },
+      {
+        indexed: false,
         internalType: "address",
-        name: "owner",
+        name: "target",
         type: "address",
       },
     ],
-    name: "NFTMinted",
+    name: "MessageSent",
     type: "event",
   },
   {
@@ -160,18 +125,18 @@ export const NFT_CONTRACT_ABI = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-      {
-        indexed: false,
         internalType: "address",
         name: "owner",
         type: "address",
       },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
     ],
-    name: "TokenBurned",
+    name: "Mint",
     type: "event",
   },
   {
@@ -238,59 +203,7 @@ export const NFT_CONTRACT_ABI = [
   },
   {
     inputs: [],
-    name: "estimateCost",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "estimateGasBuffer",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "estimatedFee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "fee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "feePrecentage",
     outputs: [
       {
         internalType: "uint256",
@@ -323,18 +236,18 @@ export const NFT_CONTRACT_ABI = [
   {
     inputs: [
       {
-        internalType: "uint16",
+        internalType: "uint32",
         name: "targetChain",
-        type: "uint16",
+        type: "uint32",
+      },
+      {
+        internalType: "address",
+        name: "targetAddress",
+        type: "address",
       },
       {
         internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "gasLimit",
+        name: "tokenId",
         type: "uint256",
       },
     ],
@@ -342,16 +255,34 @@ export const NFT_CONTRACT_ABI = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "",
+        name: "nativeFee",
         type: "uint256",
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "_origin",
+        type: "uint32",
+      },
+      {
+        internalType: "bytes32",
+        name: "_sender",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "_data",
+        type: "bytes",
+      },
+    ],
+    name: "handle",
+    outputs: [],
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -373,6 +304,19 @@ export const NFT_CONTRACT_ABI = [
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "mailbox",
+    outputs: [
+      {
+        internalType: "contract IMailbox",
+        name: "",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -441,39 +385,6 @@ export const NFT_CONTRACT_ABI = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes",
-        name: "payload",
-        type: "bytes",
-      },
-      {
-        internalType: "bytes[]",
-        name: "",
-        type: "bytes[]",
-      },
-      {
-        internalType: "bytes32",
-        name: "sourceAddress",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint16",
-        name: "sourceChain",
-        type: "uint16",
-      },
-      {
-        internalType: "bytes32",
-        name: "deliveryHash",
-        type: "bytes32",
-      },
-    ],
-    name: "receiveWormholeMessages",
-    outputs: [],
-    stateMutability: "payable",
     type: "function",
   },
   {
@@ -549,9 +460,9 @@ export const NFT_CONTRACT_ABI = [
   {
     inputs: [
       {
-        internalType: "uint16",
+        internalType: "uint32",
         name: "targetChain",
-        type: "uint16",
+        type: "uint32",
       },
       {
         internalType: "address",
@@ -563,43 +474,10 @@ export const NFT_CONTRACT_ABI = [
         name: "tokenId",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "receiverValue",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "gasLimit",
-        type: "uint256",
-      },
-      {
-        internalType: "uint16",
-        name: "refundChain",
-        type: "uint16",
-      },
-      {
-        internalType: "address",
-        name: "refundAddress",
-        type: "address",
-      },
     ],
     name: "sendPayload",
     outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "sendingAmount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -624,19 +502,6 @@ export const NFT_CONTRACT_ABI = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_estimateGasBuffer",
-        type: "uint256",
-      },
-    ],
-    name: "setEstimateGasBuffer",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "_fee",
         type: "uint256",
       },
@@ -649,9 +514,9 @@ export const NFT_CONTRACT_ABI = [
   {
     inputs: [
       {
-        internalType: "uint16",
+        internalType: "uint32",
         name: "sourceChain",
-        type: "uint16",
+        type: "uint32",
       },
       {
         internalType: "bytes32",
@@ -743,32 +608,6 @@ export const NFT_CONTRACT_ABI = [
     name: "withdraw",
     outputs: [],
     stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "wormhole",
-    outputs: [
-      {
-        internalType: "contract IWormhole",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "wormholeRelayer",
-    outputs: [
-      {
-        internalType: "contract IWormholeRelayer",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ];

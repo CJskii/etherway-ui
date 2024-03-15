@@ -1,5 +1,5 @@
 import QnA from "./QuestionComponent";
-import { Questions } from "../../common/modules/data/faq";
+import { Questions } from "../../common/data/faq";
 import dynamic from "next/dynamic";
 
 const Footer = dynamic(() => import("./Footer"), {

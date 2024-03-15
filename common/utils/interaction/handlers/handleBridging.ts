@@ -1,9 +1,8 @@
-import { ethers } from "ethers";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Contract } from "@ethersproject/contracts";
+import { ethers, Signer, Contract } from "ethers";
 import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { Network } from "../../../types/network";
 import handleInteraction from "./handleInteraction";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 
 export const handleBridging = async ({
   TOKEN_ID,
@@ -21,9 +20,9 @@ export const handleBridging = async ({
   };
   address: string;
 }) => {
-  const txGasLimit = fromNetwork.name == "Arbitrum One" ? 4000000 : 2000000;
+  const txGasLimit = fromNetwork.params?.gasLimit.bridge;
   const signer = await getProviderOrSigner(true);
-  const ownerAddress = await (signer as JsonRpcSigner).getAddress();
+  const ownerAddress = await (signer as Signer).getAddress();
   let tx;
   if (contractProvider.type == "layerzero") {
     tx = await layerZeroBridge({
@@ -31,8 +30,8 @@ export const handleBridging = async ({
       fromNetwork,
       toNetwork,
       ownerAddress,
-      signer: signer as JsonRpcSigner,
-      txGasLimit,
+      signer: signer as Signer,
+      txGasLimit: txGasLimit || 500000,
     });
 
     if (tx.hash) {
@@ -44,14 +43,13 @@ export const handleBridging = async ({
     }
 
     return tx;
-  } else if (contractProvider.type == "wormhole") {
-    tx = await wormholeBridge({
+  } else if (contractProvider.type == "hyperlane") {
+    tx = await hyperlaneBridge({
       TOKEN_ID,
       fromNetwork,
       toNetwork,
-      ownerAddress,
-      signer: signer as JsonRpcSigner,
-      txGasLimit,
+      signer: signer as Signer,
+      txGasLimit: txGasLimit || 500000,
     });
 
     if (tx.hash) {
@@ -78,8 +76,8 @@ const layerZeroBridge = async ({
   fromNetwork: Network;
   toNetwork: Network;
   ownerAddress: string;
-  signer: JsonRpcSigner;
-  txGasLimit: number;
+  signer: Signer;
+  txGasLimit: number | string;
 }) => {
   if (!fromNetwork.deployedContracts)
     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
@@ -87,46 +85,41 @@ const layerZeroBridge = async ({
   const contract = new Contract(
     fromNetwork.deployedContracts.layerzero.ONFT.address,
     fromNetwork.deployedContracts.layerzero.ONFT.ABI,
-    signer
+    signer,
   );
 
   try {
     // REMOTE CHAIN ID IS THE CHAIN OF THE RECEIVING NETWORK
     // ex. if you are sending from Ethereum to Polygon, the remote chain id is the Polygon chain id
-    const remoteChainId = toNetwork.lzParams?.remoteChainId;
+    const remoteChainId = toNetwork.params?.layerzero.remoteChainId;
 
-    const adapterParams = ethers.utils.solidityPack(
-      ["uint16", "uint256"],
-      [1, 200000]
-    );
+    // create options
+    const options = Options.newOptions()
+      .addExecutorLzReceiveOption(200000, 0)
+      .toHex()
+      .toString();
 
-    const fees = await contract.estimateSendFee(
+    let nativeFee = 0;
+    [nativeFee] = await contract.quote(
       remoteChainId,
-      ownerAddress,
       TOKEN_ID,
+      ownerAddress,
+      options,
       false,
-      adapterParams
     );
-
-    const nativeFee = fees[0];
-
-    const tx = await contract.sendFrom(
-      ownerAddress, // 'from' address to send tokens
-      remoteChainId, // remote LayerZero chainId
-      ownerAddress, // 'to' address to send tokens
+    const tx = await contract.send(
+      remoteChainId, // remote LayerZero chainId v2
       TOKEN_ID, // tokenId to send
-      ownerAddress, // refund address (if too much message fee is sent, it gets refunded)
-      ethers.constants.AddressZero, // address(0x0) if not paying in ZRO (LayerZero Token)
-      adapterParams, // flexible bytes array to indicate messaging adapter services
+      ownerAddress, // to address
+      options, // flexible bytes array to indicate messaging adapter services
+      false, // use LayerZero token as gas
       {
-        value: nativeFee.mul(5).div(4),
+        value: nativeFee,
         gasLimit: txGasLimit,
-      }
+      },
     );
 
     await tx.wait();
-    console.log("NFT sent!");
-
     return tx;
   } catch (e) {
     console.error(e);
@@ -134,61 +127,53 @@ const layerZeroBridge = async ({
   }
 };
 
-const wormholeBridge = async ({
+const hyperlaneBridge = async ({
   TOKEN_ID,
   fromNetwork,
   toNetwork,
-  ownerAddress,
   signer,
   txGasLimit,
 }: {
   TOKEN_ID: string;
   fromNetwork: Network;
   toNetwork: Network;
-  ownerAddress: string;
-  signer: JsonRpcSigner;
-  txGasLimit: number;
+  signer: Signer;
+  txGasLimit: number | string;
 }) => {
   if (!fromNetwork.deployedContracts || !toNetwork.deployedContracts)
     throw new Error(
-      `No deployed contracts found for ${fromNetwork.name} or ${toNetwork.name}`
+      `No deployed contracts found for ${fromNetwork.name} or ${toNetwork.name}`,
     );
 
   const contract = new Contract(
-    fromNetwork.deployedContracts.wormhole.NFT.address,
-    fromNetwork.deployedContracts.wormhole.NFT.ABI,
-    signer
+    fromNetwork.deployedContracts.hyperlane.ONFT.address,
+    fromNetwork.deployedContracts.hyperlane.ONFT.ABI,
+    signer,
   );
 
-  const targetAddress = toNetwork.deployedContracts.wormhole.NFT.address;
-  const targetChainId = toNetwork.whParams?.remoteChainId;
+  const targetAddress = toNetwork.deployedContracts.hyperlane.NFT.address;
+  const targetChainId = toNetwork.params;
 
-  const GAS_LIMIT = 300000; // TODO: Implement dynamic gas limit
-  const receiverValue = 0; // receiver value is 0 for NFTs
+  const GAS_LIMIT = txGasLimit;
 
   try {
-    const [estimatedFee, totalCost] = await contract.getBridgeGas(
+    const nativeFee = await contract.getBridgeGas(
       targetChainId,
-      receiverValue,
-      GAS_LIMIT
+      targetAddress,
+      TOKEN_ID,
     );
 
     let tx = await contract.sendPayload(
       targetChainId,
       targetAddress,
       TOKEN_ID,
-      receiverValue,
-      GAS_LIMIT,
-      targetChainId,
-      ownerAddress,
       {
-        value: totalCost,
-        gasLimit: txGasLimit,
-      }
+        value: nativeFee,
+        gasLimit: GAS_LIMIT,
+      },
     );
-    await tx.wait();
 
-    console.log("NFT sent!");
+    await tx.wait();
 
     return tx;
   } catch (e) {

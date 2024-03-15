@@ -109,75 +109,46 @@ export function NavLinks() {
               ONFT Bridge
             </DropdownMenuItem>
           </Link>
+          <Link aria-disabled href={"/layerzero/oft-mint-bridge"}>
+            <DropdownMenuItem>ONFT & Mint Bridge</DropdownMenuItem>
+          </Link>
           <Link href={"https://layerzeroscan.com/"} target="_blank">
             <DropdownMenuItem className=" cursor-pointer">
               Explorer
             </DropdownMenuItem>
           </Link>
-
-          <DropdownMenuItem disabled>
-            <Link aria-disabled href={"#"}>
-              ONFT & Mint Bridge
-            </Link>
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full">
           <Button className="" variant={"navbar"}>
-            Wormhole
+            Hyperlane
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/wormhole/nft-mint"}>
+          <Link href={"/hyperlane/nft-mint"}>
             <DropdownMenuItem className=" cursor-pointer">
-              NFT Mint
+              hNFT Mint
             </DropdownMenuItem>
           </Link>
-          <Link href={"/wormhole/nft-bridge"}>
+          <Link href={"/hyperlane/nft-bridge"}>
             <DropdownMenuItem className=" cursor-pointer">
-              wNFT Bridge
+              hNFT Bridge
             </DropdownMenuItem>
           </Link>
-          <Link href={"https://wormholescan.io/"}>
+          <Link href={"/hyperlane/token-mint-bridge"}>
+            <DropdownMenuItem className=" cursor-pointer">
+              ERC20 & Mint Bridge
+            </DropdownMenuItem>
+          </Link>
+          <Link href={"https://explorer.hyperlane.xyz"}>
             <DropdownMenuItem className=" cursor-pointer">
               Explorer
             </DropdownMenuItem>
           </Link>
-          <Link href={"#"}>
-            <DropdownMenuItem disabled className=" cursor-pointer">
-              ERC20 & Mint Bridge
-            </DropdownMenuItem>
-          </Link>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="w-full">
-          <Button className="" variant={"navbar"}>
-            Featured
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/featured/onft-mint"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              oNFT Mint
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/featured/wnft-bridge"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              wNFT Bridge
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/featured/wERC20-bridge"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              wERC20 Bridge
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full">
           <Button className="" variant={"navbar"}>
@@ -185,14 +156,18 @@ export function NavLinks() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/blogs"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              Blogs
-            </DropdownMenuItem>
+          <Link href={"/faq"}>
+            <DropdownMenuItem className=" cursor-pointer">FAQ</DropdownMenuItem>
           </Link>
           <Link href={"/chains"}>
             <DropdownMenuItem className=" cursor-pointer">
               Supported Chains
+            </DropdownMenuItem>
+          </Link>
+          {/* href={"/blogs"} */}
+          <Link href={""}>
+            <DropdownMenuItem disabled className=" cursor-pointer">
+              Blogs
             </DropdownMenuItem>
           </Link>
         </DropdownMenuContent>

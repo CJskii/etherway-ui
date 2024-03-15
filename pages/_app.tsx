@@ -5,26 +5,14 @@ import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiConfig } from "wagmi";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-import useReferalCode from "../common/components/hooks/useReferalCode";
+import useReferalCode from "../common/hooks/useReferalCode";
 import { wagmiConfig, theme, chains } from "../constants/config/wagmiConfig";
-import Alert from "../common/components/elements/Alert";
+import Alert from "../common/elements/Alert";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Inter, Raleway } from "next/font/google";
 import Provider from "@/components/dashboard/provider";
-import {
-  ThirdwebProvider,
-  ConnectWallet,
-  metamaskWallet,
-  coinbaseWallet,
-  walletConnect,
-  localWallet,
-  embeddedWallet,
-  trustWallet,
-  rainbowWallet,
-} from "@thirdweb-dev/react";
 
-import { mainnetChainsThirdWeb } from "@/constants/config/thirdwebChainsConfig";
-import { activeChains } from "@/constants/config/thirdwebChainsConfig";
+import { activeChains } from "@/constants/config/chainsConfig";
 
 export const raleway = Raleway({
   subsets: ["latin"],
@@ -57,8 +45,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       {/* TODO: Remove wagmi and rainbowkit provider  */}
       {/* Figure out how to pass existing chain setup to thirdweb provider  */}
       <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains}>
-          <ThirdwebProvider
+        <RainbowKitProvider chains={chains} theme={theme}>
+          {/* <ThirdwebProvider
             supportedChains={mainnetChainsThirdWeb}
             clientId={process.env.THIRDWEB_CLIENT_ID || ""}
             supportedWallets={[
@@ -78,18 +66,18 @@ function MyApp({ Component, pageProps }: AppProps) {
               authUrl: "/api/auth",
               domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
             }}
+          > */}
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <div className={`${raleway.variable}`}>
-                <Component {...pageProps} />
-              </div>
-            </ThemeProvider>
-          </ThirdwebProvider>
+            <div className={`${raleway.variable}`}>
+              <Component {...pageProps} />
+            </div>
+          </ThemeProvider>
+          {/* </ThirdwebProvider> */}
         </RainbowKitProvider>
       </WagmiConfig>
       {/* <WagmiConfig config={wagmiConfig}>

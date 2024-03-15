@@ -53,7 +53,7 @@ export default function LeaderboardTable() {
           variant={"paragraph"}
           className="font-raleway font-[500] tracking-wide"
         >
-          Your stats on Mintly
+          Your stats on Etherway
         </Typography>
       </div>
       <Table>

@@ -3,14 +3,14 @@ import { useNetwork, useAccount } from "wagmi";
 import { handleBridging } from "../../common/utils/interaction/handlers/handleBridging";
 import { handleErrors } from "../../common/utils/interaction/handlers/handleErrors";
 import handleInteraction from "../../common/utils/interaction/handlers/handleInteraction";
-import { useNetworkSelection } from "../../common/components/hooks/useNetworkSelection";
+import { useNetworkSelection } from "../../common/hooks/useNetworkSelection";
 import { getValidToNetworks } from "../../common/utils/getters/getValidToNetworks";
 import { Network } from "../../common/types/network";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 
 const NetworkModal = dynamic(
-  () => import("../../common/components/elements/modals/NetworkModal"),
+  () => import("../../common/elements/NetworkModal"),
   {
     loading: () => <span className="loading loading-dots loading-lg"></span>,
     ssr: true,

@@ -26,41 +26,38 @@ export interface Network {
   remoteChainId?: number;
   lzEndpointAddress?: string;
   deployedContracts?: DeployedContracts;
-  lzParams?: {
-    lzEndpointAddress?: string;
-    remoteChainId?: number;
-  };
-  whParams?: {
-    whEndpointAddress?: string;
-    remoteChainId?: number;
-  };
+  params?: NetworkParams;
 }
+
+type NetworkParams = {
+  gasLimit: {
+    mint: number | string;
+    bridge: number | string;
+    lzOptionsGas?: number | string;
+  };
+  layerzero: {
+    remoteChainId: number | string;
+    maxRefuelGas: number | string;
+  };
+  hyperlane: {
+    remoteChainId: number | string;
+    maxRefuelGas: number | string;
+  };
+  polyhedra: {
+    remoteChainId: number | string;
+    maxRefuelGas: number | string;
+  };
+};
 
 type DeployedContracts = {
   layerzero: {
-    ONFT: {
-      address: string;
-      ABI: any[];
-    };
-    REFUEL: {
-      address: string;
-      ABI: any[];
-    };
-    OFT: {
+    [key: string]: {
       address: string;
       ABI: any[];
     };
   };
-  wormhole: {
-    NFT: {
-      address: string;
-      ABI: any[];
-    };
-    ERC20: {
-      address: string;
-      ABI: any[];
-    };
-    REFUEL: {
+  hyperlane: {
+    [key: string]: {
       address: string;
       ABI: any[];
     };

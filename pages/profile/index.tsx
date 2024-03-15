@@ -8,14 +8,10 @@ import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/dashboard/layout";
 import profile from "@/assets/dashboard/profile.svg";
 import profileDark from "@/assets/dashboard/profile-dark.svg";
-
-import { useUser, useAddress, useConnect } from "@thirdweb-dev/react";
+import { useAccount } from "wagmi";
 
 export default function ProfilePage() {
-  const { user, isLoggedIn, isLoading } = useUser();
-  const address = useAddress();
-
-  console.log({ user, isLoggedIn, isLoading, address });
+  const { address } = useAccount();
 
   // if (!isLoggedIn) we display a message to log in
   // if (isLoading) we display a loading indicator
@@ -23,9 +19,9 @@ export default function ProfilePage() {
 
   return (
     <DashboardLayout>
-      {isLoggedIn && <div>{user?.address}</div>}
+      {/* {isLoggedIn && <div>{user?.address}</div>}
       {isLoading && <div>Loading...</div>}
-      {!isLoggedIn && address && <div>Not logged in</div>}
+      {!isLoggedIn && address && <div>Not logged in</div>} */}
 
       {!address && (
         <div className=" flex items-center justify-center">

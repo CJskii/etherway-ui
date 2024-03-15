@@ -1,42 +1,20 @@
 "use client";
 // import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "./button";
-import { ConnectWallet } from "@thirdweb-dev/react";
-import {
-  useUser,
-  useAddress,
-  useConnect,
-  useLogin,
-  useSetWalletModalConfig,
-  useSetIsWalletModalOpen,
-} from "@thirdweb-dev/react";
 
 export const ConnectWalletButton = () => {
-  const setModalConfig = useSetWalletModalConfig();
-  const setIsWalletModalOpen = useSetIsWalletModalOpen();
-  const RenderButton = () => {};
-
-  return (
-    <ConnectWallet
-      // TODO: theme toggle
-      theme={"dark"}
-      auth={{ loginOptional: false }}
-      switchToActiveChain={true}
-      modalSize={"wide"}
-      welcomeScreen={{}}
-    />
-  );
-
-  const openModal = async () => {
-    setIsWalletModalOpen(true);
-    setModalConfig({
-      theme: "dark",
-      auth: { loginOptional: false },
-      modalSize: "wide",
-      welcomeScreen: {},
-    });
-  };
-
+  // const RenderButton = () => {
+  // }
+  // return (
+  //   <ConnectWallet
+  //     // TODO: theme toggle
+  //     theme={"dark"}
+  //     auth={{ loginOptional: false }}
+  //     switchToActiveChain={true}
+  //     modalSize={"wide"}
+  //     welcomeScreen={{}}
+  //   />
+  // );
   // return (
   //   <ConnectButton.Custom>
   //     {({

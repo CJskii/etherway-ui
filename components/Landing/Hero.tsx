@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { hero_data } from "../../common/modules/data/hero";
+import { hero_data } from "../../common/data/hero";
 
 const Hero = () => {
   return (
@@ -176,7 +176,7 @@ const Hero = () => {
                                 </article>
                               </div>
                             );
-                          }
+                          },
                         )}
                     </div>
                   );

@@ -1,6 +1,4 @@
-import { ethers } from "ethers";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Contract } from "@ethersproject/contracts";
+import { ethers, Signer, Contract } from "ethers";
 import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { handleErrors } from "./handleErrors";
 import { GasTransferParams } from "../../../types/gas-refuel";
@@ -59,7 +57,7 @@ const handleGasTransaction = async ({
   estimatedFee: string;
   recipientAddress?: string;
 }) => {
-  const signer = (await getProviderOrSigner(true)) as JsonRpcSigner;
+  const signer = (await getProviderOrSigner(true)) as Signer;
   const ownerAddress = await signer.getAddress();
   const refundAddress = recipientAddress || ownerAddress;
 
@@ -69,27 +67,27 @@ const handleGasTransaction = async ({
   const contract = new Contract(
     fromNetwork.deployedContracts.layerzero.REFUEL.address,
     fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
-    signer
+    signer,
   );
 
   const gasInWei = ethers.utils.parseUnits(value, "ether");
 
   let adapterParams = ethers.utils.solidityPack(
     ["uint16", "uint", "uint", "address"],
-    [2, 200000, gasInWei.toString(), refundAddress]
+    [2, 200000, gasInWei.toString(), refundAddress],
   );
 
   const gasPrice = await signer.getGasPrice();
   try {
     const [_nativeFee, _zroFee, totalCost] = await contract.estimateSendFee(
-      targetNetwork.lzParams?.remoteChainId,
+      targetNetwork.params?.layerzero?.remoteChainId,
       refundAddress,
       gasInWei,
-      adapterParams
+      adapterParams,
     );
 
     const tx = await contract.bridgeGas(
-      targetNetwork.lzParams?.remoteChainId,
+      targetNetwork.params?.layerzero?.remoteChainId,
       refundAddress,
       gasInWei,
       adapterParams,
@@ -98,7 +96,7 @@ const handleGasTransaction = async ({
         // gasLimit: ethers.utils.parseUnits("250000", "wei"),
         gasPrice: gasPrice.mul(5).div(4),
         gasLimit: fromNetwork.name == "Arbitrum One" ? 2000000 : 1500000,
-      }
+      },
     );
 
     const receipt = await tx.wait();

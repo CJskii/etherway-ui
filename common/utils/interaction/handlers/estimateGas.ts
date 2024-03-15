@@ -1,7 +1,5 @@
 import { handleErrors } from "./handleErrors";
-import { ethers } from "ethers";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Contract } from "@ethersproject/contracts";
+import { ethers, Signer, Contract } from "ethers";
 import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { estimateGasParams } from "../../../types/gas-refuel";
 import { Network } from "../../../types/network";
@@ -46,7 +44,7 @@ const estimateGasBridgeFee = async ({
   value: string;
   recipientAddress?: string;
 }) => {
-  const signer = (await getProviderOrSigner(true)) as JsonRpcSigner;
+  const signer = (await getProviderOrSigner(true)) as Signer;
   const ownerAddress = await signer.getAddress();
   const refundAddress = recipientAddress || ownerAddress;
 
@@ -55,21 +53,21 @@ const estimateGasBridgeFee = async ({
   const contract = new Contract(
     fromNetwork.deployedContracts.layerzero.REFUEL.address,
     fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
-    signer
+    signer,
   );
 
   const gasInWei = ethers.utils.parseUnits(value, "ether");
   let adapterParams = ethers.utils.solidityPack(
     ["uint16", "uint", "uint", "address"],
-    [2, 200000, gasInWei.toString(), refundAddress]
+    [2, 200000, gasInWei.toString(), refundAddress],
   );
 
   try {
     const [_nativeFee, _zroFee, totalCost] = await contract.estimateSendFee(
-      targetNetwork.lzParams?.remoteChainId,
+      targetNetwork.params?.layerzero?.remoteChainId,
       refundAddress,
       gasInWei.toString(),
-      adapterParams
+      adapterParams,
     );
 
     return totalCost;
