@@ -149,32 +149,6 @@ export function NavLinks() {
           </Link>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="w-full">
-          <Button className="" variant={"navbar"}>
-            Featured
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/featured/onft-mint"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              oNFT Mint
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/featured/wnft-bridge"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              wNFT Bridge
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/featured/wERC20-bridge"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              wERC20 Bridge
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full">
           <Button className="" variant={"navbar"}>
@@ -182,14 +156,18 @@ export function NavLinks() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/blogs"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              Blogs
-            </DropdownMenuItem>
+          <Link href={"/faq"}>
+            <DropdownMenuItem className=" cursor-pointer">FAQ</DropdownMenuItem>
           </Link>
           <Link href={"/chains"}>
             <DropdownMenuItem className=" cursor-pointer">
               Supported Chains
+            </DropdownMenuItem>
+          </Link>
+          {/* href={"/blogs"} */}
+          <Link href={""}>
+            <DropdownMenuItem disabled className=" cursor-pointer">
+              Blogs
             </DropdownMenuItem>
           </Link>
         </DropdownMenuContent>

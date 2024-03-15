@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   return (
     <>
       {/* // TODO: Uncomment below line to use the new design */}
-      <div className="relative h-auto ">
+      <div className="relative h-auto">
         <Header />
         <div className=" z-10 ">
           <HeroSection />
@@ -28,7 +28,7 @@ const Home: NextPage = () => {
             <OnboardSection />
             <StatsSection />
             <FeaturesSection />
-            <ContactSection />
+            {/* <ContactSection /> */}
           </Container>
         </div>
         <Image
