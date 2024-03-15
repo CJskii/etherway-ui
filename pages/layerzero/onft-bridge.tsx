@@ -13,6 +13,24 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 export default function ONFTBridge() {
+
+  const contractProvider = { type: "layerzero", contract: "ONFT" };
+
+  // TODO: The idea here is that we're going to display FROM and TO network selection modals with search bar functionality to the user
+  // We will only display the networks that are supported by the contract && in combination that is being supported by layerzero endpoints
+  // ^^^ this is still something that I need to look into
+  
+  // The user will select FROM network and TO network, enter the NFT ID and click on the bridge button 
+  // (if user is navigating directly from the minting page we want to pass minted NFT ID as a value to the URL and enter this for him)
+
+  // If user is on the correct network we will call bridge function and send metamask popup
+  // If user isn't connected to this network we will request network change
+  // If user wallet isn't connected we will request to connect a wallet
+
+  const handleBridgeButton = () => {
+    console.log("Bridge button clicked");
+  }
+
   return (
     <Layout className="px-0 pt-24 pb-8 min-h-[90vh]">
       <div className=" z-10 py-20 md:py-16 flex items-center justify-center min-h-[90vh]">
@@ -61,7 +79,8 @@ export default function ONFTBridge() {
               />
             </Label>
 
-            <Button className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl">
+            <Button className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handleBridgeButton}>
               Bridge
             </Button>
           </div>
