@@ -8,104 +8,137 @@ datasource db {
 }
 
 model User {
-  ethereumAddress     String              @id
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-  totalPoints         Int                 @default(0)
-  inviteLink          String              @unique
-  invitedById         String?
-  leaderboardRank     Int?
-  discordHandle       String?             @unique
-  githubHandle        String?             @unique
-  twitterHandle       String?             @unique
-  currentRewardDay    Int                 @default(1)
-  inviteCount         Int                 @default(0)
-  lastRewardClaimedAt DateTime?
-  email               String?             @unique
-  isOnWaitlist        Boolean             @default(false)
-  isSubscribed        Boolean             @default(false)
-  bridges             Bridges[]
-  interactions        Interactions[]
-  mints               Mints[]
-  streaks             Streaks[]
-  invitedBy           User?               @relation("ReferralRelation", fields: [invitedById], references: [ethereumAddress])
-  referredUsers       User[]              @relation("ReferralRelation")
-  dailyRewards        UserDailyReward[]
-  VerificationToken   VerificationToken[]
-
-  @@index([totalPoints])
+  id              Int           @id @default(autoincrement())
+  ethereumAddress String        @unique
+  inviteCode      String        @unique
+  role            Role          @default(USER)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+  discordHandle   String?       @unique
+  email           String?       @unique
+  githubHandle    String?       @unique
+  twitterHandle   String?       @unique
+  interactions    Interaction[]
+  referred        Referral[]    @relation("Referred")
+  referrals       Referral[]    @relation("Referrer")
+  UserProjects    UserProject[]
+  UserRewards     UserReward[]
+  UserTasks       UserTask[]
 }
 
-model Mints {
-  id              Int      @id @default(autoincrement())
-  ethereumAddress String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  count           Int      @default(0)
-  user            User     @relation(fields: [ethereumAddress], references: [ethereumAddress])
+
+model Referral {
+  id            Int      @id @default(autoincrement())
+  referrerId    Int
+  referredId    Int
+  pointsAwarded Boolean  @default(false)
+  points        Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  referred      User  @relation("Referred", fields: [referredId], references: [id])
+  referrer      User  @relation("Referrer", fields: [referrerId], references: [id])
 }
 
-model Bridges {
-  id              Int      @id @default(autoincrement())
-  ethereumAddress String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  count           Int      @default(0)
-  layerzeroCount  Int      @default(0)
-  wormholeCount   Int      @default(0)
-  user            User     @relation(fields: [ethereumAddress], references: [ethereumAddress])
+model Interaction {
+  id           Int             @id @default(autoincrement())
+  type         InteractionType
+  contractType ContractType?
+  chainId      Int?
+  points       Int             @default(0)
+  userId       Int
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  user         User         @relation(fields: [userId], references: [id])
 }
 
-model Interactions {
-  id              Int      @id @default(autoincrement())
-  ethereumAddress String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  count           Int      @default(0)
-  user            User     @relation(fields: [ethereumAddress], references: [ethereumAddress])
+model Project {
+  id               Int            @id @default(autoincrement())
+  name             String
+  shortDescription String
+  about            String
+  moreDescription  String
+  difficulty       DifficultyType
+  category         CategoryType
+  likelihood       LikelihoodType
+  rating           Float
+  featured         Boolean        @default(false)
+  network          String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  links            Link[]
+  tasks            Task[]
+  UserFavorites    UserProject[]
 }
 
-model Streaks {
-  id              Int       @id @default(autoincrement())
-  ethereumAddress String
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  startDate       DateTime
-  endDate         DateTime?
-  currentStreak   Int       @default(0)
-  user            User      @relation(fields: [ethereumAddress], references: [ethereumAddress])
+model Task {
+  id           Int            @id @default(autoincrement())
+  name         String
+  difficulty   DifficultyType
+  about        String
+  instructions String
+  projectId    Int
+  steps        Step[]
+  Project      Project        @relation(fields: [projectId], references: [id])
+  UserTasks    UserTask[]
 }
 
-model DailyReward {
-  id          Int               @id @default(autoincrement())
-  day         Int               @unique
-  reward      String
+model Step {
+  id          Int    @id @default(autoincrement())
+  name        String
   description String
-  points      Int
-  users       UserDailyReward[]
+  taskId      Int
+  Task        Task   @relation(fields: [taskId], references: [id])
 }
 
-model UserDailyReward {
-  id            Int         @id @default(autoincrement())
-  userId        String
-  dailyRewardId Int
-  claimedAt     DateTime    @default(now())
-  dailyReward   DailyReward @relation(fields: [dailyRewardId], references: [id])
-  user          User        @relation(fields: [userId], references: [ethereumAddress])
+model Link {
+  id        Int      @id @default(autoincrement())
+  url       String
+  type      LinkType
+  projectId Int
+  Project   Project  @relation(fields: [projectId], references: [id])
 }
 
-model VerificationToken {
-  id         Int       @id @default(autoincrement())
-  token      String    @unique
-  identifier String
-  expires    DateTime? @db.Timestamptz(6)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime
-  user_email String
-  User       User      @relation(fields: [user_email], references: [email])
-
-  @@unique([identifier, token])
+model UserTask {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  taskId    Int
+  completed Boolean @default(false)
+  Task      Task    @relation(fields: [taskId], references: [id])
+  User      User @relation(fields: [userId], references: [id])
 }
+
+model UserProject {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  projectId Int
+  Project   Project @relation(fields: [projectId], references: [id])
+  User      User @relation(fields: [userId], references: [id])
+}
+
+model Reward {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String
+  basePoints  Int
+  type        RewardType
+  day         Int?
+  isDeleted   Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  userRewards UserReward[]
+}
+
+model UserReward {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  rewardId  Int
+  claimedAt DateTime   @default(now())
+  type      RewardType
+  points    Int        @default(0)
+  reward    Reward     @relation(fields: [rewardId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
+}
+
 
 model DiscordEvent {
   id             Int      @id @default(autoincrement())
@@ -155,6 +188,58 @@ model GnStreak {
   lastGnDate    DateTime    @db.Timestamptz(6)
   discordUserId String      @unique
   DiscordUser   DiscordUser @relation(fields: [discordUserId], references: [id])
+}
+
+
+enum RewardType {
+  DAILY
+}
+
+enum LinkType {
+  TWITTER
+  GITHUB
+  TELEGRAM
+  DISCORD
+}
+
+enum CategoryType {
+  L1
+  L2
+  DEFI
+  NFT
+  DAO
+  OTHER
+}
+
+enum ContractType {
+  NO_CONTRACT
+  ONFT_ERC721
+  OFT_ERC20
+  GAS_REFUEL
+  WNFT_ERC721
+}
+
+enum InteractionType {
+  V1
+  MINT
+  BRIDGE
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum DifficultyType {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum LikelihoodType {
+  LOW
+  MEDIUM
+  HIGH
 }
 
 enum DiscordSupportTicketType {
