@@ -21,8 +21,6 @@ export const raleway = Raleway({
 
 const inter = Inter({ subsets: ["latin"] });
 
-console.log("activeChains", activeChains);
-
 // const Navbar = dynamic(() => import("../common/components/elements/Navbar"), {
 //   loading: () => <span className="loading loading-dots loading-lg"></span>,
 //   ssr: true,
