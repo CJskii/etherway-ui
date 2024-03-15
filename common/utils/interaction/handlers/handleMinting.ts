@@ -1,5 +1,4 @@
-import { ethers } from "ethers";
-import { Contract } from "@ethersproject/contracts";
+import { ethers, Contract } from "ethers";
 import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { Network } from "../../../types/network";
 import { getTokenId } from "../../getters/getTokenId";

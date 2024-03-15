@@ -1,6 +1,4 @@
-import { ethers } from "ethers";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Contract } from "@ethersproject/contracts";
+import { ethers, Signer, Contract } from "ethers";
 import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { handleErrors } from "./handleErrors";
 import { GasTransferParams } from "../../../types/gas-refuel";
@@ -59,7 +57,7 @@ const handleGasTransaction = async ({
   estimatedFee: string;
   recipientAddress?: string;
 }) => {
-  const signer = (await getProviderOrSigner(true)) as JsonRpcSigner;
+  const signer = (await getProviderOrSigner(true)) as Signer;
   const ownerAddress = await signer.getAddress();
   const refundAddress = recipientAddress || ownerAddress;
 

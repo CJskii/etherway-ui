@@ -1,6 +1,4 @@
-import { ethers } from "ethers";
-import { JsonRpcSigner } from "@ethersproject/providers";
-import { Contract } from "@ethersproject/contracts";
+import { ethers, Signer, Contract } from "ethers";
 import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { Network } from "../../../types/network";
 import handleInteraction from "./handleInteraction";
@@ -24,7 +22,7 @@ export const handleBridging = async ({
 }) => {
   const txGasLimit = fromNetwork.params?.gasLimit.bridge;
   const signer = await getProviderOrSigner(true);
-  const ownerAddress = await (signer as JsonRpcSigner).getAddress();
+  const ownerAddress = await (signer as Signer).getAddress();
   let tx;
   if (contractProvider.type == "layerzero") {
     tx = await layerZeroBridge({
@@ -32,7 +30,7 @@ export const handleBridging = async ({
       fromNetwork,
       toNetwork,
       ownerAddress,
-      signer: signer as JsonRpcSigner,
+      signer: signer as Signer,
       txGasLimit: txGasLimit || 500000,
     });
 
@@ -50,7 +48,7 @@ export const handleBridging = async ({
       TOKEN_ID,
       fromNetwork,
       toNetwork,
-      signer: signer as JsonRpcSigner,
+      signer: signer as Signer,
       txGasLimit: txGasLimit || 500000,
     });
 
@@ -78,7 +76,7 @@ const layerZeroBridge = async ({
   fromNetwork: Network;
   toNetwork: Network;
   ownerAddress: string;
-  signer: JsonRpcSigner;
+  signer: Signer;
   txGasLimit: number | string;
 }) => {
   if (!fromNetwork.deployedContracts)
@@ -139,7 +137,7 @@ const hyperlaneBridge = async ({
   TOKEN_ID: string;
   fromNetwork: Network;
   toNetwork: Network;
-  signer: JsonRpcSigner;
+  signer: Signer;
   txGasLimit: number | string;
 }) => {
   if (!fromNetwork.deployedContracts || !toNetwork.deployedContracts)
