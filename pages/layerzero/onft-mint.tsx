@@ -1,4 +1,4 @@
-import NFTMint from "@/components/ui/nft-mint";
+import NFTMint from "@/components/nft-mint";
 import { Layout } from "@/components/dashboard/layout";
 import HeadComponent from "@/common/elements/HeadComponent";
 

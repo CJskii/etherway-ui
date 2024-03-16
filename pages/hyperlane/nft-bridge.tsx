@@ -1,4 +1,4 @@
-import NFTBridge from "@/components/ui/nft-bridge";
+import NFTBridge from "@/components/nft-bridge";
 import { Layout } from "@/components/dashboard/layout";
 
 const HyperlaneNFTBridge = () => {

@@ -1,4 +1,4 @@
-import TokenMintAndBridge from "@/components/ui/token-bridge";
+import TokenMintAndBridge from "@/components/token-bridge";
 import { Layout } from "@/components/dashboard/layout";
 
 const HyperlaneTokenMintBridge = () => {
