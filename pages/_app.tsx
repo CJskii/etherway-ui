@@ -1,16 +1,40 @@
 import "../styles/globals.css";
+import { Inter, Raleway } from "next/font/google";
+
 // import "@fontsource/ibm-plex-mono";
 import type { AppProps } from "next/app";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { WagmiConfig } from "wagmi";
+
+// import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { wagmiConfig, theme } from "../constants/config/wagmiConfig";
+// import { WagmiConfig } from "wagmi";
+
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import useReferalCode from "../common/hooks/useReferalCode";
-import { wagmiConfig, theme, chains } from "../constants/config/wagmiConfig";
+
 import Alert from "../common/elements/Alert";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import { Inter, Raleway } from "next/font/google";
 import Provider from "@/components/dashboard/provider";
+
+import "@rainbow-me/rainbowkit/styles.css";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { WagmiProvider } from "wagmi";
+
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import {
+  GetSiweMessageOptions,
+  RainbowKitSiweNextAuthProvider,
+} from "@rainbow-me/rainbowkit-siwe-next-auth";
+import { SessionProvider } from "next-auth/react";
+import type { Session } from "next-auth";
+
+import React from "react";
+
+const queryClient = new QueryClient();
+
+const getSiweMessageOptions: GetSiweMessageOptions = () => ({
+  statement: "Sign in to Etherway",
+});
 
 import { activeChains } from "@/constants/config/chainsConfig";
 
@@ -37,16 +61,21 @@ const inter = Inter({ subsets: ["latin"] });
 //   link: "https://mintly.deform.cc/survey",
 // };
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   const router = useRouter();
   useReferalCode(router);
   return (
     <>
       {/* TODO: Remove wagmi and rainbowkit provider  */}
       {/* Figure out how to pass existing chain setup to thirdweb provider  */}
-      <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains} theme={theme}>
-          {/* <ThirdwebProvider
+      <WagmiProvider config={wagmiConfig}>
+        <SessionProvider refetchInterval={0} session={pageProps.session}>
+          <QueryClientProvider client={queryClient}>
+            <RainbowKitSiweNextAuthProvider
+              getSiweMessageOptions={getSiweMessageOptions}
+            >
+              <RainbowKitProvider>
+                {/* <ThirdwebProvider
             supportedChains={mainnetChainsThirdWeb}
             clientId={process.env.THIRDWEB_CLIENT_ID || ""}
             supportedWallets={[
@@ -67,19 +96,22 @@ function MyApp({ Component, pageProps }: AppProps) {
               domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
             }}
           > */}
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <div className={`${raleway.variable}`}>
-              <Component {...pageProps} />
-            </div>
-          </ThemeProvider>
-          {/* </ThirdwebProvider> */}
-        </RainbowKitProvider>
-      </WagmiConfig>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                  disableTransitionOnChange
+                >
+                  <div className={`${raleway.variable}`}>
+                    <Component {...pageProps} />
+                  </div>
+                </ThemeProvider>
+                {/* </ThirdwebProvider> */}
+              </RainbowKitProvider>
+            </RainbowKitSiweNextAuthProvider>
+          </QueryClientProvider>
+        </SessionProvider>
+      </WagmiProvider>
       {/* <WagmiConfig config={wagmiConfig}>
         <RainbowKitProvider chains={chains} theme={theme}>
           <div className="flex flex-col justify-between items-center min-h-screen font-plex-mono">
