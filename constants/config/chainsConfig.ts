@@ -352,16 +352,16 @@ const getContractProviders = (chain: Network) => {
   const layerzeroContracts = deployedContracts.layerzero;
   const hyperlaneContracts = deployedContracts.hyperlane;
 
-  if (layerzeroContracts.OFT.address) {
+  if (layerzeroContracts.OFT) {
     contractProviders.layerzero.push("OFT");
   }
-  if (layerzeroContracts.ONFT.address) {
+  if (layerzeroContracts.ONFT) {
     contractProviders.layerzero.push("ONFT");
   }
-  if (hyperlaneContracts.OFT.address) {
+  if (hyperlaneContracts.OFT) {
     contractProviders.hyperlane.push("OFT");
   }
-  if (hyperlaneContracts.ONFT.address) {
+  if (hyperlaneContracts.ONFT) {
     contractProviders.hyperlane.push("ONFT");
   }
 
