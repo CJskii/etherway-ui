@@ -51,7 +51,7 @@ const NetworkModal = ({ props }: NetworkModalProps) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <CardContent className="grid gap-4 px-0">
+        <CardContent className="grid gap-4 px-0 pb-0">
           <div className=" flex items-center space-x-4 rounded-md border p-4">
             <Image
               src={selectedNetwork.iconUrl as string}

@@ -1,15 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography } from "@/components/ui/typography";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+
+import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
+import { Network } from "@/common/types/network";
+import { getValidToNetworks } from "@/common/utils/getters/getValidToNetworks";
+
+import NetworkModal from "./networkModal";
 
 interface NFTBridgeProps {
   params: {
@@ -31,10 +30,84 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   // If user wallet isn't connected we will request to connect a wallet
 
   const { contractProvider, stepDescription } = params;
+  const { type, contract } = contractProvider;
+
+  const isValidToNetwork = (toNetwork: Network) => {
+    const validToNetworks = getValidToNetworks({
+      fromNetwork,
+      type,
+      contract,
+    }) as string[];
+
+    return validToNetworks.includes(toNetwork.name);
+  };
+
+  const {
+    selectedNetwork: fromNetwork,
+    onNetworkSelect: setFromNetwork,
+    searchTerm: fromSearchTerm,
+    onSearchChange: setFromSearchTerm,
+    filteredChains: fromFilteredChains,
+    networksByProvider: networksByProvider,
+    onClose: onFromClose,
+  } = useNetworkSelection(contractProvider);
+
+  const {
+    selectedNetwork: toNetwork,
+    onNetworkSelect: setToNetwork,
+    searchTerm: toSearchTerm,
+    onSearchChange: setToSearchTerm,
+    filteredChains: toFilteredChains,
+    onClose: onToClose,
+  } = useNetworkSelection(contractProvider, isValidToNetwork);
 
   const handleBridgeButton = () => {
     console.log("Bridge button clicked");
   };
+
+  const fromBridgeProps = {
+    selectedNetwork: fromNetwork,
+    onNetworkSelect: setFromNetwork,
+    searchTerm: fromSearchTerm,
+    onSearchChange: setFromSearchTerm,
+    filteredChains: fromFilteredChains,
+    networksByProvider: networksByProvider,
+    onClose: onFromClose,
+    dialogTitle: "Select a network",
+    dialogDescription: "Select the network you want to bridge from",
+    commandHeading: "Select a network",
+  };
+
+  const toBridgeProps = {
+    selectedNetwork: toNetwork,
+    onNetworkSelect: setToNetwork,
+    searchTerm: toSearchTerm,
+    onSearchChange: setToSearchTerm,
+    filteredChains: toFilteredChains,
+    onClose: onToClose,
+    dialogTitle: "Select a network",
+    dialogDescription: "Select the network you want to bridge to",
+    commandHeading: "Select a network",
+  };
+
+  useEffect(() => {
+    // If the currently selected "To" network is not valid after the "From" network changes, reset it.
+    if (!isValidToNetwork(toNetwork)) {
+      const validNetworks = getValidToNetworks({
+        fromNetwork,
+        type,
+        contract,
+      }) as string[];
+      const defaultNetwork = networksByProvider.find((network) =>
+        validNetworks.includes(network.name),
+      );
+
+      defaultNetwork
+        ? setToNetwork(defaultNetwork as Network)
+        : setToNetwork(networksByProvider[0] as Network);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromNetwork, toNetwork, setToNetwork]);
 
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center min-h-[90vh]">
@@ -43,36 +116,23 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           <Typography variant={"h3"} className=" dark:text-black text-center">
             Step 2 : {stepDescription}
           </Typography>
+
           <Label className=" space-y-2">
             <Typography variant={"large"} className="dark:text-black">
               Bridge From
             </Typography>
-            <Select>
-              <SelectTrigger className="bg-white p-6 dark:bg-white dark:text-black dark:border-0">
-                <SelectValue placeholder="Select chain" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ethereum">Ethereum</SelectItem>
-                <SelectItem value="solana">Solana</SelectItem>
-                <SelectItem value="polkadot">Polkadot</SelectItem>
-              </SelectContent>
-            </Select>
           </Label>
-          <Label className=" space-y-2">
+
+          <NetworkModal props={fromBridgeProps} />
+
+          <Label className=" space-y-2 w-full ">
             <Typography variant={"large"} className="dark:text-black">
               Bridge To
             </Typography>
-            <Select>
-              <SelectTrigger className="bg-white p-6 dark:bg-white dark:text-black dark:border-0">
-                <SelectValue placeholder="Select chain" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ethereum">Ethereum</SelectItem>
-                <SelectItem value="solana">Solana</SelectItem>
-                <SelectItem value="polkadot">Polkadot</SelectItem>
-              </SelectContent>
-            </Select>
           </Label>
+
+          <NetworkModal props={toBridgeProps} />
+
           <Label className=" space-y-2">
             <Typography variant={"large"} className="dark:text-black">
               NFT ID
