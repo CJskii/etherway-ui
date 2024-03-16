@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ConnectWalletButton } from "../ui/connect-button";
 
 interface NavLinks {
   label: string;
@@ -157,16 +158,16 @@ export function NavLinks() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
           <Link href={"/faq"}>
-            <DropdownMenuItem className=" cursor-pointer">FAQ</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">FAQ</DropdownMenuItem>
           </Link>
           <Link href={"/chains"}>
-            <DropdownMenuItem className=" cursor-pointer">
+            <DropdownMenuItem className="cursor-pointer">
               Supported Chains
             </DropdownMenuItem>
           </Link>
           {/* href={"/blogs"} */}
           <Link href={""}>
-            <DropdownMenuItem disabled className=" cursor-pointer">
+            <DropdownMenuItem disabled className="cursor-pointer">
               Blogs
             </DropdownMenuItem>
           </Link>
