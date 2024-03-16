@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Typography } from "@/components/ui/typography";
 import {
   Select,
@@ -12,6 +12,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
 import DashboardCard from "@/components/dashboard/dashboard-card";
+
+import NetworkModal from "./networkModal";
+import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
+import { getValidToNetworks } from "@/common/utils/getters/getValidToNetworks";
+import { Network } from "@/common/types/network";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -39,9 +44,63 @@ export default function TokenMintAndBridge({
   // If user wallet isn't connected we will request to connect a wallet
 
   const { contractProvider, headerDescription, stepDescription } = params;
+  const { type, contract } = contractProvider;
 
   const [selectedChain1, setSelectedChain1] = React.useState<string>("");
   const [selectedChain2, setSelectedChain2] = React.useState<string>("");
+
+  const isValidToNetwork = (toNetwork: Network) => {
+    const validToNetworks = getValidToNetworks({
+      fromNetwork,
+      type,
+      contract,
+    }) as string[];
+
+    return validToNetworks.includes(toNetwork.name);
+  };
+  const {
+    selectedNetwork: fromNetwork,
+    onNetworkSelect: setFromNetwork,
+    searchTerm: fromSearchTerm,
+    onSearchChange: setFromSearchTerm,
+    filteredChains: fromFilteredChains,
+    networksByProvider: networksByProvider,
+    onClose: onFromClose,
+  } = useNetworkSelection(contractProvider);
+
+  const {
+    selectedNetwork: toNetwork,
+    onNetworkSelect: setToNetwork,
+    searchTerm: toSearchTerm,
+    onSearchChange: setToSearchTerm,
+    filteredChains: toFilteredChains,
+    onClose: onToClose,
+  } = useNetworkSelection(contractProvider, isValidToNetwork);
+
+  const fromBridgeProps = {
+    selectedNetwork: fromNetwork,
+    onNetworkSelect: setFromNetwork,
+    searchTerm: fromSearchTerm,
+    onSearchChange: setFromSearchTerm,
+    filteredChains: fromFilteredChains,
+    networksByProvider: networksByProvider,
+    onClose: onFromClose,
+    dialogTitle: "Select a network",
+    dialogDescription: "Select the network you want to bridge from",
+    commandHeading: "Select a network",
+  };
+
+  const toBridgeProps = {
+    selectedNetwork: toNetwork,
+    onNetworkSelect: setToNetwork,
+    searchTerm: toSearchTerm,
+    onSearchChange: setToSearchTerm,
+    filteredChains: toFilteredChains,
+    onClose: onToClose,
+    dialogTitle: "Select a network",
+    dialogDescription: "Select the network you want to bridge to",
+    commandHeading: "Select a network",
+  };
 
   function swapSelectedChain() {
     setSelectedChain1(selectedChain2);
@@ -60,6 +119,25 @@ export default function TokenMintAndBridge({
     console.log("Max button clicked");
   };
 
+  useEffect(() => {
+    // If the currently selected "To" network is not valid after the "From" network changes, reset it.
+    if (!isValidToNetwork(toNetwork)) {
+      const validNetworks = getValidToNetworks({
+        fromNetwork,
+        type,
+        contract,
+      }) as string[];
+      const defaultNetwork = networksByProvider.find((network) =>
+        validNetworks.includes(network.name),
+      );
+
+      defaultNetwork
+        ? setToNetwork(defaultNetwork as Network)
+        : setToNetwork(networksByProvider[0] as Network);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromNetwork, toNetwork, setToNetwork]);
+
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center min-h-[90vh]">
       <div className="bg-gradient my-auto md:rounded-xl md:w-8/12 lg:w-5/12 w-full items-start">
@@ -76,21 +154,7 @@ export default function TokenMintAndBridge({
             </Typography>
           </DashboardCard>
           <div className=" flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
-            <Select
-              value={selectedChain1}
-              onValueChange={(value) => {
-                setSelectedChain1(value);
-              }}
-            >
-              <SelectTrigger className="bg-white p-6 dark:bg-white dark:text-black dark:border-0">
-                <SelectValue placeholder="Select chain" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ethereum">Ethereum</SelectItem>
-                <SelectItem value="solana">Solana</SelectItem>
-                <SelectItem value="polkadot">Polkadot</SelectItem>
-              </SelectContent>
-            </Select>
+            <NetworkModal props={fromBridgeProps} />
             <div
               onClick={swapSelectedChain}
               className=" active:scale-90 transition-all ease-in-out cursor-pointer"
@@ -103,16 +167,8 @@ export default function TokenMintAndBridge({
               onValueChange={(value) => {
                 setSelectedChain2(value);
               }}
-            >
-              <SelectTrigger className="bg-white p-6 dark:bg-white dark:text-black dark:border-0">
-                <SelectValue placeholder="Select chain" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ethereum">Ethereum</SelectItem>
-                <SelectItem value="solana">Solana</SelectItem>
-                <SelectItem value="polkadot">Polkadot</SelectItem>
-              </SelectContent>
-            </Select>
+            ></Select>
+            <NetworkModal props={toBridgeProps} />
           </div>
           <Label className=" space-y-2">
             <Typography
