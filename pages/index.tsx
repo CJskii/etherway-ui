@@ -15,6 +15,7 @@ import NewsLetter from "../components/Landing/NewsLetter";
 import HeadComponent from "../common/elements/HeadComponent";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/ui/footer";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Home: NextPage = () => {
   return (

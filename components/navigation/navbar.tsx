@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ConnectWalletButton } from "../ui/connect-button";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 interface NavLinks {
   label: string;
@@ -75,6 +76,7 @@ export function Header() {
             Contact Us
           </Button>
         </Link>
+        <ConnectButton />
       </div>
       <div className="block md:hidden">
         <HeaderSheet />
