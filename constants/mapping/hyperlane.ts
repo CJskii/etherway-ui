@@ -1,4 +1,4 @@
-export const wormholeMapping = {
+export const hyperlaneMapping = {
   ethereum: [
     "BNB Smart Chain",
     "Polygon",
@@ -116,5 +116,46 @@ export const wormholeMapping = {
     "Celo",
     "Moonbeam",
     "Arbitrum One",
+  ],
+
+  Sepolia: [
+    "Goerli",
+    "Arbitrum Goerli",
+    "Optimism Goerli",
+    "Base Goerli",
+    "Linea Goerli Testnet",
+    "Binance Smart Chain Testnet",
+    // "Polygon zkEVM Testnet",
+    "Polygon Mumbai",
+    // "Mantle Testnet",
+    "Metis Goerli",
+    "Arbitrum",
+    "Optimism",
+  ],
+
+  "Polygon Mumbai": [
+    "Goerli",
+    "Sepolia",
+    "Arbitrum Goerli",
+    "Optimism Goerli",
+    "Base Goerli",
+    "Linea Goerli Testnet",
+    "Binance Smart Chain Testnet",
+    // "Polygon zkEVM Testnet",
+    // "Mantle Testnet",
+    "Metis Goerli",
+  ],
+
+  "Binance Smart Chain Testnet": [
+    "Goerli",
+    "Sepolia",
+    "Arbitrum Goerli",
+    "Optimism Goerli",
+    "Base Goerli",
+    "Linea Goerli Testnet",
+    // "Polygon zkEVM Testnet",
+    "Polygon Mumbai",
+    // "Mantle Testnet",
+    "Metis Goerli",
   ],
 };

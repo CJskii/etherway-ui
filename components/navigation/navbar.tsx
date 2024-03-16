@@ -110,7 +110,7 @@ export function NavLinks() {
             </DropdownMenuItem>
           </Link>
           <Link aria-disabled href={"/layerzero/oft-mint-bridge"}>
-            <DropdownMenuItem>ONFT & Mint Bridge</DropdownMenuItem>
+            <DropdownMenuItem>OFT & Mint Bridge</DropdownMenuItem>
           </Link>
           <Link href={"https://layerzeroscan.com/"} target="_blank">
             <DropdownMenuItem className=" cursor-pointer">

@@ -1,5 +1,5 @@
 import { layerZeroMapping } from "./mapping/layerzero";
-import { wormholeMapping } from "./mapping/wormhole";
+import { hyperlaneMapping } from "./mapping/hyperlane";
 
 type NetworkTransferMappings = {
   layerzero: {
@@ -20,7 +20,7 @@ export const networkTransferMappings: NetworkTransferMappings = {
     ONFT: layerZeroMapping,
   },
   hyperlane: {
-    ONFT: wormholeMapping,
-    OFT: wormholeMapping,
+    ONFT: hyperlaneMapping,
+    OFT: hyperlaneMapping,
   },
 };
