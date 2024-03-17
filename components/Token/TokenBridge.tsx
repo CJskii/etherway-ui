@@ -5,7 +5,7 @@ import { Network } from "../../common/types/network";
 import { useNetworkSelection } from "../../common/hooks/useNetworkSelection";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import { getValidToNetworks } from "../../common/utils/getters/getValidToNetworks";
-import { useNetwork } from "wagmi";
+// import { useNetwork } from "wagmi";
 import { activeChains } from "../../constants/config/chainsConfig";
 import NetworkModal from "../../common/elements/NetworkModal";
 
@@ -17,7 +17,7 @@ const TokenBridge = ({
     contract: any;
   };
 }) => {
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
   const { openChainModal } = useChainModal();
   const { type, contract } = contractProvider;
 

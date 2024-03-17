@@ -143,6 +143,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
 
   useEffect(() => {
     // If the currently selected "To" network is not valid after the "From" network changes, reset it.
+    // TODO: Make this a reusable hook or function
     if (!isValidToNetwork(toNetwork)) {
       const validNetworks = getValidToNetworks({
         fromNetwork,

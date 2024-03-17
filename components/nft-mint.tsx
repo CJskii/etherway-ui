@@ -27,7 +27,6 @@ export default function NFTMint({ params }: NFTMintProps) {
   const { chains, switchChain } = useSwitchChain();
   const account = useAccount();
   const chain = account?.chain;
-  console.log("chain", chain);
   const { contractProvider, stepDescription } = params;
 
   const [isLoading, setIsLoading] = useState(false);
@@ -84,27 +83,27 @@ export default function NFTMint({ params }: NFTMintProps) {
         handleErrors({ e, setErrorMessage });
       }
     }
-
-    useEffect(() => {
-      let selected = mintNetwork;
-
-      if (chain?.name) {
-        const networkObject = fromFilteredChains.find(
-          (net) => net.name === chain.name,
-        );
-        selected =
-          (networkObject as ExtendedNetwork) ||
-          (fromFilteredChains[0] as ExtendedNetwork);
-      }
-      const isReferredUser = checkIfReferredUser();
-      const { isReferred, refLink } = isReferredUser;
-      setIsInvited(isReferred);
-      setReferredBy(refLink ? refLink : "");
-      setMintNetwork(selected);
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chain?.name]);
   };
+
+  useEffect(() => {
+    let selected = mintNetwork;
+
+    if (chain?.name) {
+      const networkObject = fromFilteredChains.find(
+        (net) => net.name === chain.name,
+      );
+      selected =
+        (networkObject as ExtendedNetwork) ||
+        (fromFilteredChains[0] as ExtendedNetwork);
+    }
+    const isReferredUser = checkIfReferredUser();
+    const { isReferred, refLink } = isReferredUser;
+    setIsInvited(isReferred);
+    setReferredBy(refLink ? refLink : "");
+    setMintNetwork(selected);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chain?.name]);
 
   const networkModalProps = {
     selectedNetwork: mintNetwork,
