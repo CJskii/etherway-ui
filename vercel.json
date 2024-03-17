@@ -12,5 +12,11 @@
     "pages/api/*.ts": {
       "maxDuration": 15
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "api/cron/updateKVpoints",
+      "schedule": "0 0 * * 0"
+    }
+  ]
 }
