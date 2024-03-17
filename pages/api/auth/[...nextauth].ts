@@ -2,6 +2,7 @@
 // with added process.env.VERCEL_URL detection to support preview deployments
 // and with auth option logic extracted into a 'getAuthOptions' function so it
 // can be used to get the session server-side with 'getServerSession'
+import handleUser from "@/prisma/src/handlers/user";
 import { IncomingMessage } from "http";
 import { NextApiRequest, NextApiResponse } from "next";
 import NextAuth, { NextAuthOptions } from "next-auth";
@@ -41,6 +42,11 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           }
 
           await siwe.verify({ signature: credentials?.signature || "" });
+
+          // take this ethAddress , and then check for the user in the db
+          // Then add if the user in not in the db for the first time
+          // handled directly by the handleUser function
+          await handleUser({ ethAddress: siwe.address });
 
           return {
             id: siwe.address,
