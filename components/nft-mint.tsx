@@ -1,31 +1,19 @@
+import React, { useState, useEffect } from "react";
 import featured from "@/assets/homepage-background/featured.svg";
 import logoLight from "@/assets/light-logo.svg";
 import { Typography } from "@/components/ui/typography";
-import { SparkleIcon, Type } from "lucide-react";
-import Image from "next/image";
-import React, { useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SparkleIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
-
-import {
-  useConnectModal,
-  useAccountModal,
-  useChainModal,
-} from "@rainbow-me/rainbowkit";
-// import { useSwitchNetwork } from "wagmi";
-// import { useAccount, useNetwork } from "wagmi";
-
-import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
-
-import NetworkModal from "./networkModal";
+import Image from "next/image";
 import { Label } from "./ui/label";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useAccount, useSwitchChain } from "wagmi";
+import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
+import NetworkModal from "./networkModal";
+import { checkIfReferredUser } from "@/common/utils/validators/checkIfReferredUser";
+import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
+import { ExtendedNetwork } from "@/common/types/network";
+import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 
 interface NFTMintProps {
   params: {
@@ -36,24 +24,22 @@ interface NFTMintProps {
 
 export default function NFTMint({ params }: NFTMintProps) {
   const { openConnectModal } = useConnectModal();
-  const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
-
-  // const { switchNetwork } = useSwitchNetwork();
-
-  // const { address } = useAccount();
-  // const { chain } = useNetwork();
-
+  const { chains, switchChain } = useSwitchChain();
+  const account = useAccount();
+  const chain = account?.chain;
+  console.log("chain", chain);
   const { contractProvider, stepDescription } = params;
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [showMintModal, setShowMintModal] = useState(false);
+  const [minting, setMinting] = useState(false);
+  const [mintedNFT, setMintedNFT] = useState("");
+  const [txHash, setTxHash] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
 
-  // TODO: The idea here is that we're going to display a custom network selection modal with search bar functionality to the user
-  // The user will select the network and click on the mint button
-  // If user is on the correct network we will call mint function and send metamask popup
-  // If user isn't connected to this network we will request network change
-  // If user wallet isn't connected we will request to connect a wallet
+  // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
 
   const {
     selectedNetwork: mintNetwork,
@@ -61,22 +47,64 @@ export default function NFTMint({ params }: NFTMintProps) {
     filteredChains: fromFilteredChains,
   } = useNetworkSelection(contractProvider);
 
-  // const isConnected = address !== undefined && address !== null;
-  // const isCorrectNetwork = mintNetwork.id === (chain?.id ?? "");
+  const isConnected = account !== undefined && account !== null;
+  const isCorrectNetwork = mintNetwork.id === (account.chainId ?? "");
 
-  // const handleMintButton = async () => {
-  //   console.log("Mint button clicked");
+  const handleMintButton = async () => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+      return;
+    } else if (!isCorrectNetwork && switchChain) {
+      switchChain({ chainId: mintNetwork.id });
+      return;
+    } else {
+      try {
+        setIsLoading(true);
+        setShowMintModal(true);
+        setMinting(true);
 
-  //   if (!isConnected && openConnectModal) {
-  //     openConnectModal();
-  //     return;
-  //   } else if (!isCorrectNetwork && switchNetwork) {
-  //     switchNetwork(mintNetwork.id);
-  //     return;
-  //   } else {
-  //     await handleMinting({ mintNetwork, contractProvider });
-  //   }
-  // };
+        const result = await handleMinting({
+          mintNetwork,
+          contractProvider,
+        });
+
+        if (result) {
+          const { mintedID, txHash } = result;
+          setTxHash(txHash);
+          setMintedNFT(mintedID.toString());
+          setMinting(false);
+          setIsLoading(false);
+        } else {
+          console.error("Error while minting");
+        }
+      } catch (e) {
+        console.error(e);
+        setIsLoading(false);
+        setMinting(false);
+        handleErrors({ e, setErrorMessage });
+      }
+    }
+
+    useEffect(() => {
+      let selected = mintNetwork;
+
+      if (chain?.name) {
+        const networkObject = fromFilteredChains.find(
+          (net) => net.name === chain.name,
+        );
+        selected =
+          (networkObject as ExtendedNetwork) ||
+          (fromFilteredChains[0] as ExtendedNetwork);
+      }
+      const isReferredUser = checkIfReferredUser();
+      const { isReferred, refLink } = isReferredUser;
+      setIsInvited(isReferred);
+      setReferredBy(refLink ? refLink : "");
+      setMintNetwork(selected);
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [chain?.name]);
+  };
 
   const networkModalProps = {
     selectedNetwork: mintNetwork,
@@ -136,7 +164,7 @@ export default function NFTMint({ params }: NFTMintProps) {
 
           <Button
             className=" dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-            // onClick={handleMintButton}
+            onClick={handleMintButton}
           >
             Mint
           </Button>
