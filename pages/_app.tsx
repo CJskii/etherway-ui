@@ -3,6 +3,7 @@ import { Inter, Raleway } from "next/font/google";
 
 // import "@fontsource/ibm-plex-mono";
 import type { AppProps } from "next/app";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 // import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { wagmiConfig, theme } from "../constants/config/wagmiConfig";
@@ -37,6 +38,7 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({
 });
 
 import { activeChains } from "@/constants/config/chainsConfig";
+import Script from "next/script";
 
 export const raleway = Raleway({
   subsets: ["latin"],
@@ -66,6 +68,21 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   useReferalCode(router);
   return (
     <>
+      {/* <Script
+        strategy="lazyOnload"
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+      />
+
+      <Script strategy="lazyOnload">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
+         `}
+      </Script> */}
+      {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} /> */}
+
       {/* TODO: Remove wagmi and rainbowkit provider  */}
       {/* Figure out how to pass existing chain setup to thirdweb provider  */}
       <WagmiProvider config={wagmiConfig}>
