@@ -4,7 +4,7 @@ let cache: any = {};
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const API_URL = process.env.NEXT_PUBLIC_PRICE_API_URL;
   if (!API_URL) {

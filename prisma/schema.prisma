@@ -56,7 +56,7 @@ model Project {
   name             String
   shortDescription String
   about            String
-  moreDescription  String
+  moreDescription  String?
   difficulty       DifficultyType
   category         CategoryType
   likelihood       LikelihoodType

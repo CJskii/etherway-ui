@@ -1,42 +1,35 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../prisma/client";
+import handleUser from "@/prisma/src/handlers/user";
+import { getServerSession } from "next-auth";
+import { getAuthOptions } from "./auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== "POST") {
     return res.status(405).end();
   }
 
-  const { ethereumAddress, refLink } = req.body;
+  const { ethereumAddress, referralCode } = req.body;
+
+  if (!ethereumAddress) {
+    console.error("Missing parameters");
+    return res.status(400).json({ message: "Missing parameters" });
+  }
+
+  const session = await getServerSession(req, res, getAuthOptions(req));
+  if (!session) {
+    res.status(401).send({
+      error: "You must be signed in to interact with the API",
+    });
+  }
 
   try {
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        ethereumAddress: {
-          equals: ethereumAddress,
-          mode: "insensitive",
-        },
-      },
-    });
-
-    if (existingUser) {
-      console.error("User already exists");
-      return res
-        .status(200)
-        .json({ status: "exists", message: "User already exists" });
-    }
-
-    const referrer = await isValidRefLink(refLink);
-
-    // Create the new user with the referral link
-    const newUser = await prisma.user.create({
-      data: {
-        ethereumAddress,
-        inviteLink: generateInviteLink(),
-        invitedById: referrer ? referrer.ethereumAddress : null, // Set the referrer's ethereumAddress as invitedById
-      },
+    const newUser = await handleUser({
+      ethAddress: ethereumAddress,
+      inviteCode: referralCode,
     });
     console.log(`New user created`);
     return res.status(201).json(newUser); // 201 means Created
@@ -48,22 +41,22 @@ export default async function handler(
   }
 }
 
-function generateInviteLink(): string {
-  const referralCodes = require("referral-codes");
-  const code = referralCodes.generate({
-    length: 10,
-    count: 1,
-  });
-  return code[0];
-}
+// function generateInviteLink(): string {
+//   const referralCodes = require("referral-codes");
+//   const code = referralCodes.generate({
+//     length: 10,
+//     count: 1,
+//   });
+//   return code[0];
+// }
 
-async function isValidRefLink(refLink: string | null) {
-  if (refLink != null) {
-    const referrer = await prisma.user.findUnique({
-      where: { inviteLink: refLink },
-    });
-    return referrer ? referrer : null;
-  } else {
-    return null;
-  }
-}
+// async function isValidRefLink(refLink: string | null) {
+//   if (refLink != null) {
+//     const referrer = await prisma.user.findUnique({
+//       where: { inviteLink: refLink },
+//     });
+//     return referrer ? referrer : null;
+//   } else {
+//     return null;
+//   }
+// }

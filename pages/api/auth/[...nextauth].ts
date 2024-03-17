@@ -41,6 +41,7 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           }
 
           await siwe.verify({ signature: credentials?.signature || "" });
+
           return {
             id: siwe.address,
           };
