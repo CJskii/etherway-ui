@@ -48,7 +48,7 @@ type NetworkParams = {
   };
 };
 
-type DeployedContracts = {
+export type DeployedContracts = {
   layerzero: {
     [key: string]: {
       address: string;
