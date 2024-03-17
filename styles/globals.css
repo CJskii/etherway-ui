@@ -31,7 +31,8 @@
 }
 
 @layer base {
-  html {}
+  html {
+  }
 }
 
 .text-gradient {
@@ -56,6 +57,16 @@
 
 .airdrop-layout {
   @apply flex flex-col gap-6 md:flex-row md:gap-10 md:[&>*:first-child]:w-2/3 relative md:py-6;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  color: aqua;
 }
 
 /* 
