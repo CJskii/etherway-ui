@@ -8,11 +8,11 @@ import { Card } from "../ui/card";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 const ongoingChains = [
-  {
-    title: "Wormhole",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-    background: wormhole,
-  },
+  // {
+  //   title: "Wormhole",
+  //   description: "Lorem ipsum dolor sit amet consectetur.",
+  //   background: wormhole,
+  // },
   {
     title: "Polygon zkEVM",
     description: "Lorem ipsum dolor sit amet consectetur.",
@@ -23,11 +23,11 @@ const ongoingChains = [
     description: "Lorem ipsum dolor sit amet consectetur.",
     background: base,
   },
-  {
-    title: "Wormhole",
-    description: "Lorem ipsum dolor sit amet consectetur.",
-    background: wormhole,
-  },
+  // {
+  //   title: "Wormhole",
+  //   description: "Lorem ipsum dolor sit amet consectetur.",
+  //   background: wormhole,
+  // },
 ];
 
 export default function OnboardSection() {
@@ -54,7 +54,7 @@ export default function OnboardSection() {
         </div>
         <div>
           <div className="px-6 py-2">
-            <Typography variant={"large"}>Ongoing Chains</Typography>
+            <Typography variant={"large"}>Active & upcoming</Typography>
           </div>
           <div className="flex w-full max-w-[300px] grid-cols-6 flex-nowrap gap-4 overflow-x-auto md:grid md:max-w-2xl">
             {ongoingChains.map((chain, idx) => (
@@ -87,7 +87,8 @@ export default function OnboardSection() {
         </div>
       </div>
       <div className="">
-        <Image src={mintly} alt="mintly" className=" ml-auto md:w-10/12" />
+        {/* TODO: replace with etherway image */}
+        <Image src={mintly} alt="etherway" className=" ml-auto md:w-10/12" />
       </div>
     </div>
   );

@@ -18,12 +18,12 @@ export function HeaderSheet() {
         <div className="mb-6">
           <Image
             src={logoBlack}
-            alt="mintly logo"
+            alt="etherway logo"
             className="block w-40 dark:hidden"
           />
           <Image
             src={logoWhite}
-            alt="mintly logo"
+            alt="etherway logo"
             className="hidden w-40 dark:block"
           />
         </div>

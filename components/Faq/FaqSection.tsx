@@ -16,7 +16,7 @@ const FaqSection = () => {
             FAQ
           </h2>
           <p className="max-w-xl mx-auto mt-4 text-base leading-relaxed text-gray-300">
-            Explore the common questions and answers about Mintly
+            Explore the common questions and answers about Etherway
           </p>
         </div>
 

@@ -6,8 +6,8 @@ const OFT = () => {
   return (
     <Layout>
       <HeadComponent
-        title="Mintly: OFT Bridge - Bridge Your OFT Tokens Across Multiple Chains"
-        description="Mintly's OFT Bridge: Where seamless OFT bridging meets LayerZero's interoperability. Start bridging your OFT tokens across multiple chains effortlessly."
+        title="Etherway: OFT Bridge - Bridge Your OFT Tokens Across Multiple Chains"
+        description="Etherway's OFT Bridge: Where seamless OFT bridging meets LayerZero's interoperability. Start bridging your OFT tokens across multiple chains effortlessly."
       />
       <TokenBridge contractProvider={{ type: "hyperlane", contract: "OFT" }} />
     </Layout>
