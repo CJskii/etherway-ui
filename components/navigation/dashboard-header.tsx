@@ -29,12 +29,12 @@ export function DashboardHeader({ showLogo }: DashboardHeaderProps) {
           <div>
             <Image
               src={logoBlack}
-              alt="mintly logo"
+              alt="etherway logo"
               className="block w-40 dark:hidden"
             />
             <Image
               src={logoWhite}
-              alt="mintly logo"
+              alt="etherway logo"
               className="hidden w-40 dark:block"
             />
           </div>

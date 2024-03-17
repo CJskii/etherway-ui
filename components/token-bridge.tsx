@@ -1,12 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@/components/ui/typography";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -17,6 +10,14 @@ import NetworkModal from "./networkModal";
 import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
 import { getValidToNetworks } from "@/common/utils/getters/getValidToNetworks";
 import { Network } from "@/common/types/network";
+
+import { useAccount, useSwitchChain } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
+import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
+import { handleBridging } from "@/common/utils/interaction/handlers/handleBridging";
+import { getUserBalance } from "@/common/utils/getters/getBalance";
+import { activeChains } from "@/constants/config/chainsConfig";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -45,9 +46,19 @@ export default function TokenMintAndBridge({
 
   const { contractProvider, headerDescription, stepDescription } = params;
   const { type, contract } = contractProvider;
+  const { openConnectModal } = useConnectModal();
+  const { chains, switchChain } = useSwitchChain();
+  const account = useAccount();
 
-  const [selectedChain1, setSelectedChain1] = React.useState<string>("");
-  const [selectedChain2, setSelectedChain2] = React.useState<string>("");
+  const [mintAmount, setMintAmount] = useState("");
+  const [bridgeAmount, setBridgeAmount] = useState("");
+  const [showMintModal, setShowMintModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [txHash, setTxHash] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [userBalance, setUserBalance] = useState(0);
+  const [showBridgingModal, setShowBridgingModal] = useState(false);
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -102,39 +113,141 @@ export default function TokenMintAndBridge({
     commandHeading: "Select a network",
   };
 
-  function swapSelectedChain() {
-    setSelectedChain1(selectedChain2);
-    setSelectedChain2(selectedChain1);
-  }
+  const isConnected = account !== undefined && account !== null;
+  const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
 
-  const handleMintButton = () => {
-    console.log("Mint button clicked");
+  const handleMintButton = async () => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+      return;
+    } else if (!isCorrectNetwork && switchChain) {
+      switchChain({ chainId: fromNetwork.id });
+      return;
+    } else {
+      try {
+        setIsLoading(true);
+        setShowMintModal(true);
+        // setIsMinting(true);
+
+        // TODO: handleMinting function should be implemented for the ERC20 tokens
+        const result = await handleMinting({
+          mintNetwork: fromNetwork,
+          contractProvider,
+          // mintQuantity: mintAmount as any,
+        });
+
+        if (!result) {
+          throw new Error("Failed to mint NFT");
+        }
+
+        const { mintedID, txHash } = result;
+        const newBalance = userBalance > 0 ? userBalance + mintedID : mintedID;
+
+        setTxHash(txHash);
+        setUserBalance(Number(newBalance));
+        // setIsMinting(false);
+        setIsLoading(false);
+      } catch (e) {
+        console.error(e);
+        handleErrors({ e, setErrorMessage });
+        setShowMintModal(true);
+        // setIsMinting(false);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
-  const handleBridgeButton = () => {
+  const handleBridgeButton = async () => {
     console.log("Bridge button clicked");
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+      return;
+    } else if (!isCorrectNetwork && switchChain) {
+      switchChain({ chainId: fromNetwork.id });
+      return;
+    } else {
+      console.log(
+        `Bridging ${bridgeAmount} MIN on ${fromNetwork.name} network...`,
+      );
+
+      try {
+        setIsLoading(true);
+        setShowBridgingModal(true);
+        // setIsBridging(true);
+        if (Number(bridgeAmount) > userBalance)
+          throw new Error("insufficient OFT balance for transfer");
+
+        // TODO: handleBridging function should be implemented for the ERC20 tokens
+        const result = await handleBridging({
+          TOKEN_ID: bridgeAmount,
+          fromNetwork,
+          toNetwork,
+          contractProvider,
+          address: account.address ? account.address : "",
+        });
+
+        if (!result) {
+          throw new Error("Failed to mint NFT");
+        }
+
+        const { hash } = result;
+        const newBalance = userBalance - Number(bridgeAmount);
+
+        setTxHash(hash);
+        setUserBalance(newBalance > 0 ? newBalance : 0);
+        // setIsBridging(false);
+        setIsLoading(false);
+      } catch (e) {
+        console.error(e);
+        handleErrors({ e, setErrorMessage });
+        setShowBridgingModal(true);
+        // setIsBridging(false);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
-  const handleMaxButton = () => {
-    console.log("Max button clicked");
+  const handleSwapButton = () => {
+    const temp = fromNetwork;
+    setFromNetwork(toNetwork);
+    setToNetwork(temp);
   };
 
   useEffect(() => {
+    const getBalance = async () => {
+      if (isPageLoaded && fromNetwork.name == account.chain?.name) {
+        getUserBalance({
+          fromNetwork,
+          account,
+          type,
+          contract,
+          setUserBalance,
+        });
+      }
+    };
+    getBalance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPageLoaded, fromNetwork, toNetwork, setToNetwork]);
+
+  useEffect(() => {
     // If the currently selected "To" network is not valid after the "From" network changes, reset it.
+    // TODO: Make this a reusable hook or function
     if (!isValidToNetwork(toNetwork)) {
       const validNetworks = getValidToNetworks({
         fromNetwork,
         type,
         contract,
       }) as string[];
-      const defaultNetwork = networksByProvider.find((network) =>
-        validNetworks.includes(network.name),
+      const defaultNetwork = activeChains.find(
+        (chain) => chain.name === validNetworks[0],
       );
-
       defaultNetwork
         ? setToNetwork(defaultNetwork as Network)
-        : setToNetwork(networksByProvider[0] as Network);
+        : setToNetwork(activeChains[0] as Network);
     }
+    setIsPageLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromNetwork, toNetwork, setToNetwork]);
 
@@ -153,23 +266,21 @@ export default function TokenMintAndBridge({
               Your Balance: 0
             </Typography>
           </DashboardCard>
-          <div className=" flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
-            <NetworkModal props={fromBridgeProps} />
-            <div
-              onClick={swapSelectedChain}
-              className=" active:scale-90 transition-all ease-in-out cursor-pointer"
-            >
-              <ArrowUpDown className="md:hidden block md:h-12 md:w-12" />
-              <ArrowLeftRight className="hidden md:block md:h-12 md:w-12" />
+
+          <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
+            <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
+              <NetworkModal props={fromBridgeProps} />
+              <div
+                onClick={handleSwapButton}
+                className="flex justify-center items-center justify-self-center self-center active:scale-90 transition-all ease-in-out cursor-pointer w-12 h-12"
+              >
+                <ArrowUpDown className="md:hidden block md:h-12 md:w-12" />
+                <ArrowLeftRight className="hidden md:block md:h-12 md:w-12" />
+              </div>
+              <NetworkModal props={toBridgeProps} />
             </div>
-            <Select
-              value={selectedChain2}
-              onValueChange={(value) => {
-                setSelectedChain2(value);
-              }}
-            ></Select>
-            <NetworkModal props={toBridgeProps} />
           </div>
+
           <Label className=" space-y-2">
             <Typography
               variant={"smallTitle"}
@@ -181,6 +292,8 @@ export default function TokenMintAndBridge({
               <Input
                 placeholder="Enter amount to mint"
                 className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
+                onChange={(e) => setMintAmount(e.target.value)}
+                type="number"
               />
               <Button
                 size={"sm"}
@@ -202,11 +315,12 @@ export default function TokenMintAndBridge({
               <Input
                 placeholder="Enter amount to bridge"
                 className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
+                onChange={(e) => setBridgeAmount(e.target.value)}
               />
               <Button
                 size={"sm"}
                 className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                onClick={handleMaxButton}
+                onClick={() => setBridgeAmount(userBalance.toString())}
               >
                 Max
               </Button>

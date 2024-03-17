@@ -13,8 +13,8 @@ const buttonVariants = cva(
           "rounded-2xl bg-[#D0A2F7] tracking-wide text-black hover:bg-[#D0A2F7]/90 dark:bg-[#D0A2F7] dark:text-black dark:hover:bg-[#D0A2F7]/90",
         navbar:
           "rounded-xl bg-[#E8E8E8] tracking-wide text-black hover:bg-[#E8E8E8]/90 dark:bg-[#3A3A3A] dark:text-white dark:hover:bg-[#3A3A3A]/90",
-        mintly: "bg-primary text-neutral-900 rounded-xl hover:bg-primary/90",
-        mintlySecondary:
+        etherway: "bg-primary text-neutral-900 rounded-xl hover:bg-primary/90",
+        etherwaySecondary:
           "dark:bg-black/10 bg-white/20 text-white dark:text-neutral-900 rounded-xl dark:hover:bg-black/20 hover:bg-white/30",
         dashboardFooter:
           "bg-[#00000021] hover:bg-[#00000016] dark:bg-[#FFFFFF21] dark:hover:bg-[#FFFFFF16] w-full rounded-xl",
@@ -42,7 +42,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 export interface ButtonProps
@@ -61,7 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       />
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

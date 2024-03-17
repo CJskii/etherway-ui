@@ -39,7 +39,7 @@ import linea from "/assets/chains/linea.png";
 import base from "/assets/chains/base.png";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 interface ChainDetailCardProps {
   name: string;
@@ -231,8 +231,8 @@ const Chains = () => {
   return (
     <>
       <HeadComponent
-        title="Mintly: Supported Chains - Discover the Wide Range of Blockchain Networks Supported by Mintly."
-        description="Discover the wide range of blockchain networks supported by Mintly, designed for seamless cross-chain interoperability. Dive into the details of each chain, understanding their unique offerings and native currencies for smarter cross-chain interactions."
+        title="Etherway: Supported Chains - Discover the Wide Range of Blockchain Networks Supported by Etherway."
+        description="Discover the wide range of blockchain networks supported by Etherway, designed for seamless cross-chain interoperability. Dive into the details of each chain, understanding their unique offerings and native currencies for smarter cross-chain interactions."
       />
       <Layout
         className="py-24 md:w-11/12 mx-auto min-h-[90vh] "
@@ -250,8 +250,32 @@ const Chains = () => {
                 className=" md:max-w-xl text-lg"
               >
                 Explore the wide range of blockchain networks supported by
-                Mintly, designed for seamless cross-chain interoperability.
+                Etherway, designed for seamless cross-chain interoperability.
               </Typography>
+              {/* TODO: Add the button Link to minting */}
+              <div className="flex gap-2">
+                <Button
+                  variant={"etherway"}
+                  className="md:w-32"
+                  // href={"/dashboard"}
+                >
+                  LayerZero
+                </Button>
+                <Button
+                  variant={"etherway"}
+                  className="md:w-32"
+                  // href={"/dashboard"}
+                >
+                  Hyperlane
+                </Button>
+                {/* <Button
+                  variant={"etherway"}
+                  className="md:w-32"
+                  // href={"/dashboard"}
+                >
+                  Polyhedra
+                </Button> */}
+              </div>
             </div>
             <div className=" relative">
               <Image src={ellipseCurved} alt="ellipseCurved" />
@@ -282,7 +306,7 @@ const Chains = () => {
             Supported Chains
           </h2>
           <p className="section-description">
-            Explore the wide range of blockchain networks supported by Mintly,
+            Explore the wide range of blockchain networks supported by Etherway,
             designed for seamless cross-chain interoperability.
           </p>
           <p className="count-description">

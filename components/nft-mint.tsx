@@ -1,30 +1,19 @@
+import React, { useState, useEffect } from "react";
 import featured from "@/assets/homepage-background/featured.svg";
 import logoLight from "@/assets/light-logo.svg";
 import { Typography } from "@/components/ui/typography";
 import { SparkleIcon } from "lucide-react";
-import Image from "next/image";
-import React, { useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { Label } from "./ui/label";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { useAccount, useSwitchChain } from "wagmi";
 import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
-
-import {
-  useConnectModal,
-  useAccountModal,
-  useChainModal,
-} from "@rainbow-me/rainbowkit";
-import { useSwitchNetwork } from "wagmi";
-import { useAccount, useNetwork } from "wagmi";
-
-import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
-
 import NetworkModal from "./networkModal";
+import { checkIfReferredUser } from "@/common/utils/validators/checkIfReferredUser";
+import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
+import { ExtendedNetwork } from "@/common/types/network";
+import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 
 interface NFTMintProps {
   params: {
@@ -35,50 +24,86 @@ interface NFTMintProps {
 
 export default function NFTMint({ params }: NFTMintProps) {
   const { openConnectModal } = useConnectModal();
-  const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
-
-  const { switchNetwork } = useSwitchNetwork();
-
-  const { address } = useAccount();
-  const { chain } = useNetwork();
-
+  const { chains, switchChain } = useSwitchChain();
+  const account = useAccount();
+  const chain = account?.chain;
   const { contractProvider, stepDescription } = params;
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [showMintModal, setShowMintModal] = useState(false);
+  const [minting, setMinting] = useState(false);
+  const [mintedNFT, setMintedNFT] = useState("");
+  const [txHash, setTxHash] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
 
-  // TODO: The idea here is that we're going to display a custom network selection modal with search bar functionality to the user
-  // The user will select the network and click on the mint button
-  // If user is on the correct network we will call mint function and send metamask popup
-  // If user isn't connected to this network we will request network change
-  // If user wallet isn't connected we will request to connect a wallet
+  // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
 
   const {
     selectedNetwork: mintNetwork,
     onNetworkSelect: setMintNetwork,
-    searchTerm: fromSearchTerm,
-    onSearchChange: setFromSearchTerm,
     filteredChains: fromFilteredChains,
-    onClose: onFromClose,
   } = useNetworkSelection(contractProvider);
 
-  const isConnected = address !== undefined && address !== null;
-  const isCorrectNetwork = mintNetwork.id === (chain?.id ?? "");
+  const isConnected = account !== undefined && account !== null;
+  const isCorrectNetwork = mintNetwork.id === (account.chainId ?? "");
 
   const handleMintButton = async () => {
-    console.log("Mint button clicked");
-
     if (!isConnected && openConnectModal) {
       openConnectModal();
       return;
-    } else if (!isCorrectNetwork && switchNetwork) {
-      switchNetwork(mintNetwork.id);
+    } else if (!isCorrectNetwork && switchChain) {
+      switchChain({ chainId: mintNetwork.id });
       return;
     } else {
-      await handleMinting({ mintNetwork, contractProvider });
+      try {
+        setIsLoading(true);
+        setShowMintModal(true);
+        setMinting(true);
+
+        const result = await handleMinting({
+          mintNetwork,
+          contractProvider,
+        });
+
+        if (result) {
+          const { mintedID, txHash } = result;
+          setTxHash(txHash);
+          setMintedNFT(mintedID.toString());
+          setMinting(false);
+          setIsLoading(false);
+        } else {
+          console.error("Error while minting");
+        }
+      } catch (e) {
+        console.error(e);
+        setIsLoading(false);
+        setMinting(false);
+        handleErrors({ e, setErrorMessage });
+      }
     }
   };
+
+  useEffect(() => {
+    let selected = mintNetwork;
+
+    if (chain?.name) {
+      const networkObject = fromFilteredChains.find(
+        (net) => net.name === chain.name,
+      );
+      selected =
+        (networkObject as ExtendedNetwork) ||
+        (fromFilteredChains[0] as ExtendedNetwork);
+    }
+    const isReferredUser = checkIfReferredUser();
+    const { isReferred, refLink } = isReferredUser;
+    setIsInvited(isReferred);
+    setReferredBy(refLink ? refLink : "");
+    setMintNetwork(selected);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chain?.name]);
 
   const networkModalProps = {
     selectedNetwork: mintNetwork,
@@ -95,7 +120,7 @@ export default function NFTMint({ params }: NFTMintProps) {
       <div className="bg-gradient my-auto grid grid-cols-12 rounded-xl md:w-9/12 items-start">
         <div className="col-span-full md:col-span-5 relative flex items-start justify-start">
           <div className=" md:rounded-tl-xl absolute top-0 w-full py-2 px-5 bg-gradient-to-t from-black/0 via-black/50 to-black flex items-center flex-wrap gap-y-4 gap-x-6">
-            <Image src={logoLight} alt="mintly logo" className="w-40" />
+            <Image src={logoLight} alt="etherway logo" className="w-40" />
           </div>
           <Image
             src={featured}
@@ -123,21 +148,19 @@ export default function NFTMint({ params }: NFTMintProps) {
             </div>
           </div>
         </div>
-        <div className="col-span-full md:col-span-7 px-8 py-10 md:p-14 space-y-6 flex flex-col">
+        <div className="col-span-full h-full md:col-span-7 px-8 py-10 md:p-14 space-y-6 flex flex-col justify-between">
           <Typography variant={"h3"} className=" dark:text-black">
             Step 1 : {stepDescription}
           </Typography>
-          <NetworkModal props={networkModalProps} />
-          {/* <Select>
-            <SelectTrigger className="bg-white p-6 dark:bg-white dark:text-black dark:border-0">
-              <SelectValue placeholder="Select chain" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ethereum">Ethereum</SelectItem>
-              <SelectItem value="solana">Solana</SelectItem>
-              <SelectItem value="polkadot">Polkadot</SelectItem>
-            </SelectContent>
-          </Select> */}
+          <div className="flex flex-col">
+            <Label className="py-2 w-full">
+              <Typography variant={"large"} className="dark:text-black">
+                Network
+              </Typography>
+            </Label>
+            <NetworkModal props={networkModalProps} />
+          </div>
+
           <Button
             className=" dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
             onClick={handleMintButton}

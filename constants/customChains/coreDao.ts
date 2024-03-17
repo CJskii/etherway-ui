@@ -3,7 +3,7 @@ import { Chain } from "@rainbow-me/rainbowkit";
 export const coreDao: Chain = {
   id: 1116,
   name: "Core Dao",
-  network: "coreDao",
+  // network: "coreDao",
   iconUrl: "/chain-icons/coredao.svg",
   iconBackground: "#000000",
   nativeCurrency: {

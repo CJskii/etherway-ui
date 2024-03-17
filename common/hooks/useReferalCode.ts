@@ -5,7 +5,7 @@ const useReferalCode = (router: NextRouter) => {
     const referralCode = router.query.invite;
     if (referralCode) {
       try {
-        localStorage.setItem("Mintly_referralCode", referralCode as string);
+        localStorage.setItem("Etherway_referralCode", referralCode as string);
       } catch (e) {
         console.error("Could not set referral code:", e);
       }

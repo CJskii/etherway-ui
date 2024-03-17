@@ -5,7 +5,7 @@ export type RpcUrls = {
 
 export interface Network {
   id: number;
-  network: string;
+  network?: string;
   name: string;
   nativeCurrency: {
     name: string;
@@ -15,7 +15,6 @@ export interface Network {
   rpcUrls: {
     [key: string]: RpcUrls;
     default: RpcUrls;
-    public: RpcUrls;
   };
   iconUrl?: string;
   blockExplorers?: any;
@@ -49,7 +48,7 @@ type NetworkParams = {
   };
 };
 
-type DeployedContracts = {
+export type DeployedContracts = {
   layerzero: {
     [key: string]: {
       address: string;

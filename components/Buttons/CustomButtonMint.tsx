@@ -1,6 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
-import { useNetwork, useAccount } from "wagmi";
+// import { useNetwork, useAccount } from "wagmi";
 import { handleErrors } from "../../common/utils/interaction/handlers/handleErrors";
 import { handleMinting } from "../../common/utils/interaction/handlers/handleMinting";
 import handleInteraction from "../../common/utils/interaction/handlers/handleInteraction";
@@ -32,21 +32,21 @@ export const CustomButtonMint = (props: MintButtonProps) => {
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { chain } = useNetwork();
-  const { address } = useAccount();
+  // const { chain } = useNetwork();
+  // const { address } = useAccount();
   const { setLastMintId, mintNetwork, isInvited, referredBy } = props;
 
-  useEffect(() => {
-    if (mintNetwork.name.toLowerCase() !== chain?.name.toLowerCase()) {
-      setWrongNetwork(true);
-    } else {
-      setWrongNetwork(false);
-    }
-  }, [chain, mintNetwork]);
+  // useEffect(() => {
+  //   if (mintNetwork.name.toLowerCase() !== chain?.name.toLowerCase()) {
+  //     setWrongNetwork(true);
+  //   } else {
+  //     setWrongNetwork(false);
+  //   }
+  // }, [chain, mintNetwork]);
 
   const handleMint = async () => {
-    if (mintNetwork.name.toLowerCase() !== chain?.name.toLowerCase())
-      return alert("Please change network in your wallet\n\n:)");
+    // if (mintNetwork.name.toLowerCase() !== chain?.name.toLowerCase())
+    //   return alert("Please change network in your wallet\n\n:)");
 
     console.log(`Minting NFT on ${mintNetwork.name} network...`);
 
@@ -73,14 +73,14 @@ export const CustomButtonMint = (props: MintButtonProps) => {
 
       console.log(`ONFT nftId: ${mintedID.toString()}`);
 
-      if (address) {
-        await handleInteraction({
-          address,
-          isInvited,
-          referredBy,
-          operation: "new_mint",
-        });
-      }
+      // if (address) {
+      //   await handleInteraction({
+      //     address,
+      //     isInvited,
+      //     referredBy,
+      //     operation: "new_mint",
+      //   });
+      // }
 
       setTxHash(txHash);
     } catch (e) {

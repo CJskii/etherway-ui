@@ -21,7 +21,7 @@ export default function Featured() {
         <div className="bg-gradient my-auto grid grid-cols-12 rounded-xl md:w-9/12 items-start">
           <div className="col-span-full md:col-span-5 relative flex items-start justify-start">
             <div className=" md:rounded-tl-xl absolute top-0 w-full py-2 px-5 bg-gradient-to-t from-black/0 via-black/50 to-black flex items-center flex-wrap gap-y-4 gap-x-6">
-              <Image src={logoLight} alt="mintly logo" className="w-40" />
+              <Image src={logoLight} alt="etherway logo" className="w-40" />
             </div>
             <Image
               src={featured}

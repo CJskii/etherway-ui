@@ -11,12 +11,12 @@ const features = [
   {
     title: "Multi-Network Support",
     description:
-      "Mintly offers a wide variety of chains for interaction, including not only the main chains but also those you may have overlooked.",
+      "Etherway offers a wide variety of chains for interaction, including not only the main chains but also those you may have overlooked.",
   },
   {
     title: "Instant Transfer",
     description:
-      "No more waiting around for confirmations or experiencing frustrating delays. Mintly leverages cutting-edge technology and innovative solutions to provide users with seamless experiences across various chains.",
+      "No more waiting around for confirmations or experiencing frustrating delays. Etherway leverages cutting-edge technology and innovative solutions to provide users with seamless experiences across various chains.",
   },
   {
     title: "Leaderboard",

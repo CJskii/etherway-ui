@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNetwork, useAccount } from "wagmi";
+// import { useNetwork, useAccount } from "wagmi";
 import { handleBridging } from "../../common/utils/interaction/handlers/handleBridging";
 import { handleErrors } from "../../common/utils/interaction/handlers/handleErrors";
 import handleInteraction from "../../common/utils/interaction/handlers/handleInteraction";
@@ -57,8 +57,8 @@ type ExtendedNetwork = Network & {
 
 const Bridging = (props: BridgeProps) => {
   let { passedNftId, contractProvider, stepDescription } = props;
-  const { chain } = useNetwork();
-  const { address } = useAccount();
+  // const { chain } = useNetwork();
+  // const { address } = useAccount();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { type, contract } = contractProvider;
@@ -114,7 +114,7 @@ const Bridging = (props: BridgeProps) => {
         ? setToNetwork(defaultNetwork as Network)
         : setToNetwork(networksByProvider[0] as Network);
     }
-    checkNetwork();
+    // checkNetwork();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromNetwork, toNetwork, setToNetwork]);
 
@@ -122,13 +122,13 @@ const Bridging = (props: BridgeProps) => {
     passedNftId ? setNftId(passedNftId) : setNftId("");
   }, [passedNftId]);
 
-  const checkNetwork = () => {
-    if (chain?.name == fromNetwork.name) {
-      setWrongNetwork(false);
-    } else {
-      setWrongNetwork(true);
-    }
-  };
+  // const checkNetwork = () => {
+  //   if (chain?.name == fromNetwork.name) {
+  //     setWrongNetwork(false);
+  //   } else {
+  //     setWrongNetwork(true);
+  //   }
+  // };
 
   const handleBridge = async () => {
     const TOKEN_ID = nftId;
@@ -144,15 +144,15 @@ const Bridging = (props: BridgeProps) => {
         `Sending NFT #${TOKEN_ID} from ${fromNetwork.name} to ${toNetwork.name}`,
       );
 
-      const result = await handleBridging({
-        TOKEN_ID,
-        fromNetwork,
-        toNetwork,
-        contractProvider,
-        address: address ? address : "",
-      });
+      // const result = await handleBridging({
+      //   TOKEN_ID,
+      //   fromNetwork,
+      //   toNetwork,
+      //   contractProvider,
+      //   address: address ? address : "",
+      // });
 
-      const txHash = result ? result.hash : "";
+      // const txHash = result ? result.hash : "";
 
       setNftId("");
       setIsLoading(false);

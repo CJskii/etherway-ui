@@ -27,7 +27,8 @@ export default function HeroSection() {
           on One Platform
         </Typography>
         <div className=" flex items-center gap-3">
-          <Button variant={"mintly"}>Launch Airdrop</Button>
+          {/* <Button variant={"etherway"}>Launch Airdrop</Button> */}
+          <Button variant={"etherway"}>How to start</Button>
           <Button variant={"ghost"} className="md:w-32">
             Explore Chains <ChevronRightIcon />
           </Button>

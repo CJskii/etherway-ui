@@ -55,12 +55,12 @@ export function Header() {
         <div className="hidden md:block">
           <Image
             src={logoDark}
-            alt="mintly logo"
+            alt="etherway logo"
             className="block w-40 dark:hidden"
           />
           <Image
             src={logoLight}
-            alt="mintly logo"
+            alt="etherway logo"
             className="hidden w-40 dark:block"
           />
         </div>
@@ -92,7 +92,7 @@ export function NavLinks() {
         href={"/dashboard"}
         className={cn(buttonVariants({ variant: "navbar" }))}
       >
-        Airdrop
+        Airdrop Marketplace
       </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full">

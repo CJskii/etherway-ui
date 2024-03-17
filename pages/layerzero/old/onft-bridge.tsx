@@ -17,8 +17,8 @@ const ONFTBridge = () => {
   return (
     <Layout>
       <HeadComponent
-        title="Mintly: ONFT Bridge - Seamlessly Bridge Your Omnichain Non-Fungible Tokens (ONFTs) with Mintly's Advanced ONFT Bridge"
-        description="Seamlessly bridge your Omnichain Non-Fungible Tokens (ONFTs) with Mintly's advanced ONFT Bridge. Experience the ease of cross-chain transfers, enhancing your digital asset's interoperability through LayerZero."
+        title="Etherway: ONFT Bridge - Seamlessly Bridge Your Omnichain Non-Fungible Tokens (ONFTs) with Etherway's Advanced ONFT Bridge"
+        description="Seamlessly bridge your Omnichain Non-Fungible Tokens (ONFTs) with Etherway's advanced ONFT Bridge. Experience the ease of cross-chain transfers, enhancing your digital asset's interoperability through LayerZero."
       />
       <Bridging
         passedNftId={nftId}

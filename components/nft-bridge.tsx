@@ -1,14 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
 import { Network } from "@/common/types/network";
 import { getValidToNetworks } from "@/common/utils/getters/getValidToNetworks";
+import { handleBridging } from "@/common/utils/interaction/handlers/handleBridging";
 
 import NetworkModal from "./networkModal";
+import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
+
+import { useAccount, useSwitchChain } from "wagmi";
 
 interface NFTBridgeProps {
   params: {
@@ -31,6 +36,16 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
 
   const { contractProvider, stepDescription } = params;
   const { type, contract } = contractProvider;
+  const { openConnectModal } = useConnectModal();
+  const { chains, switchChain } = useSwitchChain();
+  const account = useAccount();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [nftId, setNftId] = useState("");
+  const [showBridgingModal, setShowBridgingModal] = useState(false);
+  // const [wrongNetwork, setWrongNetwork] = useState(false);
+  const [txHash, setTxHash] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -61,8 +76,44 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
     onClose: onToClose,
   } = useNetworkSelection(contractProvider, isValidToNetwork);
 
-  const handleBridgeButton = () => {
-    console.log("Bridge button clicked");
+  const isConnected = account !== undefined && account !== null;
+  const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
+
+  const handleBridgeButton = async () => {
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+      return;
+    } else if (!isCorrectNetwork && switchChain) {
+      switchChain({ chainId: fromNetwork.id });
+      return;
+    } else {
+      const TOKEN_ID = nftId;
+      try {
+        setIsLoading(true);
+        setShowBridgingModal(true);
+        console.log(
+          `Sending NFT #${TOKEN_ID} from ${fromNetwork.name} to ${toNetwork.name}`,
+        );
+
+        const result = await handleBridging({
+          TOKEN_ID,
+          fromNetwork,
+          toNetwork,
+          contractProvider,
+          address: account.address ? account.address : "",
+        });
+
+        const txHash = result ? result.hash : "";
+
+        setNftId("");
+        setIsLoading(false);
+        setTxHash(txHash);
+      } catch (e) {
+        console.error(e);
+        setIsLoading(false);
+        handleErrors({ e, setErrorMessage });
+      }
+    }
   };
 
   const fromBridgeProps = {
@@ -92,6 +143,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
 
   useEffect(() => {
     // If the currently selected "To" network is not valid after the "From" network changes, reset it.
+    // TODO: Make this a reusable hook or function
     if (!isValidToNetwork(toNetwork)) {
       const validNetworks = getValidToNetworks({
         fromNetwork,
@@ -117,21 +169,24 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
             Step 2 : {stepDescription}
           </Typography>
 
-          <Label className=" space-y-2">
-            <Typography variant={"large"} className="dark:text-black">
-              Bridge From
-            </Typography>
-          </Label>
+          <div className="flex flex-col">
+            <Label className=" space-y-2">
+              <Typography variant={"large"} className="dark:text-black">
+                Bridge From
+              </Typography>
+            </Label>
 
-          <NetworkModal props={fromBridgeProps} />
+            <NetworkModal props={fromBridgeProps} />
+          </div>
 
-          <Label className=" space-y-2 w-full ">
-            <Typography variant={"large"} className="dark:text-black">
-              Bridge To
-            </Typography>
-          </Label>
-
-          <NetworkModal props={toBridgeProps} />
+          <div className="flex flex-col">
+            <Label className=" space-y-2 w-full ">
+              <Typography variant={"large"} className="dark:text-black">
+                Bridge To
+              </Typography>
+            </Label>
+            <NetworkModal props={toBridgeProps} />
+          </div>
 
           <Label className=" space-y-2">
             <Typography variant={"large"} className="dark:text-black">

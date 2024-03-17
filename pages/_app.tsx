@@ -15,7 +15,7 @@ import useReferalCode from "../common/hooks/useReferalCode";
 
 import Alert from "../common/elements/Alert";
 import { ThemeProvider } from "@/components/ui/theme-provider";
-import Provider from "@/components/dashboard/provider";
+// import Provider from "@/components/dashboard/provider";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";

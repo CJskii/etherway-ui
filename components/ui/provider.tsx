@@ -1,82 +1,21 @@
-"use client";
+import "@rainbow-me/rainbowkit/styles.css";
+import { darkTheme, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import "@fontsource/ibm-plex-mono";
+import { getSupportedChains } from "@/constants/config/chainsConfig";
 
-import * as React from "react";
-import {
-  RainbowKitProvider,
-  getDefaultWallets,
-  connectorsForWallets,
-} from "@rainbow-me/rainbowkit";
-import {
-  argentWallet,
-  trustWallet,
-  ledgerWallet,
-} from "@rainbow-me/rainbowkit/wallets";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { publicProvider } from "wagmi/providers/public";
-import {
-  arbitrum,
-  base,
-  mainnet,
-  optimism,
-  polygon,
-  sepolia,
-  zora,
-} from "wagmi/chains";
+const customChains = getSupportedChains();
 
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    zora,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [sepolia] : []),
-  ],
-  [publicProvider()],
-);
-
-const projectId = "YOUR_PROJECT_ID";
-
-const { wallets } = getDefaultWallets({
-  appName: "RainbowKit demo",
-  projectId,
-  chains,
+export const theme = darkTheme({
+  accentColor: "#ff57b6",
+  accentColorForeground: "#181920",
+  borderRadius: "small",
+  fontStack: "system",
+  overlayBlur: "small",
 });
 
-const demoAppInfo = {
-  appName: "Rainbowkit Demo",
-};
-
-const connectors = connectorsForWallets([
-  ...wallets,
-  {
-    groupName: "Other",
-    wallets: [
-      argentWallet({ projectId, chains }),
-      trustWallet({ projectId, chains }),
-      ledgerWallet({ projectId, chains }),
-    ],
-  },
-]);
-
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-  webSocketPublicClient,
+export const wagmiConfig = getDefaultConfig({
+  appName: process.env.NEXT_PUBLIC_WALLETCONNECT_APP_NAME || "",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "",
+  chains: customChains as any,
+  ssr: true,
 });
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-  return (
-    <>
-      <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains} appInfo={demoAppInfo}>
-          {mounted && children}
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </>
-  );
-}

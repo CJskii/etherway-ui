@@ -8,8 +8,8 @@ const Mint: NextPage = () => {
     <Layout>
       <div className=" py-20 ">
         <HeadComponent
-          title="Mintly: Mint - Mint Your ONFTs and Bridge Them Across Multiple Chains"
-          description="Mintly's Mint page: Where seamless ONFT creation meets LayerZero's interoperability. Start minting and bridging your ONFTs across multiple chains effortlessly."
+          title="Etherway: Mint - Mint Your ONFTs and Bridge Them Across Multiple Chains"
+          description="Etherway's Mint page: Where seamless ONFT creation meets LayerZero's interoperability. Start minting and bridging your ONFTs across multiple chains effortlessly."
         />
         <Minting
           contractProvider={{ type: "hyperlane", contract: "ONFT" }}

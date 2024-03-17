@@ -27,7 +27,7 @@ export function Footer({ isDashboard }: FooterProps) {
       <div>
         <Image
           src={logoWhite}
-          alt="mintly logo"
+          alt="etherway logo"
           className={cn(
             isDashboard ? "hidden dark:block" : "block dark:hidden",
             "w-40",
@@ -35,7 +35,7 @@ export function Footer({ isDashboard }: FooterProps) {
         />
         <Image
           src={logoBlack}
-          alt="mintly logo"
+          alt="etherway logo"
           className={cn(
             isDashboard ? "block dark:hidden" : "hidden dark:block",
             "w-40",
@@ -57,22 +57,22 @@ export function Footer({ isDashboard }: FooterProps) {
       </div>
       {!isDashboard && (
         <div className=" grid w-full grid-cols-6 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
-          <Button variant={"mintlySecondary"}>
+          <Button variant={"etherwaySecondary"}>
             <DiscordIcon className="h-4 w-4 mx-2" />
             Discord
           </Button>
-          <Button variant={"mintlySecondary"}>
+          <Button variant={"etherwaySecondary"}>
             <XIcon className="h-4 w-4 mx-2" /> Twitter
           </Button>
-          <Button variant={"mintlySecondary"}>
+          <Button variant={"etherwaySecondary"}>
             <Instagram className="h-4 w-4 mx-2" />
             Instagram
           </Button>
-          <Button variant={"mintlySecondary"}>
+          <Button variant={"etherwaySecondary"}>
             <TelegramIcon className="h-4 w-4 mx-2" />
             Telegram
           </Button>
-          <Button variant={"mintlySecondary"} className="">
+          <Button variant={"etherwaySecondary"} className="">
             <GitBookIcon className="h-4 w-4 mx-2" />
             GitBook
           </Button>

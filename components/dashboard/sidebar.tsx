@@ -56,12 +56,12 @@ export function DashboardSidebar() {
           <>
             <Image
               src={logoDark}
-              alt="mintly logo"
+              alt="etherway logo"
               className="block w-40 dark:hidden"
             />
             <Image
               src={logoLight}
-              alt="mintly logo"
+              alt="etherway logo"
               className="hidden w-40 dark:block"
             />
           </>
