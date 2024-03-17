@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { activeChains } from "../../constants/config/chainsConfig";
-import { useNetwork } from "wagmi";
+// import { useNetwork } from "wagmi";
 import { checkIfReferredUser } from "../../common/utils/validators/checkIfReferredUser";
 import { useNetworkSelection } from "../../common/hooks/useNetworkSelection";
 import dynamic from "next/dynamic";
@@ -42,7 +42,7 @@ const Minting = ({
   const [lastMintId, setLastMintId] = useState(0);
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
 
   const {
     selectedNetwork: mintNetwork,
@@ -53,25 +53,25 @@ const Minting = ({
     onClose: onFromClose,
   } = useNetworkSelection(contractProvider);
 
-  useEffect(() => {
-    let selected = mintNetwork;
+  // useEffect(() => {
+  //   let selected = mintNetwork;
 
-    if (chain?.name && !chain.unsupported) {
-      const networkObject = fromFilteredChains.find(
-        (net) => net.name === chain.name,
-      );
-      selected =
-        (networkObject as ExtendedNetwork) ||
-        (fromFilteredChains[0] as ExtendedNetwork);
-    }
-    const isReferredUser = checkIfReferredUser();
-    const { isReferred, refLink } = isReferredUser;
-    setIsInvited(isReferred);
-    setReferredBy(refLink ? refLink : "");
-    setMintNetwork(selected);
+  //   if (chain?.name && !chain.unsupported) {
+  //     const networkObject = fromFilteredChains.find(
+  //       (net) => net.name === chain.name,
+  //     );
+  //     selected =
+  //       (networkObject as ExtendedNetwork) ||
+  //       (fromFilteredChains[0] as ExtendedNetwork);
+  //   }
+  //   const isReferredUser = checkIfReferredUser();
+  //   const { isReferred, refLink } = isReferredUser;
+  //   setIsInvited(isReferred);
+  //   setReferredBy(refLink ? refLink : "");
+  //   setMintNetwork(selected);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chain?.name]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [chain?.name]);
 
   return (
     <div className="flex z-30 flex-col justify-betweeen items-center min-w-full">

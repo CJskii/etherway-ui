@@ -1,4 +1,4 @@
-import { useNetwork } from "wagmi";
+// import { useNetwork } from "wagmi";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { IoSwapHorizontalSharp } from "react-icons/io5";
@@ -38,7 +38,7 @@ const Gas = ({
     contract: string;
   };
 }) => {
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
   const { openChainModal } = useChainModal();
   const { type, contract } = contractProvider;
 
@@ -126,9 +126,9 @@ const Gas = ({
   const handlePreviewClick = async () => {
     setIsLoading(true);
     try {
-      if (chain?.name !== fromNetwork.name) {
-        await requestNetworkSwitch(fromNetwork.id, openChainModal);
-      }
+      // if (chain?.name !== fromNetwork.name) {
+      //   await requestNetworkSwitch(fromNetwork.id, openChainModal);
+      // }
       await estimateGasRequest({
         fromNetwork,
         toNetwork,

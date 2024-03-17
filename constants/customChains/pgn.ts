@@ -3,7 +3,7 @@ import { Chain } from "@rainbow-me/rainbowkit";
 export const pgn: Chain = {
   id: 424,
   name: "PGN",
-  network: "pgn-mainnet",
+  // network: "pgn-mainnet",
   iconUrl: "/chain-icons/pgn.svg",
   iconBackground: "#000000",
   nativeCurrency: {

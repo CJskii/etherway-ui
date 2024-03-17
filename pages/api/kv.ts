@@ -11,7 +11,8 @@ export default async function handler(
       const userId = req.query.userId;
       const data = await kv.hget("points", `${userId}`);
       return res.status(200).json({
-        points: data?.points,
+        // TODO: Fix points type @Dhruv
+        // points: data?.points,
       });
     } else if (req.method == "POST") {
       const userId = req.body.userId;

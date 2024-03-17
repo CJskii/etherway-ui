@@ -1,35 +1,21 @@
-"use client";
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, polygon, polygonMumbai } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
+import { darkTheme, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import "@fontsource/ibm-plex-mono";
+import { getSupportedChains } from "@/constants/config/chainsConfig";
 
-interface ProviderProps {
-  children: React.ReactNode;
-}
+const customChains = getSupportedChains();
 
-const { chains, publicClient } = configureChains(
-  [polygonMumbai, mainnet, polygon],
-  [publicProvider()],
-);
-
-const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
-  chains,
+export const theme = darkTheme({
+  accentColor: "#ff57b6",
+  accentColorForeground: "#181920",
+  borderRadius: "small",
+  fontStack: "system",
+  overlayBlur: "small",
 });
 
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
+export const wagmiConfig = getDefaultConfig({
+  appName: process.env.NEXT_PUBLIC_WALLETCONNECT_APP_NAME || "",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "",
+  chains: customChains as any,
+  ssr: true,
 });
-
-export default function Provider({ children }: ProviderProps) {
-  return (
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
-    </WagmiConfig>
-  );
-}

@@ -3,7 +3,7 @@ import { Chain } from "@rainbow-me/rainbowkit";
 export const linea: Chain = {
   id: 59_144,
   name: "Linea",
-  network: "linea",
+  // network: "linea",
   iconUrl: "/chain-icons/linea.svg",
   iconBackground: "#000000",
   nativeCurrency: {

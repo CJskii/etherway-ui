@@ -3,7 +3,7 @@ import { Chain } from "@rainbow-me/rainbowkit";
 export const kava: Chain = {
   id: 2222,
   name: "Kava EVM",
-  network: "kava-mainnet",
+  // network: "kava-mainnet",
   iconUrl: "/chain-icons/kava.svg",
   iconBackground: "#000000",
   nativeCurrency: {

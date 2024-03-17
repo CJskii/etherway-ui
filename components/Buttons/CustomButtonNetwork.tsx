@@ -1,6 +1,6 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
-import { useNetwork } from "wagmi";
+// import { useNetwork } from "wagmi";
 import { Network } from "../../common/types/network";
 import { requestNetworkSwitch } from "../../common/utils/requestNetworkSwitch";
 
@@ -12,7 +12,7 @@ interface SwitchNetworkProps {
 export const CustomButtonNetwork = (props: SwitchNetworkProps) => {
   const [selectedNetwork, setSelectedNetwork] = useState("");
   const [changeChain, setChangeChain] = useState(false);
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
 
   const { mintNetwork } = props;
 
@@ -24,15 +24,15 @@ export const CustomButtonNetwork = (props: SwitchNetworkProps) => {
     setSelectedNetwork(mintNetwork.name);
   }, [mintNetwork]);
 
-  useEffect(() => {
-    if (mintNetwork.name.toLowerCase() !== chain?.name.toLowerCase()) {
-      setChangeChain(true);
-      //   setWrongNetwork(true);
-    } else {
-      setChangeChain(false);
-      //   setWrongNetwork(false);
-    }
-  }, [chain, mintNetwork]);
+  // useEffect(() => {
+  //   if (mintNetwork.name.toLowerCase() !== chain?.name.toLowerCase()) {
+  //     setChangeChain(true);
+  //     //   setWrongNetwork(true);
+  //   } else {
+  //     setChangeChain(false);
+  //     //   setWrongNetwork(false);
+  //   }
+  // }, [chain, mintNetwork]);
 
   return (
     <ConnectButton.Custom>

@@ -3,7 +3,7 @@ import { Chain } from "@rainbow-me/rainbowkit";
 export const tenet: Chain = {
   id: 1559,
   name: "Tenet",
-  network: "tenet-mainnet",
+  // network: "tenet-mainnet",
   iconUrl: "/chain-icons/tenet.svg",
   iconBackground: "#000000",
   nativeCurrency: {
