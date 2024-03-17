@@ -153,7 +153,24 @@ export default function TokenMintAndBridge({
               Your Balance: 0
             </Typography>
           </DashboardCard>
-          <div className=" flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
+
+          <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
+            <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
+              <NetworkModal props={fromBridgeProps} />
+              <div
+                onClick={swapSelectedChain}
+                className="flex justify-center items-center justify-self-center self-center active:scale-90 transition-all ease-in-out cursor-pointer w-12 h-12"
+              >
+                <ArrowUpDown className="md:hidden block md:h-12 md:w-12" />
+                <ArrowLeftRight className="hidden md:block md:h-12 md:w-12" />
+              </div>
+              <NetworkModal props={toBridgeProps} />
+            </div>
+
+            {/* The Select component for the second chain */}
+          </div>
+
+          {/* <div className=" flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
             <NetworkModal props={fromBridgeProps} />
             <div
               onClick={swapSelectedChain}
@@ -169,7 +186,7 @@ export default function TokenMintAndBridge({
               }}
             ></Select>
             <NetworkModal props={toBridgeProps} />
-          </div>
+          </div> */}
           <Label className=" space-y-2">
             <Typography
               variant={"smallTitle"}

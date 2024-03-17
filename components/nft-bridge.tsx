@@ -117,21 +117,24 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
             Step 2 : {stepDescription}
           </Typography>
 
-          <Label className=" space-y-2">
-            <Typography variant={"large"} className="dark:text-black">
-              Bridge From
-            </Typography>
-          </Label>
+          <div className="flex flex-col">
+            <Label className=" space-y-2">
+              <Typography variant={"large"} className="dark:text-black">
+                Bridge From
+              </Typography>
+            </Label>
 
-          <NetworkModal props={fromBridgeProps} />
+            <NetworkModal props={fromBridgeProps} />
+          </div>
 
-          <Label className=" space-y-2 w-full ">
-            <Typography variant={"large"} className="dark:text-black">
-              Bridge To
-            </Typography>
-          </Label>
-
-          <NetworkModal props={toBridgeProps} />
+          <div className="flex flex-col">
+            <Label className=" space-y-2 w-full ">
+              <Typography variant={"large"} className="dark:text-black">
+                Bridge To
+              </Typography>
+            </Label>
+            <NetworkModal props={toBridgeProps} />
+          </div>
 
           <Label className=" space-y-2">
             <Typography variant={"large"} className="dark:text-black">

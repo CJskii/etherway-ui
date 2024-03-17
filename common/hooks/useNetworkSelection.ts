@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { activeChains } from "../../constants/config/chainsConfig";
-import { useNetwork } from "wagmi";
+// import { useNetwork } from "wagmi";
 import { Network, ExtendedNetwork } from "../types/network";
 
 export const useNetworkSelection = (
   contractProviders: { type: string; contract: string },
   filterFn: (network: Network) => boolean = () => true,
 ) => {
-  const { chain } = useNetwork();
+  // const { chain } = useNetwork();
 
   const [selectedNetwork, setSelectedNetwork] = useState(activeChains[0]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,14 +24,14 @@ export const useNetworkSelection = (
     filterNetworksByContractProvider(activeChains),
   );
 
-  useEffect(() => {
-    // Update the selected network based on user's current connection
-    const validNetworks = filterNetworksByContractProvider(activeChains);
-    const initialNetwork =
-      validNetworks.find((net) => net.name === chain?.name) || validNetworks[0];
-    setSelectedNetwork(initialNetwork);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chain, type, contract]);
+  // useEffect(() => {
+  //   // Update the selected network based on user's current connection
+  //   const validNetworks = filterNetworksByContractProvider(activeChains);
+  //   const initialNetwork =
+  //     validNetworks.find((net) => net.name === chain?.name) || validNetworks[0];
+  //   setSelectedNetwork(initialNetwork);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [chain, type, contract]);
 
   const filteredChains = activeChains.filter(
     (network) =>

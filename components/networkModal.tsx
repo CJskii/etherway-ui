@@ -18,6 +18,8 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 
+import { Typography } from "./ui/typography";
+
 import { CardContent } from "./ui/card";
 
 import { ExtendedNetwork } from "@/common/types/network";
@@ -51,8 +53,8 @@ const NetworkModal = ({ props }: NetworkModalProps) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <CardContent className="grid gap-4 px-0 pb-0">
-          <div className=" flex items-center space-x-4 rounded-md border p-4">
+        <CardContent className="grid gap-4 px-0 pb-0 min-w-full">
+          <div className="flex items-center space-x-4 rounded-md border border-black p-4 overflow-hidden">
             <Image
               src={selectedNetwork.iconUrl as string}
               width={40}
@@ -60,9 +62,12 @@ const NetworkModal = ({ props }: NetworkModalProps) => {
               alt={selectedNetwork.name}
             />
             <div className="flex-1 space-y-1 text-start">
-              <p className="text-lg font-medium leading-none">
+              <Typography
+                variant={"smallTitle"}
+                className="dark:text-black font-semibold truncate"
+              >
                 {selectedNetwork.name}
-              </p>
+              </Typography>
               <p className="text-sm text-muted-foreground">
                 {selectedNetwork.nativeCurrency.symbol}
               </p>

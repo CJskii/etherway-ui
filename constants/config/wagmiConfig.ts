@@ -29,6 +29,8 @@ export const theme = darkTheme({
 
 const chains = [mainnet, polygon];
 
+console.log(mainnet);
+
 export const wagmiConfig = getDefaultConfig({
   appName: "My RainbowKit App",
   projectId: "YOUR_PROJECT_ID",

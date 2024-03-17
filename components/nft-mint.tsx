@@ -1,7 +1,7 @@
 import featured from "@/assets/homepage-background/featured.svg";
 import logoLight from "@/assets/light-logo.svg";
 import { Typography } from "@/components/ui/typography";
-import { SparkleIcon } from "lucide-react";
+import { SparkleIcon, Type } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import {
@@ -19,12 +19,13 @@ import {
   useAccountModal,
   useChainModal,
 } from "@rainbow-me/rainbowkit";
-import { useSwitchNetwork } from "wagmi";
-import { useAccount, useNetwork } from "wagmi";
+// import { useSwitchNetwork } from "wagmi";
+// import { useAccount, useNetwork } from "wagmi";
 
 import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
 
 import NetworkModal from "./networkModal";
+import { Label } from "./ui/label";
 
 interface NFTMintProps {
   params: {
@@ -38,10 +39,10 @@ export default function NFTMint({ params }: NFTMintProps) {
   const { openAccountModal } = useAccountModal();
   const { openChainModal } = useChainModal();
 
-  const { switchNetwork } = useSwitchNetwork();
+  // const { switchNetwork } = useSwitchNetwork();
 
-  const { address } = useAccount();
-  const { chain } = useNetwork();
+  // const { address } = useAccount();
+  // const { chain } = useNetwork();
 
   const { contractProvider, stepDescription } = params;
 
@@ -57,28 +58,25 @@ export default function NFTMint({ params }: NFTMintProps) {
   const {
     selectedNetwork: mintNetwork,
     onNetworkSelect: setMintNetwork,
-    searchTerm: fromSearchTerm,
-    onSearchChange: setFromSearchTerm,
     filteredChains: fromFilteredChains,
-    onClose: onFromClose,
   } = useNetworkSelection(contractProvider);
 
-  const isConnected = address !== undefined && address !== null;
-  const isCorrectNetwork = mintNetwork.id === (chain?.id ?? "");
+  // const isConnected = address !== undefined && address !== null;
+  // const isCorrectNetwork = mintNetwork.id === (chain?.id ?? "");
 
-  const handleMintButton = async () => {
-    console.log("Mint button clicked");
+  // const handleMintButton = async () => {
+  //   console.log("Mint button clicked");
 
-    if (!isConnected && openConnectModal) {
-      openConnectModal();
-      return;
-    } else if (!isCorrectNetwork && switchNetwork) {
-      switchNetwork(mintNetwork.id);
-      return;
-    } else {
-      await handleMinting({ mintNetwork, contractProvider });
-    }
-  };
+  //   if (!isConnected && openConnectModal) {
+  //     openConnectModal();
+  //     return;
+  //   } else if (!isCorrectNetwork && switchNetwork) {
+  //     switchNetwork(mintNetwork.id);
+  //     return;
+  //   } else {
+  //     await handleMinting({ mintNetwork, contractProvider });
+  //   }
+  // };
 
   const networkModalProps = {
     selectedNetwork: mintNetwork,
@@ -123,24 +121,22 @@ export default function NFTMint({ params }: NFTMintProps) {
             </div>
           </div>
         </div>
-        <div className="col-span-full md:col-span-7 px-8 py-10 md:p-14 space-y-6 flex flex-col">
+        <div className="col-span-full h-full md:col-span-7 px-8 py-10 md:p-14 space-y-6 flex flex-col justify-between">
           <Typography variant={"h3"} className=" dark:text-black">
             Step 1 : {stepDescription}
           </Typography>
-          <NetworkModal props={networkModalProps} />
-          {/* <Select>
-            <SelectTrigger className="bg-white p-6 dark:bg-white dark:text-black dark:border-0">
-              <SelectValue placeholder="Select chain" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ethereum">Ethereum</SelectItem>
-              <SelectItem value="solana">Solana</SelectItem>
-              <SelectItem value="polkadot">Polkadot</SelectItem>
-            </SelectContent>
-          </Select> */}
+          <div className="flex flex-col">
+            <Label className="py-2 w-full">
+              <Typography variant={"large"} className="dark:text-black">
+                Network
+              </Typography>
+            </Label>
+            <NetworkModal props={networkModalProps} />
+          </div>
+
           <Button
             className=" dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-            onClick={handleMintButton}
+            // onClick={handleMintButton}
           >
             Mint
           </Button>
