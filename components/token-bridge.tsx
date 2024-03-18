@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -49,8 +49,9 @@ export default function TokenMintAndBridge({
   const { openConnectModal } = useConnectModal();
   const { chains, switchChain } = useSwitchChain();
   const account = useAccount();
+  const userBalanceRef = useRef<HTMLInputElement>(null);
 
-  const [mintAmount, setMintAmount] = useState("");
+  const [mintAmount, setMintAmount] = useState(0);
   const [bridgeAmount, setBridgeAmount] = useState("");
   const [showMintModal, setShowMintModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -133,7 +134,7 @@ export default function TokenMintAndBridge({
         const result = await handleMinting({
           mintNetwork: fromNetwork,
           contractProvider,
-          // mintQuantity: mintAmount as any,
+          mintQuantity: mintAmount,
         });
 
         if (!result) {
@@ -215,6 +216,13 @@ export default function TokenMintAndBridge({
     setToNetwork(temp);
   };
 
+  const handleMaxButton = () => {
+    setBridgeAmount(userBalance.toString());
+    if (userBalanceRef.current) {
+      userBalanceRef.current.value = userBalance.toString();
+    }
+  };
+
   useEffect(() => {
     const getBalance = async () => {
       if (isPageLoaded && fromNetwork.name == account.chain?.name) {
@@ -227,6 +235,7 @@ export default function TokenMintAndBridge({
         });
       }
     };
+    console.log("Getting balance");
     getBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPageLoaded, fromNetwork, toNetwork, setToNetwork]);
@@ -263,7 +272,7 @@ export default function TokenMintAndBridge({
               variant={"smallTitle"}
               className="dark:text-black font-semibold"
             >
-              Your Balance: 0
+              Your Balance: {userBalance}
             </Typography>
           </DashboardCard>
 
@@ -292,7 +301,7 @@ export default function TokenMintAndBridge({
               <Input
                 placeholder="Enter amount to mint"
                 className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
-                onChange={(e) => setMintAmount(e.target.value)}
+                onChange={(e) => setMintAmount(Number(e.target.value))}
                 type="number"
               />
               <Button
@@ -316,11 +325,13 @@ export default function TokenMintAndBridge({
                 placeholder="Enter amount to bridge"
                 className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
                 onChange={(e) => setBridgeAmount(e.target.value)}
+                type="number"
+                ref={userBalanceRef}
               />
               <Button
                 size={"sm"}
                 className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                onClick={() => setBridgeAmount(userBalance.toString())}
+                onClick={handleMaxButton}
               >
                 Max
               </Button>
