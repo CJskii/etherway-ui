@@ -2,10 +2,10 @@ import { prisma } from "../../client";
 
 interface getUserProps {
   ethAddress: string;
-  includeReferred: boolean;
-  includeReferrals: boolean;
-  includeInteractions: boolean;
-  includeRewards: boolean;
+  includeReferred?: boolean;
+  includeReferrals?: boolean;
+  includeInteractions?: boolean;
+  includeRewards?: boolean;
 }
 export const getUser = async ({
   ethAddress,

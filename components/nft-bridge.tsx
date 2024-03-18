@@ -95,7 +95,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           `Sending NFT #${TOKEN_ID} from ${fromNetwork.name} to ${toNetwork.name}`,
         );
 
-        const result = await handleBridging({
+        const data = await handleBridging({
           TOKEN_ID,
           fromNetwork,
           toNetwork,
@@ -103,7 +103,9 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           address: account.address ? account.address : "",
         });
 
-        const txHash = result ? result.hash : "";
+        // data -> { tx, response , APIError , BridgeError }
+
+        const txHash = data?.tx ? data.tx.hash : "";
 
         setNftId("");
         setIsLoading(false);

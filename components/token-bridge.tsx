@@ -191,10 +191,10 @@ export default function TokenMintAndBridge({
           throw new Error("Failed to mint NFT");
         }
 
-        const { hash } = result;
+        const { tx, bridgeError, response, apiError } = result;
         const newBalance = userBalance - Number(bridgeAmount);
 
-        setTxHash(hash);
+        setTxHash(tx.hash);
         setUserBalance(newBalance > 0 ? newBalance : 0);
         // setIsBridging(false);
         setIsLoading(false);

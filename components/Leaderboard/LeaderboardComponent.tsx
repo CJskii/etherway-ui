@@ -6,7 +6,7 @@ import UserStats from "./Stats/UserStats";
 import DailyReward from "./Rewards/DailyRewardCollapse";
 import InviteUsersCollapse from "./InviteUsersCollapse";
 import LeaderboardTable from "./Data/Table";
-import { callUserStats } from "../../common/utils/api/userStats";
+import { callUserStats } from "../../common/utils/api/getUsers";
 import { User as LeaderboardData } from "../../common/types/leaderboard";
 
 // create interface for leaderboard data
@@ -31,7 +31,7 @@ const LeaderboardComponent = () => {
 
   useEffect(() => {
     const filteredStats = leaderboard.filter(
-      (user) => user.ethereumAddress === address
+      (user) => user.ethereumAddress === address,
     );
 
     if (filteredStats.length > 0) {
