@@ -3,6 +3,8 @@ import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { Network } from "../../../types/network";
 import handleInteraction from "./handleInteraction";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
+import { updateBridgeData } from "../../api/bridge";
+import { ContractType } from "@prisma/client";
 
 export const handleBridging = async ({
   TOKEN_ID,
@@ -23,9 +25,9 @@ export const handleBridging = async ({
   const txGasLimit = fromNetwork.params?.gasLimit.bridge;
   const signer = await getProviderOrSigner(true);
   const ownerAddress = await (signer as Signer).getAddress();
-  let tx;
+
   if (contractProvider.type == "layerzero") {
-    tx = await layerZeroBridge({
+    const { tx, error: bridgeError } = await layerZeroBridge({
       TOKEN_ID,
       fromNetwork,
       toNetwork,
@@ -35,16 +37,16 @@ export const handleBridging = async ({
     });
 
     if (tx.hash) {
-      await handleInteraction({
-        address,
-        operation: "new_bridge",
-        type: contractProvider.type,
+      const { response, error: apiError } = await updateBridgeData({
+        address: ownerAddress,
+        contractType: ContractType.ONFT_ERC721,
+        chainId: fromNetwork.id,
       });
+      return { tx, response, bridgeError, apiError };
     }
-
-    return tx;
+    return { tx, bridgeError };
   } else if (contractProvider.type == "hyperlane") {
-    tx = await hyperlaneBridge({
+    const { tx, error: bridgeError } = await hyperlaneBridge({
       TOKEN_ID,
       fromNetwork,
       toNetwork,
@@ -53,14 +55,14 @@ export const handleBridging = async ({
     });
 
     if (tx.hash) {
-      await handleInteraction({
-        address,
-        operation: "new_bridge",
-        type: contractProvider.type,
+      const { response, error: APIerror } = await updateBridgeData({
+        address: ownerAddress,
+        contractType: ContractType.ONFT_ERC721,
+        chainId: fromNetwork.id,
       });
+      return { tx, response, bridgeError, APIerror };
     }
-
-    return tx;
+    return { tx, bridgeError };
   }
 };
 
@@ -79,6 +81,9 @@ const layerZeroBridge = async ({
   signer: Signer;
   txGasLimit: number | string;
 }) => {
+  let tx;
+  let error;
+
   if (!fromNetwork.deployedContracts)
     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
 
@@ -107,7 +112,7 @@ const layerZeroBridge = async ({
       options,
       false,
     );
-    const tx = await contract.send(
+    tx = await contract.send(
       remoteChainId, // remote LayerZero chainId v2
       TOKEN_ID, // tokenId to send
       ownerAddress, // to address
@@ -120,11 +125,16 @@ const layerZeroBridge = async ({
     );
 
     await tx.wait();
-    return tx;
   } catch (e) {
     console.error(e);
+    error = e;
     throw new Error((e as any).data?.message || (e as any)?.message);
   }
+
+  return {
+    tx,
+    error,
+  };
 };
 
 const hyperlaneBridge = async ({
@@ -140,6 +150,8 @@ const hyperlaneBridge = async ({
   signer: Signer;
   txGasLimit: number | string;
 }) => {
+  let tx;
+  let error;
   if (!fromNetwork.deployedContracts || !toNetwork.deployedContracts)
     throw new Error(
       `No deployed contracts found for ${fromNetwork.name} or ${toNetwork.name}`,
@@ -163,20 +175,19 @@ const hyperlaneBridge = async ({
       TOKEN_ID,
     );
 
-    let tx = await contract.sendPayload(
-      targetChainId,
-      targetAddress,
-      TOKEN_ID,
-      {
-        value: nativeFee,
-        gasLimit: GAS_LIMIT,
-      },
-    );
+    tx = await contract.sendPayload(targetChainId, targetAddress, TOKEN_ID, {
+      value: nativeFee,
+      gasLimit: GAS_LIMIT,
+    });
 
     await tx.wait();
-
-    return tx;
   } catch (e) {
+    error = e;
     throw new Error((e as any).data?.message || (e as any)?.message);
   }
+
+  return {
+    tx,
+    error,
+  };
 };

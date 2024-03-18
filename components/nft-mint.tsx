@@ -14,6 +14,9 @@ import { checkIfReferredUser } from "@/common/utils/validators/checkIfReferredUs
 import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
 import { ExtendedNetwork } from "@/common/types/network";
 import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
+import { useToast } from "./ui/use-toast";
+import { updateMintData } from "@/common/utils/api/mintAPI";
+import { ContractType } from "@prisma/client";
 
 interface NFTMintProps {
   params: {
@@ -37,6 +40,7 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
+  const { toast } = useToast();
 
   // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
 
@@ -61,6 +65,9 @@ export default function NFTMint({ params }: NFTMintProps) {
         setIsLoading(true);
         setShowMintModal(true);
         setMinting(true);
+        if (!account.address) {
+          return;
+        }
 
         const result = await handleMinting({
           mintNetwork,
@@ -69,6 +76,12 @@ export default function NFTMint({ params }: NFTMintProps) {
 
         if (result) {
           const { mintedID, txHash } = result;
+
+          const { response, error: apiError } = await updateMintData({
+            address: account.address,
+            contractType: ContractType.ONFT_ERC721,
+            chainId: mintNetwork.id,
+          });
           setTxHash(txHash);
           setMintedNFT(mintedID.toString());
           setMinting(false);
