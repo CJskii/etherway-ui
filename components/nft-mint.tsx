@@ -17,6 +17,7 @@ import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 import { useToast } from "./ui/use-toast";
 import { updateMintData } from "@/common/utils/api/mintAPI";
 import { ContractType } from "@prisma/client";
+import MintModal from "./modal-mint";
 
 interface NFTMintProps {
   params: {
@@ -141,6 +142,19 @@ export default function NFTMint({ params }: NFTMintProps) {
             className=" h-[600px] w-full object-cover rounded-xl "
           />
           <div className=" md:rounded-bl-xl absolute bottom-0 py-14 px-8 bg-gradient-to-b from-black/5  to-black flex items-center flex-wrap gap-y-4 gap-x-6 text-white">
+            <MintModal
+              props={{
+                isOpen: showMintModal,
+                setIsOpen: setShowMintModal,
+                isLoading: isLoading,
+                modalTitle: "NFT Minted",
+                modalDescription: "Your NFT has been minted successfully",
+                modalButtonText: "View NFT",
+                errorMessage: errorMessage,
+                setErrorMessage: setErrorMessage,
+                nftId: mintedNFT,
+              }}
+            />
             <div className=" flex items-center gap-2">
               <SparkleIcon className=" w-5 h-5" />
               <Typography variant={"smallTitle"}>
