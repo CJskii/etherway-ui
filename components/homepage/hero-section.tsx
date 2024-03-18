@@ -38,7 +38,8 @@ export default function HeroSection() {
         <Marquee autoFill pauseOnClick>
           <div className="bg-background-secondary flex w-full items-center py-5">
             <Image alt="layerzero-logo" src={layerzero} className="mx-6" />
-            <Image alt="wormhole-logo" src={wormhole} className="mx-6" />
+            // TODO: Replace wormhole with the Hyperlane logo
+            {/* <Image alt="wormhole-logo" src={wormhole} className="mx-6" /> */}
           </div>
         </Marquee>
       </div>
