@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Typography } from "./ui/typography";
 import Image from "next/image";
 import { Button } from "./ui/button";
@@ -118,6 +118,9 @@ const MintModal = ({ props }: MintModalProps) => {
     }
   };
 
+  const modalHeight =
+    nftId && !isLoading && errorMessage == "" ? "600px" : "auto";
+
   return (
     <div>
       <Dialog
@@ -128,7 +131,7 @@ const MintModal = ({ props }: MintModalProps) => {
         }}
       >
         <DialogContent
-          className={`rounded-xl bg-gradient border-0 flex flex-col justify-center items-between ${nftId && !isLoading ? "min-h-[600px]" : ""} ${
+          className={`rounded-xl bg-gradient border-0 flex flex-col justify-center items-between ${modalHeight} ${
             errorMessage ? "border-4 border-red-500" : ""
           }`}
         >
