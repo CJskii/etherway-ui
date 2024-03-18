@@ -162,7 +162,7 @@ export default function NFTMint({ params }: NFTMintProps) {
           </div>
 
           <Button
-            className=" dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+            className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
             onClick={handleMintButton}
           >
             Mint
