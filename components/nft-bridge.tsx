@@ -15,6 +15,8 @@ import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 
 import { useAccount, useSwitchChain } from "wagmi";
 
+import BridgeModal from "./bridge-modal";
+
 interface NFTBridgeProps {
   params: {
     contractProvider: { type: string; contract: string };
@@ -107,7 +109,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
 
         const txHash = data?.tx ? data.tx.hash : "";
 
-        setNftId("");
+        // setNftId("");
         setIsLoading(false);
         setTxHash(txHash);
       } catch (e) {
@@ -171,6 +173,20 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
             Step 2 : {stepDescription}
           </Typography>
 
+          <BridgeModal
+            props={{
+              isOpen: showBridgingModal,
+              setIsOpen: setShowBridgingModal,
+              isLoading: isLoading,
+              modalTitle: "NFT Bridged",
+              modalDescription: "Your NFT has been Bridged successfully",
+              modalButtonText: "View NFT",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              nftId: nftId,
+            }}
+          />
+
           <div className="flex flex-col">
             <Label className=" space-y-2">
               <Typography variant={"large"} className="dark:text-black">
@@ -197,6 +213,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
             <Input
               placeholder="ID"
               className="p-6 rounded-xl dark:bg-white dark:text-black"
+              onChange={(e) => setNftId(e.target.value)}
             />
           </Label>
 

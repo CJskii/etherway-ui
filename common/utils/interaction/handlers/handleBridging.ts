@@ -25,6 +25,7 @@ export const handleBridging = async ({
   const txGasLimit = fromNetwork.params?.gasLimit.bridge;
   const signer = await getProviderOrSigner(true);
   const ownerAddress = await (signer as Signer).getAddress();
+  console.log(TOKEN_ID);
 
   if (contractProvider.type == "layerzero") {
     const { tx, error: bridgeError } = await layerZeroBridge({
