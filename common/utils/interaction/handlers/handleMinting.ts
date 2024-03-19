@@ -16,9 +16,7 @@ export const handleMinting = async ({
   };
   mintQuantity?: number;
 }) => {
-  // TODO: Refactor this function with dynamic gas limit
-  // TODO: Add conditions for OFT minting
-  const mintGasLimit = mintNetwork.name == "Arbitrum One" ? 2000000 : 1000000;
+  const mintGasLimit = mintNetwork.params?.gasLimit.mint || 500000;
 
   if (
     contractProvider.type == "layerzero" &&
@@ -56,7 +54,7 @@ const handleLayerZeroONFTMinting = async ({
   mintGasLimit,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
 }) => {
   try {
     // Initiate provider and signer
@@ -102,7 +100,7 @@ const handleHyperlaneONFTMinting = async ({
   mintGasLimit,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
 }) => {
   try {
     // Initiate provider and signer
@@ -148,7 +146,7 @@ const handleLayerZeroOFTMinting = async ({
   mintQuantity,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
   mintQuantity: number;
 }) => {
   try {
@@ -197,7 +195,7 @@ const handleHyperlaneOFTMinting = async ({
   mintQuantity,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
   mintQuantity: number;
 }) => {
   try {
