@@ -19,6 +19,7 @@ import { handleBridging } from "@/common/utils/interaction/handlers/handleBridgi
 import { getUserBalance } from "@/common/utils/getters/getBalance";
 import { activeChains } from "@/constants/config/chainsConfig";
 import TokenMintModal from "./modal-mint-token";
+import TokenBridgeModal from "./modal-bridge-token";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -34,17 +35,6 @@ interface TokenMintAndBridgeProps {
 export default function TokenMintAndBridge({
   params,
 }: TokenMintAndBridgeProps) {
-  // TODO: The idea here is that we're going to display FROM and TO network selection modals with search bar functionality to the user
-  // We will display user balance in his wallet for the current chain
-  // In order to make bridge user balance has to be greater than 0
-
-  // So the user will need to mint tokens first, this should automatically update his balance with the the minted tokens
-  // Then the user should select FROM and TO network, enter the amount of tokens he wants to bridge and click on the bridge button
-
-  // If user is on the correct network we will call bridge function and send metamask popup
-  // If user isn't connected to this network we will request network change
-  // If user wallet isn't connected we will request to connect a wallet
-
   const { contractProvider, headerDescription, stepDescription } = params;
   const { type, contract } = contractProvider;
   const { openConnectModal } = useConnectModal();
@@ -285,6 +275,20 @@ export default function TokenMintAndBridge({
               errorMessage: errorMessage,
               setErrorMessage: setErrorMessage,
               amount: mintAmount,
+            }}
+          />
+
+          <TokenBridgeModal
+            props={{
+              isOpen: showBridgingModal,
+              setIsOpen: setShowBridgingModal,
+              isLoading: isLoading,
+              modalTitle: "Bridging Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Bridge",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: Number(bridgeAmount),
             }}
           />
 
