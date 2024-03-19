@@ -7,6 +7,7 @@ import Image from "next/image";
 import Marquee from "react-fast-marquee";
 import { Typography } from "../ui/typography";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -28,10 +29,14 @@ export default function HeroSection() {
         </Typography>
         <div className=" flex items-center gap-3">
           {/* <Button variant={"etherway"}>Launch Airdrop</Button> */}
-          <Button variant={"etherway"}>How to start</Button>
-          <Button variant={"ghost"} className="md:w-32">
-            Explore Chains <ChevronRightIcon />
-          </Button>
+          <Link href={"/guides/how-to-start"}>
+            <Button variant={"etherway"}>How to start</Button>
+          </Link>
+          <Link href={"/chains"}>
+            <Button variant={"ghost"} className="md:w-32">
+              Explore Chains <ChevronRightIcon />
+            </Button>
+          </Link>
         </div>
       </div>
       <div className=" w-auto md:mb-10">

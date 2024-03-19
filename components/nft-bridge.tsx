@@ -71,7 +71,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
 
   const handleBridgeButton = async () => {
-    if (nftId === "") return;
+    if (nftId === "" || fromNetwork.id === toNetwork.id) return;
     if (!isConnected && openConnectModal) {
       openConnectModal();
       return;

@@ -150,7 +150,7 @@ export default function TokenMintAndBridge({
   };
 
   const handleBridgeButton = async () => {
-    if (bridgeAmount === "") return;
+    if (bridgeAmount === "" || fromNetwork.id === toNetwork.id) return;
     if (!isConnected && openConnectModal) {
       openConnectModal();
       return;
@@ -237,14 +237,14 @@ export default function TokenMintAndBridge({
         type,
         contract,
       }) as string[];
-      const defaultNetwork = activeChains.find(
-        (chain) => chain.name === validNetworks[0],
+      const defaultNetwork = networksByProvider.find((network) =>
+        validNetworks.includes(network.name),
       );
+
       defaultNetwork
         ? setToNetwork(defaultNetwork as Network)
-        : setToNetwork(activeChains[0] as Network);
+        : setToNetwork(networksByProvider[0] as Network);
     }
-    setIsPageLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromNetwork, toNetwork, setToNetwork]);
 
