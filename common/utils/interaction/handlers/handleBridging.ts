@@ -7,7 +7,7 @@ import { updateBridgeData } from "../../api/bridge";
 import { ContractType } from "@prisma/client";
 
 export const handleBridging = async ({
-  TOKEN_ID,
+  TOKEN_ID, // we use token-id as quantity for OFT
   fromNetwork,
   toNetwork,
   contractProvider,
@@ -25,7 +25,6 @@ export const handleBridging = async ({
   const txGasLimit = fromNetwork.params?.gasLimit.bridge;
   const signer = await getProviderOrSigner(true);
   const ownerAddress = await (signer as Signer).getAddress();
-  console.log(TOKEN_ID);
 
   if (
     contractProvider.type == "layerzero" &&
@@ -53,23 +52,23 @@ export const handleBridging = async ({
     contractProvider.type == "layerzero" &&
     contractProvider.contract == "OFT"
   ) {
-    // const { tx, error: bridgeError } = await handleLayerZeroOFTBridging({
-    //   TOKEN_ID,
-    //   fromNetwork,
-    //   toNetwork,
-    //   ownerAddress,
-    //   signer: signer as Signer,
-    //   txGasLimit: txGasLimit || 500000,
-    // });
-    // if (tx.hash) {
-    //   const { response, error: apiError } = await updateBridgeData({
-    //     address: ownerAddress,
-    //     contractType: ContractType.OFT_ERC20,
-    //     chainId: fromNetwork.id,
-    //   });
-    //   return { tx, response, bridgeError, apiError };
-    // }
-    // return { tx, bridgeError };
+    const { tx, error: bridgeError } = await handleLayerZeroOFTBridging({
+      TOKEN_ID,
+      fromNetwork,
+      toNetwork,
+      ownerAddress,
+      signer: signer as Signer,
+      txGasLimit: txGasLimit || 500000,
+    });
+    if (tx.hash) {
+      const { response, error: apiError } = await updateBridgeData({
+        address: ownerAddress,
+        contractType: ContractType.OFT_ERC20,
+        chainId: fromNetwork.id,
+      });
+      return { tx, response, bridgeError, apiError };
+    }
+    return { tx, bridgeError };
   } else if (
     contractProvider.type == "hyperlane" &&
     contractProvider.contract == "ONFT"
@@ -95,23 +94,23 @@ export const handleBridging = async ({
     contractProvider.type == "hyperlane" &&
     contractProvider.contract == "OFT"
   ) {
-    // const { tx, error: bridgeError } = await handleHyperlaneOFTBridging({
-    //   TOKEN_ID,
-    //   fromNetwork,
-    //   toNetwork,
-    //   ownerAddress,
-    //   signer: signer as Signer,
-    //   txGasLimit: txGasLimit || 500000,
-    // });
-    // if (tx.hash) {
-    //   const { response, error: apiError } = await updateBridgeData({
-    //     address: ownerAddress,
-    //     contractType: ContractType.OFT_ERC20,
-    //     chainId: fromNetwork.id,
-    //   });
-    //   return { tx, response, bridgeError, apiError };
-    // }
-    // return { tx, bridgeError };
+    const { tx, error: bridgeError } = await handleHyperlaneOFTBridging({
+      TOKEN_ID,
+      fromNetwork,
+      toNetwork,
+      ownerAddress,
+      signer: signer as Signer,
+      txGasLimit: txGasLimit || 500000,
+    });
+    if (tx.hash) {
+      const { response, error: apiError } = await updateBridgeData({
+        address: ownerAddress,
+        contractType: ContractType.OFT_ERC20,
+        chainId: fromNetwork.id,
+      });
+      return { tx, response, bridgeError, apiError };
+    }
+    return { tx, bridgeError };
   }
 };
 
@@ -186,78 +185,77 @@ const handleLayerZeroONFTBridging = async ({
   };
 };
 
-// TODO: Implement Layerzero OFT bridging
+const handleLayerZeroOFTBridging = async ({
+  TOKEN_ID,
+  fromNetwork,
+  toNetwork,
+  ownerAddress,
+  signer,
+  txGasLimit,
+}: {
+  TOKEN_ID: string;
+  fromNetwork: Network;
+  toNetwork: Network;
+  ownerAddress: string;
+  signer: Signer;
+  txGasLimit: number | string;
+}) => {
+  if (!fromNetwork.deployedContracts)
+    throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
 
-// const handleLayerZeroOFTBridging = async ({
-//   TOKEN_ID,
-//   fromNetwork,
-//   toNetwork,
-//   ownerAddress,
-//   signer,
-//   txGasLimit,
-// }: {
-//   TOKEN_ID: string;
-//   fromNetwork: Network;
-//   toNetwork: Network;
-//   ownerAddress: string;
-//   signer: Signer;
-//   txGasLimit: number | string;
-// }) => {
-//   let tx;
-//   let error;
+  const contract = new Contract(
+    fromNetwork.deployedContracts.layerzero.OFT.address,
+    fromNetwork.deployedContracts.layerzero.OFT.ABI,
+    signer,
+  );
 
-//   if (!fromNetwork.deployedContracts)
-//     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
+  let tx;
+  let error;
 
-//   const contract = new Contract(
-//     fromNetwork.deployedContracts.layerzero.OFT.address,
-//     fromNetwork.deployedContracts.layerzero.OFT.ABI,
-//     signer,
-//   );
+  try {
+    // REMOTE CHAIN ID IS THE CHAIN OF THE RECEIVING NETWORK
+    // ex. if you are sending from Ethereum to Polygon, the remote chain id is the Polygon chain id
+    const remoteChainId = toNetwork.params?.layerzero.remoteChainId;
+    const tokensToSend = ethers.utils.parseEther(TOKEN_ID);
+    const paddedAddress = ethers.utils.zeroPad(ownerAddress, 32);
 
-//   try {
-//     // REMOTE CHAIN ID IS THE CHAIN OF THE RECEIVING NETWORK
-//     // ex. if you are sending from Ethereum to Polygon, the remote chain id is the Polygon chain id
-//     const remoteChainId = toNetwork.params?.layerzero.remoteChainId;
+    // create options
+    const options = Options.newOptions()
+      .addExecutorLzReceiveOption(200000, 0)
+      .toHex()
+      .toString();
 
-//     // create options
-//     const options = Options.newOptions()
-//       .addExecutorLzReceiveOption(200000, 0)
-//       .toHex()
-//       .toString();
+    const sendParam = [
+      remoteChainId,
+      paddedAddress,
+      tokensToSend,
+      tokensToSend,
+      options,
+      "0x",
+      "0x",
+    ];
 
-//     let nativeFee = 0;
-//     [nativeFee] = await contract.quote(
-//       remoteChainId,
-//       TOKEN_ID,
-//       ownerAddress,
-//       options,
-//       false,
-//     );
-//     tx = await contract.send(
-//       remoteChainId, // remote LayerZero chainId v2
-//       TOKEN_ID, // tokenId to send
-//       ownerAddress, // to address
-//       options, // flexible bytes array to indicate messaging adapter services
-//       false, // use LayerZero token as gas
-//       {
-//         value: nativeFee,
-//         gasLimit: txGasLimit,
-//       },
-//     );
+    let nativeFee = 0;
 
-//     await tx.wait();
-//   } catch (e) {
-//     console.error(e);
-//     error = e;
-//     throw new Error((e as any).data?.message || (e as any)?.message);
-//   }
+    [nativeFee] = await contract.quoteSend(sendParam, false);
 
-//   return {
-//     tx,
-//     error,
-//   };
-// }
+    tx = await contract
+      .send(sendParam, [nativeFee, 0], ownerAddress, {
+        value: nativeFee,
+        gasLimit: txGasLimit,
+      })
+      .then((tx: any) => tx.wait());
+
+    console.log(` tx: ${tx.transactionHash}`);
+  } catch (e) {
+    console.error(e);
+    throw new Error((e as any).data?.message || (e as any)?.message);
+  }
+  return {
+    tx,
+    error,
+  };
+};
 
 const handleHyperlaneONFTBridging = async ({
   TOKEN_ID,
@@ -285,10 +283,8 @@ const handleHyperlaneONFTBridging = async ({
     signer,
   );
 
-  const targetAddress = toNetwork.deployedContracts.hyperlane.NFT.address;
-  const targetChainId = toNetwork.params;
-
-  const GAS_LIMIT = txGasLimit;
+  const targetAddress = toNetwork.deployedContracts.hyperlane.ONFT.address;
+  const targetChainId = toNetwork.params?.hyperlane.remoteChainId;
 
   try {
     const nativeFee = await contract.getBridgeGas(
@@ -299,7 +295,7 @@ const handleHyperlaneONFTBridging = async ({
 
     tx = await contract.sendPayload(targetChainId, targetAddress, TOKEN_ID, {
       value: nativeFee,
-      gasLimit: GAS_LIMIT,
+      gasLimit: txGasLimit,
     });
 
     await tx.wait();
@@ -314,61 +310,61 @@ const handleHyperlaneONFTBridging = async ({
   };
 };
 
-// TODO: Implement Hyperlane OFT bridging
+const handleHyperlaneOFTBridging = async ({
+  TOKEN_ID,
+  fromNetwork,
+  toNetwork,
+  ownerAddress,
+  signer,
+  txGasLimit,
+}: {
+  TOKEN_ID: string;
+  fromNetwork: Network;
+  toNetwork: Network;
+  ownerAddress: string;
+  signer: Signer;
+  txGasLimit: number | string;
+}) => {
+  let tx;
+  let error;
+  if (!fromNetwork.deployedContracts || !toNetwork.deployedContracts)
+    throw new Error(
+      `No deployed contracts found for ${fromNetwork.name} or ${toNetwork.name}`,
+    );
 
-// const handleHyperlaneOFTBridging = async ({
-//   TOKEN_ID,
-//   fromNetwork,
-//   toNetwork,
-//   ownerAddress,
-//   signer,
-//   txGasLimit,
-// }: {
-//   TOKEN_ID: string;
-//   fromNetwork: Network;
-//   toNetwork: Network;
-//   ownerAddress: string;
-//   signer: Signer;
-//   txGasLimit: number | string;
-// }) => {
-//   let tx;
-//   let error;
-//   if (!fromNetwork.deployedContracts || !toNetwork.deployedContracts)
-//     throw new Error(
-//       `No deployed contracts found for ${fromNetwork.name} or ${toNetwork.name}`,
-//     );
+  const contract = new Contract(
+    fromNetwork.deployedContracts.hyperlane.OFT.address,
+    fromNetwork.deployedContracts.hyperlane.OFT.ABI,
+    signer,
+  );
 
-//   const contract = new Contract(
-//     fromNetwork.deployedContracts.hyperlane.OFT.address,
-//     fromNetwork.deployedContracts.hyperlane.OFT.ABI,
-//     signer,
-//   );
+  const targetAddress = toNetwork.deployedContracts.hyperlane.OFT.address;
+  const targetChainId = toNetwork.params?.hyperlane.remoteChainId;
+  const amountInWei = ethers.utils.parseEther(TOKEN_ID);
 
-//   const targetAddress = toNetwork.deployedContracts.hyperlane.ERC20.address;
-//   const targetChainId = toNetwork.params;
+  try {
+    const [estimatedFee, totalCost] = await contract.getBridgeGas(
+      targetChainId,
+      targetAddress,
+      amountInWei,
+    );
+    console.log(
+      `Estimated fee: ${estimatedFee.toString()} | Total cost: ${totalCost.toString()}`,
+    );
 
-//   const GAS_LIMIT = txGasLimit;
+    tx = await contract.sendPayload(targetChainId, targetAddress, amountInWei, {
+      value: totalCost,
+      gasLimit: txGasLimit,
+    });
 
-//   try {
-//     const nativeFee = await contract.getBridgeGas(
-//       targetChainId,
-//       targetAddress,
-//       TOKEN_ID,
-//     );
+    await tx.wait();
+  } catch (e) {
+    error = e;
+    throw new Error((e as any).data?.message || (e as any)?.message);
+  }
 
-//     tx = await contract.sendPayload(targetChainId, targetAddress, TOKEN_ID, {
-//       value: nativeFee,
-//       gasLimit: GAS_LIMIT,
-//     });
-
-//     await tx.wait();
-//   } catch (e) {
-//     error = e;
-//     throw new Error((e as any).data?.message || (e as any)?.message);
-//   }
-
-//   return {
-//     tx,
-//     error,
-//   };
-// }
+  return {
+    tx,
+    error,
+  };
+};

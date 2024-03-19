@@ -43,7 +43,11 @@ export const handleMinting = async ({
     contractProvider.type == "hyperlane" &&
     contractProvider.contract == "OFT"
   ) {
-    // return handleHyperlaneOFTMinting({ mintNetwork, mintGasLimit, mintQuantity });
+    return handleHyperlaneOFTMinting({
+      mintNetwork,
+      mintGasLimit,
+      mintQuantity: mintQuantity || 0,
+    });
   }
 };
 
@@ -173,6 +177,7 @@ const handleLayerZeroOFTMinting = async ({
 
     const tx = await contract.mint(toAddress, mintQuantity, {
       value: fee,
+      gasLimit: mintGasLimit,
     });
 
     await tx.wait();
@@ -186,52 +191,53 @@ const handleLayerZeroOFTMinting = async ({
   }
 };
 
-//TODO: Implement this function and test it
+const handleHyperlaneOFTMinting = async ({
+  mintNetwork,
+  mintGasLimit,
+  mintQuantity,
+}: {
+  mintNetwork: Network;
+  mintGasLimit: number;
+  mintQuantity: number;
+}) => {
+  try {
+    // Initiate provider and signer
+    const provider = await getProviderOrSigner();
+    const signer = await getProviderOrSigner(true);
+    const toAddress = (await (signer as Signer).getAddress()).toLowerCase();
 
-// const handleHyperlaneOFTMinting = async ({
-//   mintNetwork,
-//   mintGasLimit,
-//   mintQuantity,
-// }: {
-//   mintNetwork: Network;
-//   mintGasLimit: number;
-//   mintQuantity: number;
-// }) => {
-//   try {
-//     // Initiate provider and signer
-//     const provider = await getProviderOrSigner();
-//     const signer = await getProviderOrSigner(true);
-//     const toAddress = (await (signer as Signer).getAddress()).toLowerCase();
+    if (!(provider instanceof ethers.providers.Web3Provider)) {
+      console.error("Provider is not an instance of Web3Provider");
+      return;
+    }
 
-//     if (!(provider instanceof ethers.providers.Web3Provider)) {
-//       console.error("Provider is not an instance of Web3Provider");
-//       return;
-//     }
+    if (!mintNetwork.deployedContracts)
+      throw new Error(`No deployed contracts found for ${mintNetwork.name}`);
 
-//     if (!mintNetwork.deployedContracts)
-//       throw new Error(`No deployed contracts found for ${mintNetwork.name}`);
+    // Initiate contract instance and get fee
+    const contract = new Contract(
+      mintNetwork.deployedContracts.hyperlane.OFT.address,
+      mintNetwork.deployedContracts.hyperlane.OFT.ABI,
+      signer as any,
+    );
 
-//     // Initiate contract instance and get fee
-//     const contract = new Contract(
-//       mintNetwork.deployedContracts.hyperlane.OFT.address,
-//       mintNetwork.deployedContracts.hyperlane.OFT.ABI,
-//       signer as any,
-//     );
-//     const fee = await contract.getMintFee(mintQuantity);
+    const contractFee = await contract.fee();
+    const totalFee = contractFee.mul(mintQuantity);
 
-//     console.log(`Minting ${mintQuantity} OFTs...`);
+    console.log(`Minting ${mintQuantity} OFTs...`);
 
-//     const tx = await contract.mint(toAddress, mintQuantity, {
-//       value: fee,
-//     });
+    const tx = await contract.mint(toAddress, mintQuantity, {
+      value: totalFee,
+      mintGasLimit,
+    });
 
-//     await tx.wait();
+    await tx.wait();
 
-//     const txHash: string = tx.hash;
+    const txHash: string = tx.hash;
 
-//     return { mintedID: 0, txHash };
-//   } catch (e) {
-//     console.log(e);
-//     throw new Error((e as any).data?.message || (e as any)?.message);
-//   }
-// };
+    return { mintedID: 0, txHash };
+  } catch (e) {
+    console.log(e);
+    throw new Error((e as any).data?.message || (e as any)?.message);
+  }
+};

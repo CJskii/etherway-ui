@@ -129,8 +129,6 @@ export default function TokenMintAndBridge({
         setIsLoading(true);
         setShowMintModal(true);
         // setIsMinting(true);
-
-        // TODO: handleMinting function should be implemented for the ERC20 tokens
         const result = await handleMinting({
           mintNetwork: fromNetwork,
           contractProvider,
@@ -235,7 +233,6 @@ export default function TokenMintAndBridge({
         });
       }
     };
-    console.log("Getting balance");
     getBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPageLoaded, fromNetwork, toNetwork, setToNetwork]);

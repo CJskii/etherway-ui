@@ -119,7 +119,7 @@ const MintModal = ({ props }: MintModalProps) => {
   };
 
   const modalHeight =
-    nftId && !isLoading && errorMessage == "" ? "600px" : "auto";
+    nftId && !isLoading && errorMessage == "" ? "min-h-[600px]" : "auto";
 
   return (
     <div>
