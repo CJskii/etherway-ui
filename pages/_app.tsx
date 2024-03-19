@@ -83,8 +83,6 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
       </Script> */}
       {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} /> */}
 
-      {/* TODO: Remove wagmi and rainbowkit provider  */}
-      {/* Figure out how to pass existing chain setup to thirdweb provider  */}
       <WagmiProvider config={wagmiConfig}>
         <SessionProvider refetchInterval={0} session={pageProps.session}>
           <QueryClientProvider client={queryClient}>
@@ -92,27 +90,6 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
               getSiweMessageOptions={getSiweMessageOptions}
             >
               <RainbowKitProvider>
-                {/* <ThirdwebProvider
-            supportedChains={mainnetChainsThirdWeb}
-            clientId={process.env.THIRDWEB_CLIENT_ID || ""}
-            supportedWallets={[
-              metamaskWallet({ recommended: true }),
-              coinbaseWallet(),
-              walletConnect(),
-              localWallet(),
-              embeddedWallet({
-                auth: {
-                  options: ["email", "google", "apple"],
-                },
-              }),
-              trustWallet(),
-              rainbowWallet(),
-            ]}
-            authConfig={{
-              authUrl: "/api/auth",
-              domain: process.env.NEXT_PUBLIC_THIRDWEB_AUTH_DOMAIN || "",
-            }}
-          > */}
                 <ThemeProvider
                   attribute="class"
                   defaultTheme="system"
@@ -123,27 +100,11 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
                     <Component {...pageProps} />
                   </div>
                 </ThemeProvider>
-                {/* </ThirdwebProvider> */}
               </RainbowKitProvider>
             </RainbowKitSiweNextAuthProvider>
           </QueryClientProvider>
         </SessionProvider>
       </WagmiProvider>
-      {/* <WagmiConfig config={wagmiConfig}>
-        <RainbowKitProvider chains={chains} theme={theme}>
-          <div className="flex flex-col justify-between items-center min-h-screen font-plex-mono">
-            <div className="flex flex-col justify-center items-center w-full">
-              <Alert {...alertProps} />
-              <Navbar />
-            </div>
-
-            <main className="flex flex-col justify-center items-center gap-4 py-8 px-4 rounded-lg my-4 w-full min-h-full">
-              <Component {...pageProps} />
-            </main>
-            <Footer />
-          </div>
-        </RainbowKitProvider>
-      </WagmiConfig> */}
     </>
   );
 }

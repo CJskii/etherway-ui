@@ -169,7 +169,6 @@ export default function TokenMintAndBridge({
         if (Number(bridgeAmount) > userBalance)
           throw new Error("insufficient OFT balance for transfer");
 
-        // TODO: handleBridging function should be implemented for the ERC20 tokens
         const result = await handleBridging({
           TOKEN_ID: bridgeAmount,
           fromNetwork,

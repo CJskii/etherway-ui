@@ -43,8 +43,6 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [referredBy, setReferredBy] = useState("");
   const { toast } = useToast();
 
-  // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
-
   const {
     selectedNetwork: mintNetwork,
     onNetworkSelect: setMintNetwork,

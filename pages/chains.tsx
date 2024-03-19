@@ -252,22 +252,25 @@ const Chains = () => {
                 Explore the wide range of blockchain networks supported by
                 Etherway, designed for seamless cross-chain interoperability.
               </Typography>
-              {/* TODO: Add the button Link to minting */}
               <div className="flex gap-2">
-                <Button
-                  variant={"etherway"}
-                  className="md:w-32"
-                  // href={"/dashboard"}
-                >
-                  LayerZero
-                </Button>
-                <Button
-                  variant={"etherway"}
-                  className="md:w-32"
-                  // href={"/dashboard"}
-                >
-                  Hyperlane
-                </Button>
+                <Link href={"/layerzero/onft-mint"}>
+                  <Button
+                    variant={"etherway"}
+                    className="md:w-32"
+                    // href={"/dashboard"}
+                  >
+                    LayerZero
+                  </Button>
+                </Link>
+                <Link href={"/hyperlane/nft-mint"}>
+                  <Button
+                    variant={"etherway"}
+                    className="md:w-32"
+                    // href={"/dashboard"}
+                  >
+                    Hyperlane
+                  </Button>
+                </Link>
                 {/* <Button
                   variant={"etherway"}
                   className="md:w-32"
