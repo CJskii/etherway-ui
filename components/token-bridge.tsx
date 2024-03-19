@@ -18,6 +18,7 @@ import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 import { handleBridging } from "@/common/utils/interaction/handlers/handleBridging";
 import { getUserBalance } from "@/common/utils/getters/getBalance";
 import { activeChains } from "@/constants/config/chainsConfig";
+import TokenMintModal from "./modal-mint-token";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -272,6 +273,20 @@ export default function TokenMintAndBridge({
               Your Balance: {userBalance}
             </Typography>
           </DashboardCard>
+
+          <TokenMintModal
+            props={{
+              isOpen: showMintModal,
+              setIsOpen: setShowMintModal,
+              isLoading: isLoading,
+              modalTitle: "Minting Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Mint",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: mintAmount,
+            }}
+          />
 
           <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
             <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
