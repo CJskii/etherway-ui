@@ -109,6 +109,7 @@ export default function TokenMintAndBridge({
   const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
 
   const handleMintButton = async () => {
+    if (mintAmount === 0) return;
     if (!isConnected && openConnectModal) {
       openConnectModal();
       return;
@@ -149,7 +150,7 @@ export default function TokenMintAndBridge({
   };
 
   const handleBridgeButton = async () => {
-    console.log("Bridge button clicked");
+    if (bridgeAmount === "") return;
     if (!isConnected && openConnectModal) {
       openConnectModal();
       return;
