@@ -6,7 +6,7 @@ import { getSupportedChains } from "./chainsConfig";
 const customChains = getSupportedChains();
 
 export const theme = darkTheme({
-  accentColor: "#ff57b6",
+  accentColor: "#FF8F8F",
   accentColorForeground: "#181920",
   borderRadius: "small",
   fontStack: "system",

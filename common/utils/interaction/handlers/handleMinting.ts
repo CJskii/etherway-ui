@@ -20,9 +20,7 @@ export const handleMinting = async ({
   mintQuantity?: number;
   userAddress: `0x${string}`;
 }) => {
-  // TODO: Refactor this function with dynamic gas limit
-  // TODO: Add conditions for OFT minting
-  const mintGasLimit = mintNetwork.name == "Arbitrum One" ? 2000000 : 1000000;
+  const mintGasLimit = mintNetwork.params?.gasLimit.mint || 500000;
 
   if (
     contractProvider.type == "layerzero" &&
@@ -110,7 +108,7 @@ const handleLayerZeroONFTMinting = async ({
   mintGasLimit,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
 }) => {
   try {
     // Initiate provider and signer
@@ -156,7 +154,7 @@ const handleHyperlaneONFTMinting = async ({
   mintGasLimit,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
 }) => {
   try {
     // Initiate provider and signer
@@ -202,7 +200,7 @@ const handleLayerZeroOFTMinting = async ({
   mintQuantity,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
   mintQuantity: number;
 }) => {
   try {
@@ -231,6 +229,7 @@ const handleLayerZeroOFTMinting = async ({
 
     const tx = await contract.mint(toAddress, mintQuantity, {
       value: fee,
+      gasLimit: mintGasLimit,
     });
 
     await tx.wait();
@@ -244,15 +243,13 @@ const handleLayerZeroOFTMinting = async ({
   }
 };
 
-//TODO: Implement this function and test it
-
 const handleHyperlaneOFTMinting = async ({
   mintNetwork,
   mintGasLimit,
   mintQuantity,
 }: {
   mintNetwork: Network;
-  mintGasLimit: number;
+  mintGasLimit: number | string;
   mintQuantity: number;
 }) => {
   try {
@@ -275,12 +272,15 @@ const handleHyperlaneOFTMinting = async ({
       mintNetwork.deployedContracts.hyperlane.OFT.ABI,
       signer as any,
     );
-    const fee = await contract.getMintFee(mintQuantity);
+
+    const contractFee = await contract.fee();
+    const totalFee = contractFee.mul(mintQuantity);
 
     console.log(`Minting ${mintQuantity} OFTs...`);
 
     const tx = await contract.mint(toAddress, mintQuantity, {
-      value: fee,
+      value: totalFee,
+      mintGasLimit,
     });
 
     await tx.wait();

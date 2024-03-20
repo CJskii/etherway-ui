@@ -50,9 +50,9 @@ const navLinks: NavLinks[] = [
 
 export function Header() {
   return (
-    <div className="fixed z-50 flex w-full items-center justify-between border-b border-neutral-400/50 bg-white/50 p-4 backdrop-blur-xl dark:bg-black/50 md:px-16 md:py-4">
-      <Link href={"/"}>
-        <div className="hidden md:block">
+    <div className="fixed z-50 flex w-full justify-between items-center border-b border-neutral-400/50 bg-white/50 p-4 backdrop-blur-xl dark:bg-black/50 md:px-16 md:py-4">
+      <div className="flex-1 hidden md:block">
+        <Link href="/" className="flex items-center justify-start">
           <Image
             src={logoDark}
             alt="etherway logo"
@@ -63,27 +63,65 @@ export function Header() {
             alt="etherway logo"
             className="hidden w-40 dark:block"
           />
-        </div>
-        <Image src={logo} alt="Icon" className="block w-10 md:hidden" />
-      </Link>
-      <div className="hidden items-center gap-3 md:flex ">
+        </Link>
+      </div>
+
+      <div className="flex-1 justify-center hidden items-center gap-3 md:flex">
         <NavLinks />
       </div>
-      <div className="hidden items-center gap-3 md:flex ">
+
+      <div className="flex-1  justify-end items-center gap-3 hidden  md:flex">
+        <ThemeToggler />
+        <ConnectWalletButton />
         {/* <Link href={"/contact-us"}>
           <Button className="bg-gradient rounded-xl font-normal  text-white hover:opacity-90">
           Contact Us
           </Button>
         </Link> */}
-        <ThemeToggler />
-        <ConnectWalletButton />
-        {/* <ConnectButton /> */}
       </div>
+
       <div className="block md:hidden">
         <HeaderSheet />
       </div>
     </div>
   );
+
+  // return (
+  //   <div className="fixed z-50 flex w-full justify-between items-center border-b border-neutral-400/50 bg-white/50 p-4 backdrop-blur-xl dark:bg-black/50 md:px-16 md:py-4">
+  //
+  //     <div className="flex-1 hidden md:block">
+  //       <Link href="/" className="flex items-center justify-start">
+  //
+  //         <Image
+  //           src={logoDark}
+  //           alt="etherway logo"
+  //           className="block w-40 dark:hidden"
+  //         />
+  //         <Image
+  //           src={logoLight}
+  //           alt="etherway logo"
+  //           className="hidden w-40 dark:block"
+  //         />
+  //       </Link>
+  //     </div>
+
+  //
+  //     <div className="flex-1 justify-center hidden items-center gap-3 md:flex">
+  //       <NavLinks />
+  //     </div>
+
+  //
+  //     <div className="flex-1  justify-end items-center gap-3 hidden  md:flex">
+  //       <ThemeToggler />
+  //       <ConnectWalletButton />
+  //     </div>
+
+  //
+  //     <div className="block md:hidden">
+  //       <HeaderSheet />
+  //     </div>
+  //   </div>
+  // );
 }
 
 export function NavLinks() {
@@ -160,7 +198,7 @@ export function NavLinks() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/faq"}>
+          <Link href={"/guides/faq"}>
             <DropdownMenuItem className="cursor-pointer">FAQ</DropdownMenuItem>
           </Link>
           <Link href={"/chains"}>

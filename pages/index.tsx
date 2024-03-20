@@ -20,13 +20,12 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 const Home: NextPage = () => {
   return (
     <>
-      {/* // TODO: Uncomment below line to use the new design */}
       <div className="relative h-auto">
         <Header />
         <div className=" z-10 ">
           <HeroSection />
           <Container>
-            <OnboardSection />
+            {/* <OnboardSection /> */}
             <StatsSection />
             <FeaturesSection />
             {/* <ContactSection /> */}
@@ -47,12 +46,6 @@ const Home: NextPage = () => {
       {/* <div className="flex justify-center items-center pt-8">
         {"There's nothing here yet, but the devs are building something amazing!"}
       </div> */}
-      {/* <HeadComponent />
-      <Hero />
-      <div className="divider divider-primary"></div>
-      <Process />
-      <div className="divider divider-primary"></div>
-      <NewsLetter /> */}
     </>
   );
 };

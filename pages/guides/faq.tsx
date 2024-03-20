@@ -1,11 +1,9 @@
 import dynamic from "next/dynamic";
-import HeadComponent from "../common/elements/HeadComponent";
+import HeadComponent from "../../common/elements/HeadComponent";
 import { Layout } from "@/components/dashboard/layout";
-
-const FaqSection = dynamic(() => import("../components/Faq/FaqSection"), {
-  loading: () => <span className="loading loading-dots loading-lg"></span>,
-  ssr: false,
-});
+import { Typography } from "@/components/ui/typography";
+import QnA from "@/components/guides/question-answer";
+import FaqSection from "@/components/Faq/FaqSection";
 
 const FAQ = () => {
   return (

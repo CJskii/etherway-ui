@@ -18,6 +18,8 @@ import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 import { handleBridging } from "@/common/utils/interaction/handlers/handleBridging";
 import { getUserBalance } from "@/common/utils/getters/getBalance";
 import { activeChains } from "@/constants/config/chainsConfig";
+import TokenMintModal from "./modal-mint-token";
+import TokenBridgeModal from "./modal-bridge-token";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -33,17 +35,6 @@ interface TokenMintAndBridgeProps {
 export default function TokenMintAndBridge({
   params,
 }: TokenMintAndBridgeProps) {
-  // TODO: The idea here is that we're going to display FROM and TO network selection modals with search bar functionality to the user
-  // We will display user balance in his wallet for the current chain
-  // In order to make bridge user balance has to be greater than 0
-
-  // So the user will need to mint tokens first, this should automatically update his balance with the the minted tokens
-  // Then the user should select FROM and TO network, enter the amount of tokens he wants to bridge and click on the bridge button
-
-  // If user is on the correct network we will call bridge function and send metamask popup
-  // If user isn't connected to this network we will request network change
-  // If user wallet isn't connected we will request to connect a wallet
-
   const { contractProvider, headerDescription, stepDescription } = params;
   const { type, contract } = contractProvider;
   const { openConnectModal } = useConnectModal();
@@ -118,6 +109,7 @@ export default function TokenMintAndBridge({
   const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
 
   const handleMintButton = async () => {
+    if (mintAmount === 0) return;
     if (!isConnected && openConnectModal) {
       openConnectModal();
       return;
@@ -129,8 +121,6 @@ export default function TokenMintAndBridge({
         setIsLoading(true);
         setShowMintModal(true);
         // setIsMinting(true);
-
-        // TODO: handleMinting function should be implemented for the ERC20 tokens
         const result = await handleMinting({
           mintNetwork: fromNetwork,
           contractProvider,
@@ -160,7 +150,7 @@ export default function TokenMintAndBridge({
   };
 
   const handleBridgeButton = async () => {
-    console.log("Bridge button clicked");
+    if (bridgeAmount === "" || fromNetwork.id === toNetwork.id) return;
     if (!isConnected && openConnectModal) {
       openConnectModal();
       return;
@@ -179,7 +169,6 @@ export default function TokenMintAndBridge({
         if (Number(bridgeAmount) > userBalance)
           throw new Error("insufficient OFT balance for transfer");
 
-        // TODO: handleBridging function should be implemented for the ERC20 tokens
         const result = await handleBridging({
           TOKEN_ID: bridgeAmount,
           fromNetwork,
@@ -235,7 +224,6 @@ export default function TokenMintAndBridge({
         });
       }
     };
-    console.log("Getting balance");
     getBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPageLoaded, fromNetwork, toNetwork, setToNetwork]);
@@ -249,14 +237,14 @@ export default function TokenMintAndBridge({
         type,
         contract,
       }) as string[];
-      const defaultNetwork = activeChains.find(
-        (chain) => chain.name === validNetworks[0],
+      const defaultNetwork = networksByProvider.find((network) =>
+        validNetworks.includes(network.name),
       );
+
       defaultNetwork
         ? setToNetwork(defaultNetwork as Network)
-        : setToNetwork(activeChains[0] as Network);
+        : setToNetwork(networksByProvider[0] as Network);
     }
-    setIsPageLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromNetwork, toNetwork, setToNetwork]);
 
@@ -275,6 +263,34 @@ export default function TokenMintAndBridge({
               Your Balance: {userBalance}
             </Typography>
           </DashboardCard>
+
+          <TokenMintModal
+            props={{
+              isOpen: showMintModal,
+              setIsOpen: setShowMintModal,
+              isLoading: isLoading,
+              modalTitle: "Minting Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Mint",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: mintAmount,
+            }}
+          />
+
+          <TokenBridgeModal
+            props={{
+              isOpen: showBridgingModal,
+              setIsOpen: setShowBridgingModal,
+              isLoading: isLoading,
+              modalTitle: "Bridging Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Bridge",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: Number(bridgeAmount),
+            }}
+          />
 
           <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
             <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
