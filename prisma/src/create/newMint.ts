@@ -39,7 +39,7 @@ export default async function mintInteraction({
       type: interactionType,
       contractType: contractType,
       points: 100, // Points for mint interaction
-      user: { connect: { ethereumAddress: ethAddress } },
+      user: { connect: { ethereumAddress: ethAddress.toLowerCase() } },
       chainId,
     },
   });

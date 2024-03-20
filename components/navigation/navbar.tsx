@@ -66,17 +66,18 @@ export function Header() {
         </div>
         <Image src={logo} alt="Icon" className="block w-10 md:hidden" />
       </Link>
-      <div className="hidden items-center gap-3 md:flex">
+      <div className="hidden items-center gap-3 md:flex ">
         <NavLinks />
       </div>
-      <div className="hidden items-center gap-3 md:flex">
-        <ThemeToggler />
-        <Link href={"/contact-us"}>
+      <div className="hidden items-center gap-3 md:flex ">
+        {/* <Link href={"/contact-us"}>
           <Button className="bg-gradient rounded-xl font-normal  text-white hover:opacity-90">
-            Contact Us
+          Contact Us
           </Button>
-        </Link>
-        <ConnectButton />
+        </Link> */}
+        <ThemeToggler />
+        <ConnectWalletButton />
+        {/* <ConnectButton /> */}
       </div>
       <div className="block md:hidden">
         <HeaderSheet />

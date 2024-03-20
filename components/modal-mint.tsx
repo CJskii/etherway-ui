@@ -33,8 +33,6 @@ const MintModal = ({ props }: MintModalProps) => {
     nftId,
   } = props;
 
-  const router = useRouter();
-
   const renderModalContent = () => {
     if (isLoading) {
       return (
@@ -108,7 +106,9 @@ const MintModal = ({ props }: MintModalProps) => {
             </Typography>
             <Button
               className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+              }}
             >
               Continue
             </Button>
@@ -119,7 +119,7 @@ const MintModal = ({ props }: MintModalProps) => {
   };
 
   const modalHeight =
-    nftId && !isLoading && errorMessage == "" ? "600px" : "auto";
+    nftId && !isLoading && errorMessage == "" ? "min-h-[600px]" : "auto";
 
   return (
     <div>

@@ -3,11 +3,14 @@ import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { Network } from "../../../types/network";
 import { getTokenId } from "../../getters/getTokenId";
 import { Signer } from "ethers";
+import { updateMintData } from "../../api/mintAPI";
+import { ContractType } from "@prisma/client";
 
 export const handleMinting = async ({
   mintNetwork,
   contractProvider,
   mintQuantity,
+  userAddress,
 }: {
   mintNetwork: Network;
   contractProvider: {
@@ -15,6 +18,7 @@ export const handleMinting = async ({
     contract: string;
   };
   mintQuantity?: number;
+  userAddress: `0x${string}`;
 }) => {
   // TODO: Refactor this function with dynamic gas limit
   // TODO: Add conditions for OFT minting
@@ -24,26 +28,80 @@ export const handleMinting = async ({
     contractProvider.type == "layerzero" &&
     contractProvider.contract == "ONFT"
   ) {
-    return handleLayerZeroONFTMinting({ mintNetwork, mintGasLimit });
+    const result = await handleLayerZeroONFTMinting({
+      mintNetwork,
+      mintGasLimit,
+    });
+
+    if (result && result.txHash) {
+      const { response, error: apiError } = await updateMintData({
+        address: userAddress,
+        contractType: ContractType.OFT_ERC20,
+        chainId: mintNetwork.id,
+      });
+      return { result, response, apiError };
+    }
+
+    return { result };
   } else if (
     contractProvider.type == "layerzero" &&
     contractProvider.contract == "OFT"
   ) {
-    return handleLayerZeroOFTMinting({
+    const result = await handleLayerZeroOFTMinting({
       mintNetwork,
       mintGasLimit,
       mintQuantity: mintQuantity || 0,
     });
+
+    if (result && result.txHash) {
+      const { response, error: apiError } = await updateMintData({
+        address: userAddress,
+        contractType: ContractType.OFT_ERC20,
+        chainId: mintNetwork.id,
+      });
+      return { result, response, apiError };
+    }
+
+    return { result };
   } else if (
     contractProvider.type == "hyperlane" &&
     contractProvider.contract == "ONFT"
   ) {
-    return handleHyperlaneONFTMinting({ mintNetwork, mintGasLimit });
+    const result = await handleHyperlaneONFTMinting({
+      mintNetwork,
+      mintGasLimit,
+    });
+
+    if (result && result.txHash) {
+      const { response, error: apiError } = await updateMintData({
+        address: userAddress,
+        contractType: ContractType.OFT_ERC20,
+        chainId: mintNetwork.id,
+      });
+      return { result, response, apiError };
+    }
+
+    return { result };
   } else if (
     contractProvider.type == "hyperlane" &&
     contractProvider.contract == "OFT"
   ) {
-    // return handleHyperlaneOFTMinting({ mintNetwork, mintGasLimit, mintQuantity });
+    const result = await handleHyperlaneOFTMinting({
+      mintNetwork,
+      mintGasLimit,
+      mintQuantity: mintQuantity || 0,
+    });
+
+    if (result && result.txHash) {
+      const { response, error: apiError } = await updateMintData({
+        address: userAddress,
+        contractType: ContractType.OFT_ERC20,
+        chainId: mintNetwork.id,
+      });
+      return { result, response, apiError };
+    }
+
+    return { result };
   }
 };
 
@@ -188,50 +246,50 @@ const handleLayerZeroOFTMinting = async ({
 
 //TODO: Implement this function and test it
 
-// const handleHyperlaneOFTMinting = async ({
-//   mintNetwork,
-//   mintGasLimit,
-//   mintQuantity,
-// }: {
-//   mintNetwork: Network;
-//   mintGasLimit: number;
-//   mintQuantity: number;
-// }) => {
-//   try {
-//     // Initiate provider and signer
-//     const provider = await getProviderOrSigner();
-//     const signer = await getProviderOrSigner(true);
-//     const toAddress = (await (signer as Signer).getAddress()).toLowerCase();
+const handleHyperlaneOFTMinting = async ({
+  mintNetwork,
+  mintGasLimit,
+  mintQuantity,
+}: {
+  mintNetwork: Network;
+  mintGasLimit: number;
+  mintQuantity: number;
+}) => {
+  try {
+    // Initiate provider and signer
+    const provider = await getProviderOrSigner();
+    const signer = await getProviderOrSigner(true);
+    const toAddress = (await (signer as Signer).getAddress()).toLowerCase();
 
-//     if (!(provider instanceof ethers.providers.Web3Provider)) {
-//       console.error("Provider is not an instance of Web3Provider");
-//       return;
-//     }
+    if (!(provider instanceof ethers.providers.Web3Provider)) {
+      console.error("Provider is not an instance of Web3Provider");
+      return;
+    }
 
-//     if (!mintNetwork.deployedContracts)
-//       throw new Error(`No deployed contracts found for ${mintNetwork.name}`);
+    if (!mintNetwork.deployedContracts)
+      throw new Error(`No deployed contracts found for ${mintNetwork.name}`);
 
-//     // Initiate contract instance and get fee
-//     const contract = new Contract(
-//       mintNetwork.deployedContracts.hyperlane.OFT.address,
-//       mintNetwork.deployedContracts.hyperlane.OFT.ABI,
-//       signer as any,
-//     );
-//     const fee = await contract.getMintFee(mintQuantity);
+    // Initiate contract instance and get fee
+    const contract = new Contract(
+      mintNetwork.deployedContracts.hyperlane.OFT.address,
+      mintNetwork.deployedContracts.hyperlane.OFT.ABI,
+      signer as any,
+    );
+    const fee = await contract.getMintFee(mintQuantity);
 
-//     console.log(`Minting ${mintQuantity} OFTs...`);
+    console.log(`Minting ${mintQuantity} OFTs...`);
 
-//     const tx = await contract.mint(toAddress, mintQuantity, {
-//       value: fee,
-//     });
+    const tx = await contract.mint(toAddress, mintQuantity, {
+      value: fee,
+    });
 
-//     await tx.wait();
+    await tx.wait();
 
-//     const txHash: string = tx.hash;
+    const txHash: string = tx.hash;
 
-//     return { mintedID: 0, txHash };
-//   } catch (e) {
-//     console.log(e);
-//     throw new Error((e as any).data?.message || (e as any)?.message);
-//   }
-// };
+    return { mintedID: 0, txHash };
+  } catch (e) {
+    console.log(e);
+    throw new Error((e as any).data?.message || (e as any)?.message);
+  }
+};

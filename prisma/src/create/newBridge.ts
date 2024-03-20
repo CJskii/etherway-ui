@@ -21,7 +21,7 @@ export default async function newBridge({
       points: 50,
       user: {
         connect: {
-          ethereumAddress: ethAddress,
+          ethereumAddress: ethAddress.toLowerCase(),
         },
       },
       chainId,

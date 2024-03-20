@@ -18,6 +18,7 @@ import { useToast } from "./ui/use-toast";
 import { updateMintData } from "@/common/utils/api/mintAPI";
 import { ContractType } from "@prisma/client";
 import MintModal from "./modal-mint";
+import { useRouter } from "next/router";
 
 interface NFTMintProps {
   params: {
@@ -39,11 +40,13 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [mintedNFT, setMintedNFT] = useState("");
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [apiError, setApiError] = useState("");
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
   const { toast } = useToast();
 
   // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
+  const router = useRouter();
 
   const {
     selectedNetwork: mintNetwork,
@@ -70,19 +73,25 @@ export default function NFTMint({ params }: NFTMintProps) {
           return;
         }
 
-        const result = await handleMinting({
+        const data = await handleMinting({
           mintNetwork,
           contractProvider,
+          userAddress: account.address,
         });
 
-        if (result) {
-          const { mintedID, txHash } = result;
+        // TODO: Display the Toast Error
+        // @ts-ignore
+        setApiError(data?.apiError);
 
-          const { response, error: apiError } = await updateMintData({
-            address: account.address,
-            contractType: ContractType.ONFT_ERC721,
-            chainId: mintNetwork.id,
-          });
+        if (data?.response) {
+          handleAPIError(data.response);
+        }
+
+        if (data?.result) {
+          const { mintedID, txHash } = data.result;
+
+          // check the api Response and the Error and accordingly display it to the user
+
           setTxHash(txHash);
           setMintedNFT(mintedID.toString());
           setMinting(false);
@@ -96,6 +105,76 @@ export default function NFTMint({ params }: NFTMintProps) {
         setMinting(false);
         handleErrors({ e, setErrorMessage });
       }
+    }
+  };
+
+  const tryAPICall = async () => {
+    try {
+      if (account && account.address) {
+        let _contractType: ContractType = ContractType.OFT_ERC20;
+
+        if (contractProvider.type == "layerzero") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.ONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.OFT_ERC20;
+          } else {
+            return;
+          }
+        } else if (contractProvider.type == "hyperlane") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.HONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.HOFT_ERC20;
+          } else {
+            return;
+          }
+        } else {
+          return;
+        }
+
+        const { response, error: apiError } = await updateMintData({
+          address: account.address,
+          contractType: _contractType,
+          chainId: mintNetwork.id,
+        });
+
+        // TODO: Display the Toast Error
+        // @ts-ignore
+        setApiError(apiError);
+
+        if (response) {
+          handleAPIError(response);
+        }
+      } else {
+        console.log("No Account found !!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAPIError = (response: Response) => {
+    // TODO: Display the Toast Error
+
+    if (response?.status == 200) {
+      console.log("API Call on update on db Completed");
+    } else if (response?.status == 405) {
+      console.log("Method Not allowed");
+      setApiError("Method Not allowed");
+    } else if (response?.status == 400) {
+      // let _error = await response.json();
+      setApiError("Missing parameters");
+      console.error("Missing parameters");
+    } else if (response?.status == 401) {
+      console.error("You must be signed in to interact with the API");
+      setApiError("You must be signed in to interact with the API");
+    } else if (response?.status == 500) {
+      console.error("Internal Server Error");
+      setApiError("Internal Server Error");
+    } else {
+      console.error("Error occured during APICall");
+      setApiError("Error occured during APICall");
     }
   };
 
@@ -188,12 +267,36 @@ export default function NFTMint({ params }: NFTMintProps) {
             <NetworkModal props={networkModalProps} />
           </div>
 
-          <Button
-            className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-            onClick={handleMintButton}
-          >
-            Mint
-          </Button>
+          {mintedNFT ? (
+            <>
+              {apiError != "" ? (
+                <Button
+                  className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+                  onClick={tryAPICall}
+                >
+                  Try Again
+                </Button>
+              ) : (
+                <Button
+                  className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+                  onClick={() => {
+                    router.push(
+                      `/${params.contractProvider.type}/onft-bridge?nftId=${mintedNFT}`,
+                    );
+                  }}
+                >
+                  Complete
+                </Button>
+              )}
+            </>
+          ) : (
+            <Button
+              className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handleMintButton}
+            >
+              Mint
+            </Button>
+          )}
         </div>
       </div>
     </div>

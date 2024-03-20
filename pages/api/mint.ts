@@ -34,10 +34,10 @@ export default async function handler(
       interactionType: InteractionType.MINT,
       chainId,
     });
-    console.log("Bridge recorded and points awarded");
-    res.status(200).json({ message: "Bridge recorded and points awarded" });
+    console.log("Mint recorded and points awarded");
+    res.status(200).json({ message: "Mint recorded and points awarded" });
   } catch (error) {
-    console.error("Error in /api/bridge:", error);
+    console.error("Error in /api/mint:", error);
     res.status(500).json({
       message: "Internal Server Error",
       error: (error as any).message,

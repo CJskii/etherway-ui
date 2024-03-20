@@ -16,6 +16,8 @@ import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 import { useAccount, useSwitchChain } from "wagmi";
 
 import BridgeModal from "./bridge-modal";
+import { ContractType } from "@prisma/client";
+import { updateBridgeData } from "@/common/utils/api/bridge";
 
 interface NFTBridgeProps {
   params: {
@@ -48,6 +50,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   // const [wrongNetwork, setWrongNetwork] = useState(false);
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [apiError, setApiError] = useState("");
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -105,6 +108,15 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           address: account.address ? account.address : "",
         });
 
+        if (data?.APIerror) {
+          // @ts-ignore
+          setApiError(data.APIerror);
+        }
+
+        if (data?.response) {
+          handleAPIError(data.response);
+        }
+
         // data -> { tx, response , APIError , BridgeError }
 
         const txHash = data?.tx ? data.tx.hash : "";
@@ -117,6 +129,76 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         setIsLoading(false);
         handleErrors({ e, setErrorMessage });
       }
+    }
+  };
+
+  const tryAPICall = async () => {
+    try {
+      if (account && account.address) {
+        let _contractType: ContractType = ContractType.OFT_ERC20;
+
+        if (contractProvider.type == "layerzero") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.ONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.OFT_ERC20;
+          } else {
+            return;
+          }
+        } else if (contractProvider.type == "hyperlane") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.HONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.HOFT_ERC20;
+          } else {
+            return;
+          }
+        } else {
+          return;
+        }
+
+        const { response, error: apiError } = await updateBridgeData({
+          address: account.address,
+          contractType: _contractType,
+          chainId: fromNetwork.id,
+        });
+
+        // TODO: Display the Toast Error
+        // @ts-ignore
+        setApiError(apiError);
+
+        if (response) {
+          handleAPIError(response);
+        }
+      } else {
+        console.log("No Account found !!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleAPIError = (response: Response) => {
+    // TODO: Display the Toast Error
+
+    if (response?.status == 200) {
+      console.log("API Call on update on db Completed");
+    } else if (response?.status == 405) {
+      console.log("Method Not allowed");
+      setApiError("Method Not allowed");
+    } else if (response?.status == 400) {
+      // let _error = await response.json();
+      setApiError("Missing parameters");
+      console.error("Missing parameters");
+    } else if (response?.status == 401) {
+      console.error("You must be signed in to interact with the API");
+      setApiError("You must be signed in to interact with the API");
+    } else if (response?.status == 500) {
+      console.error("Internal Server Error");
+      setApiError("Internal Server Error");
+    } else {
+      console.error("Error occured during APICall");
+      setApiError("Error occured during APICall");
     }
   };
 
@@ -216,13 +298,27 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
               onChange={(e) => setNftId(e.target.value)}
             />
           </Label>
-
-          <Button
-            className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-            onClick={handleBridgeButton}
-          >
-            Bridge
-          </Button>
+          {txHash ? (
+            <>
+              {apiError ? (
+                <Button
+                  className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+                  onClick={tryAPICall}
+                >
+                  Try Again
+                </Button>
+              ) : (
+                <a>Bridge Complete</a>
+              )}
+            </>
+          ) : (
+            <Button
+              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handleBridgeButton}
+            >
+              Bridge
+            </Button>
+          )}
         </div>
       </div>
     </div>

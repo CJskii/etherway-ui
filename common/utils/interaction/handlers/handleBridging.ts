@@ -82,10 +82,12 @@ export const handleBridging = async ({
       txGasLimit: txGasLimit || 500000,
     });
 
+    // check the Tx with the tx Hash to confirm that it passed
+
     if (tx.hash) {
       const { response, error: APIerror } = await updateBridgeData({
         address: ownerAddress,
-        contractType: ContractType.ONFT_ERC721,
+        contractType: ContractType.HONFT_ERC721,
         chainId: fromNetwork.id,
       });
       return { tx, response, bridgeError, APIerror };
