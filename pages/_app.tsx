@@ -37,31 +37,12 @@ const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: "Sign in to Etherway",
 });
 
-import { activeChains } from "@/constants/config/chainsConfig";
-import Script from "next/script";
-
 export const raleway = Raleway({
   subsets: ["latin"],
   variable: "--font-raleway",
 });
 
 const inter = Inter({ subsets: ["latin"] });
-
-// const Navbar = dynamic(() => import("../common/components/elements/Navbar"), {
-//   loading: () => <span className="loading loading-dots loading-lg"></span>,
-//   ssr: true,
-// });
-
-// const Footer = dynamic(() => import("../common/components/elements/Footer"), {
-//   loading: () => <span className="loading loading-dots loading-lg"></span>,
-//   ssr: false,
-// });
-
-// const alertProps = {
-//   title:
-//     "Share your thoughts in our quick survey and enter the draw for 50 USDC - it's your chance to make an impact and win!",
-//   link: "https://mintly.deform.cc/survey",
-// };
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   const router = useRouter();
@@ -89,7 +70,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
             <RainbowKitSiweNextAuthProvider
               getSiweMessageOptions={getSiweMessageOptions}
             >
-              <RainbowKitProvider>
+              <RainbowKitProvider theme={theme}>
                 <ThemeProvider
                   attribute="class"
                   defaultTheme="system"

@@ -198,7 +198,7 @@ export function NavLinks() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/faq"}>
+          <Link href={"/guides/faq"}>
             <DropdownMenuItem className="cursor-pointer">FAQ</DropdownMenuItem>
           </Link>
           <Link href={"/chains"}>

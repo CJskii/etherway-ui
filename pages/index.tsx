@@ -25,7 +25,7 @@ const Home: NextPage = () => {
         <div className=" z-10 ">
           <HeroSection />
           <Container>
-            <OnboardSection />
+            {/* <OnboardSection /> */}
             <StatsSection />
             <FeaturesSection />
             {/* <ContactSection /> */}

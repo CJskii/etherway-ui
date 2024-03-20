@@ -64,18 +64,19 @@ export function Footer({ isDashboard }: FooterProps) {
           <Button variant={"etherwaySecondary"}>
             <XIcon className="h-4 w-4 mx-2" /> Twitter
           </Button>
-          <Button variant={"etherwaySecondary"}>
+          {/* <Button variant={"etherwaySecondary"}>
             <Instagram className="h-4 w-4 mx-2" />
             Instagram
-          </Button>
+          </Button> */}
           <Button variant={"etherwaySecondary"}>
             <TelegramIcon className="h-4 w-4 mx-2" />
             Telegram
           </Button>
-          <Button variant={"etherwaySecondary"} className="">
+          {/* TODO: Add Galxe, Zealy  */}
+          {/* <Button variant={"etherwaySecondary"} className="">
             <GitBookIcon className="h-4 w-4 mx-2" />
             GitBook
-          </Button>
+          </Button> */}
         </div>
       )}
       {isDashboard && (
@@ -87,18 +88,19 @@ export function Footer({ isDashboard }: FooterProps) {
           <Button variant={"dashboardFooter"}>
             <XIcon className="h-4 w-4 mx-2" /> Twitter
           </Button>
-          <Button variant={"dashboardFooter"}>
+          {/* <Button variant={"dashboardFooter"}>
             <Instagram className="h-4 w-4 mx-2" />
             Instagram
-          </Button>
+          </Button> */}
           <Button variant={"dashboardFooter"}>
             <TelegramIcon className="h-4 w-4 mx-2" />
             Telegram
           </Button>
-          <Button variant={"dashboardFooter"} className="">
+          {/* TODO: Add Galxe, Zealy  */}
+          {/* <Button variant={"dashboardFooter"} className="">
             <GitBookIcon className="h-4 w-4 mx-2" />
             GitBook
-          </Button>
+          </Button> */}
         </div>
       )}
     </div>
