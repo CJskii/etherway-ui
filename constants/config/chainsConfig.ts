@@ -64,9 +64,11 @@ export const mainnetChains: Network[] = [
   },
   {
     ...blast,
+    iconUrl: "/chain-icons/blast.webp",
   },
   {
     ...gnosis,
+    iconUrl: "/chain-icons/gnosis.svg",
   },
   {
     ...linea,
