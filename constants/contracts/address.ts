@@ -97,16 +97,16 @@ const LAYERZERO_CONTRACTS = {
       ABI: LZ_OFT.abi,
     },
   },
-  "82": {
-    ONFT: {
-      address: "0x262EaED1BeB7bEDB62B58ce8B78286E67F838EFD",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0xf3048723631e35D900F192e71A1FdEa112d26513",
-      ABI: LZ_OFT.abi,
-    },
-  },
+  // "82": {
+  //   ONFT: {
+  //     address: "0x262EaED1BeB7bEDB62B58ce8B78286E67F838EFD",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0xf3048723631e35D900F192e71A1FdEa112d26513",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
   "100": {
     ONFT: {
       address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
@@ -117,16 +117,16 @@ const LAYERZERO_CONTRACTS = {
       ABI: LZ_OFT.abi,
     },
   },
-  "122": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
+  // "122": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
   "137": {
     ONFT: {
       address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
@@ -177,26 +177,26 @@ const LAYERZERO_CONTRACTS = {
       ABI: LZ_OFT.abi,
     },
   },
-  "592": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "1088": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
+  // "592": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "1088": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
   "1101": {
     ONFT: {
       address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
@@ -207,96 +207,96 @@ const LAYERZERO_CONTRACTS = {
       ABI: LZ_OFT.abi,
     },
   },
-  "1116": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "1284": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "1285": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "1559": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "2222": {
-    ONFT: {
-      address: "0x744f2b01846d05Fbd1694d36C7d89077B24c3Ea3",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "3776": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "5000": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "7700": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "8217": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
+  // "1116": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "1284": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "1285": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "1559": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "2222": {
+  //   ONFT: {
+  //     address: "0x744f2b01846d05Fbd1694d36C7d89077B24c3Ea3",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "3776": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "5000": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "7700": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "8217": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
   "8453": {
     ONFT: {
       address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
@@ -307,16 +307,16 @@ const LAYERZERO_CONTRACTS = {
       ABI: LZ_OFT.abi,
     },
   },
-  "34443": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
+  // "34443": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
   "42161": {
     ONFT: {
       address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
@@ -327,16 +327,16 @@ const LAYERZERO_CONTRACTS = {
       ABI: LZ_OFT.abi,
     },
   },
-  "42170": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
+  // "42170": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
   "42220": {
     ONFT: {
       address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
@@ -397,36 +397,36 @@ const LAYERZERO_CONTRACTS = {
       ABI: LZ_OFT.abi,
     },
   },
-  "1313161554": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "1380012617": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
-  "1666600000": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: LZ_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
-      ABI: LZ_OFT.abi,
-    },
-  },
+  // "1313161554": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "1380012617": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
+  // "1666600000": {
+  //   ONFT: {
+  //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+  //     ABI: LZ_ONFT.abi,
+  //   },
+  //   OFT: {
+  //     address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+  //     ABI: LZ_OFT.abi,
+  //   },
+  // },
 };
 
 const HYPERLANE_CONTRACTS = {
@@ -520,6 +520,16 @@ const HYPERLANE_CONTRACTS = {
       ABI: HL_OFT.abi,
     },
   },
+  "1101": {
+    ONFT: {
+      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+      ABI: HL_ONFT.abi,
+    },
+    OFT: {
+      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+      ABI: HL_OFT.abi,
+    },
+  },
   "1284": {
     ONFT: {
       address: "0x715bdf3d4989fabe0506d37761c0ee13c908e9fb",
@@ -527,16 +537,6 @@ const HYPERLANE_CONTRACTS = {
     },
     OFT: {
       address: "0xedEF6BfF33A5d3E8dd3F3C1eD11Fd7bedC5f3bE3",
-      ABI: HL_OFT.abi,
-    },
-  },
-  "1442": {
-    ONFT: {
-      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
-      ABI: HL_ONFT.abi,
-    },
-    OFT: {
-      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
       ABI: HL_OFT.abi,
     },
   },
