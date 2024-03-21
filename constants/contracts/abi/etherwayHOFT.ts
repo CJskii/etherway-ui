@@ -40,25 +40,6 @@ export const abi = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint16",
-        name: "targetChain",
-        type: "uint16",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
-    ],
-    name: "GasSent",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: "uint256",
         name: "amount",
         type: "uint256",
@@ -90,12 +71,18 @@ export const abi = [
       },
       {
         indexed: false,
+        internalType: "uint32",
+        name: "dstChain",
+        type: "uint32",
+      },
+      {
+        indexed: false,
         internalType: "address",
         name: "owner",
         type: "address",
       },
     ],
-    name: "TokensBurned",
+    name: "MessageSent",
     type: "event",
   },
   {
@@ -248,33 +235,7 @@ export const abi = [
   },
   {
     inputs: [],
-    name: "estimateGasBuffer",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "fee",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "feePrecentage",
     outputs: [
       {
         internalType: "uint256",
@@ -307,12 +268,7 @@ export const abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "",
+        name: "nativeFee",
         type: "uint256",
       },
     ],
@@ -456,37 +412,11 @@ export const abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_estimateGasBuffer",
-        type: "uint256",
-      },
-    ],
-    name: "setEstimateGasBuffer",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
         name: "_fee",
         type: "uint256",
       },
     ],
     name: "setFee",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_feePrecentage",
-        type: "uint256",
-      },
-    ],
-    name: "setFeePrecentage",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
