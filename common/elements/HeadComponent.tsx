@@ -8,10 +8,10 @@ interface HeadComponentProps {
 }
 
 const HeadComponent: React.FC<HeadComponentProps> = ({
-  title = "Mintly: Omnichain Interoperability with LayerZero Technology",
-  description = "Mintly redefines blockchain efficiency with wallet integration, gas refueling, cross-chain messaging, and interoperability, all powered by LayerZero. Mint and Bridge OFT and ONFT tokens across multiple chains.",
-  image = "https://pbs.twimg.com/profile_banners/1280015719229386754/1691925867/1500x500",
-  twitterHandle = "@Mintly_lol",
+  title = "Etherway: Omnichain Interoperability with latest cross-chain Technology",
+  description = "Etherway redefines blockchain efficiency with wallet integration, gas refueling, cross-chain messaging, airdrop marketplace and interoperability, all powered by latest cross-chain technology. Mint and Bridge OFT and ONFT tokens across multiple chains.",
+  image = "https://pbs.twimg.com/profile_banners/1634697370247233538/1710699959/1500x500",
+  twitterHandle = "@Etherway_io",
 }) => {
   return (
     <Head>
@@ -28,10 +28,10 @@ const HeadComponent: React.FC<HeadComponentProps> = ({
       {/* Open Graph data */}
       <meta property="og:title" content={title} />
       <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://www.mintly.lol/" />
+      <meta property="og:url" content="https://www.etherway.io/" />
       <meta property="og:image" content={image} />
       <meta property="og:description" content={description} />
-      <meta property="og:site_name" content="Mintly" />
+      <meta property="og:site_name" content="Etherway" />
       {/* Additional tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="dark" />{" "}

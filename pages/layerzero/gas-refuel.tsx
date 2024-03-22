@@ -13,7 +13,7 @@ const GasRefuel = () => {
         title="Etherway: Gas Refuel Service - Refuel Your Wallet with Native Tokens"
         description="Stay ahead in your blockchain transactions with Etherway's Gas Refuel service. Efficiently manage your gas reserves, ensuring uninterrupted cross-chain activities with LayerZero technology."
       />
-      <Gas contractProvider={{ type: "layerzero", contract: "OFT" }} />
+      {/* <Gas contractProvider={{ type: "layerzero", contract: "OFT" }} /> */}
     </>
   );
 };

@@ -52,7 +52,7 @@ const HowToStart = () => {
     >
       <HeadComponent
         title="Getting Started with Etherway - Your Guide to ONFT Minting and Cross-Chain Transactions"
-        description="Begin your journey with Etherway's innovative omnichain platform. Learn how to mint ONFTs, engage in cross-chain bridging, and unlock the potential of decentralized finance. Discover step-by-step instructions and expert tips to navigate the Etherway ecosystem."
+        description="Begin your journey with Etherway's innovative omnichain platform. Learn how to mint ONFTs, engage in cross-chain bridging, and unlock the potential of decentralized technology. Discover step-by-step instructions and expert tips to navigate the Etherway ecosystem."
       />
 
       {/* <div className="flex items-center md:justify-between md:flex-row flex-col">  </div> */}
