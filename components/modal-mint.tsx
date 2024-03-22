@@ -11,12 +11,13 @@ interface MintModalProps {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
     isLoading: boolean;
-    modalTitle: string;
-    modalDescription: string;
-    modalButtonText: string;
     errorMessage: string;
     setErrorMessage: (value: string) => void;
     nftId: string;
+    contractProvider: {
+      type: string;
+      contract: string;
+    };
   };
 }
 
@@ -25,13 +26,13 @@ const MintModal = ({ props }: MintModalProps) => {
     isOpen: open,
     setIsOpen: setOpen,
     isLoading,
-    modalTitle,
-    modalDescription,
-    modalButtonText,
     errorMessage,
     setErrorMessage,
     nftId,
+    contractProvider,
   } = props;
+
+  const { type } = contractProvider;
 
   const renderModalContent = () => {
     if (isLoading) {
@@ -86,7 +87,7 @@ const MintModal = ({ props }: MintModalProps) => {
 
           <div className="flex-grow relative w-full">
             <Image
-              src="https://ipfs.io/ipfs/QmWhssC8rz2ma2gLpXCKYfxpP17ouYqdjWuUzRMeKwK4Mx/Etherway_x_Layerzero.png"
+              src={`https://ipfs.io/ipfs/QmWhssC8rz2ma2gLpXCKYfxpP17ouYqdjWuUzRMeKwK4Mx/Etherway_x_${type}.png`}
               layout="fill"
               objectFit="cover"
               alt="NFT"

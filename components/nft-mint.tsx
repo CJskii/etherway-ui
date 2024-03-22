@@ -44,8 +44,6 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [referredBy, setReferredBy] = useState("");
 
   // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
-
-  // TODO: Refactor this to dynamically return mint image
   const router = useRouter();
 
   const {
@@ -242,12 +240,10 @@ export default function NFTMint({ params }: NFTMintProps) {
                 isOpen: showMintModal,
                 setIsOpen: setShowMintModal,
                 isLoading: isLoading,
-                modalTitle: "NFT Minted",
-                modalDescription: "Your NFT has been minted successfully",
-                modalButtonText: "View NFT",
                 errorMessage: errorMessage,
                 setErrorMessage: setErrorMessage,
                 nftId: mintedNFT,
+                contractProvider: contractProvider,
               }}
             />
             <div className=" flex items-center gap-2">
