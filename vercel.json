@@ -1,22 +1,19 @@
 {
   "functions": {
-    "pages/api/mint.ts": {
+    "pages/api/interactions.ts": {
       "maxDuration": 30
     },
-    "pages/api/bridge.ts": {
+    "pages/api/mint.ts": {
       "maxDuration": 30
     },
     "pages/api/createUser.ts": {
       "maxDuration": 30
     },
+    "pages/api/bridge.ts": {
+      "maxDuration": 30
+    },
     "pages/api/*.ts": {
       "maxDuration": 15
     }
-  },
-  "crons": [
-    {
-      "path": "api/cron/updateKVpoints",
-      "schedule": "0 0 * * 0"
-    }
-  ]
+  }
 }
