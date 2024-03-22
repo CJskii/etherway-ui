@@ -147,10 +147,11 @@ const handleLayerZeroONFTBridging = async ({
     // REMOTE CHAIN ID IS THE CHAIN OF THE RECEIVING NETWORK
     // ex. if you are sending from Ethereum to Polygon, the remote chain id is the Polygon chain id
     const remoteChainId = toNetwork.params?.layerzero.remoteChainId;
+    const lzOptionsGas = toNetwork.params?.gasLimit.lzOptionsGas;
 
     // create options
     const options = Options.newOptions()
-      .addExecutorLzReceiveOption(200000, 0)
+      .addExecutorLzReceiveOption(lzOptionsGas || 200000, 0)
       .toHex()
       .toString();
 
@@ -218,12 +219,13 @@ const handleLayerZeroOFTBridging = async ({
     // REMOTE CHAIN ID IS THE CHAIN OF THE RECEIVING NETWORK
     // ex. if you are sending from Ethereum to Polygon, the remote chain id is the Polygon chain id
     const remoteChainId = toNetwork.params?.layerzero.remoteChainId;
+    const lzOptionsGas = toNetwork.params?.gasLimit.lzOptionsGas;
     const tokensToSend = ethers.utils.parseEther(TOKEN_ID);
     const paddedAddress = ethers.utils.zeroPad(ownerAddress, 32);
 
     // create options
     const options = Options.newOptions()
-      .addExecutorLzReceiveOption(200000, 0)
+      .addExecutorLzReceiveOption(lzOptionsGas || 200000, 0)
       .toHex()
       .toString();
 
