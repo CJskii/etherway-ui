@@ -40,7 +40,7 @@ const BridgeModal = ({ props }: BridgeModalProps) => {
       return (
         <div className="flex flex-col justify-center items-center gap-6 h-full">
           <Typography variant="h4" className="text-center dark:text-black">
-            We're working hard to bridge your NFT
+            We&apos;re working hard to bridge your NFT
           </Typography>
           <Typography variant="small" className="text-center dark:text-black">
             This might take a few seconds...
