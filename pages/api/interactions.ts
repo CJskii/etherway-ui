@@ -3,6 +3,7 @@ import { prisma } from "../../prisma/client";
 import handleInteraction from "@/prisma/src/handlers/interaction";
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "./auth/[...nextauth]";
+import { getCsrfToken } from "next-auth/react";
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,7 +29,10 @@ export default async function handler(
   }
 
   const session = await getServerSession(req, res, getAuthOptions(req));
-  if (!session) {
+
+  const csrfToken = await getCsrfToken({ req: { headers: req.headers } });
+
+  if (!session && !csrfToken) {
     res.status(401).send({
       error: "You must be signed in to interact with the API",
     });

@@ -16,6 +16,8 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
     CredentialsProvider({
       async authorize(credentials) {
         try {
+          // console.log(credentials);
+
           const siwe = new SiweMessage(
             JSON.parse(credentials?.message || "{}"),
           );
@@ -40,6 +42,10 @@ export function getAuthOptions(req: IncomingMessage): NextAuthOptions {
           ) {
             return null;
           }
+
+          // console.log(req.headers);
+
+          // console.log(siwe);
 
           await siwe.verify({ signature: credentials?.signature || "" });
 

@@ -128,6 +128,10 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const tryAPICall = async () => {
     try {
       if (account && account.address) {
+        if (!apiError) {
+          console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+          return;
+        }
         let _contractType: ContractType = ContractType.OFT_ERC20;
 
         if (contractProvider.type == "layerzero") {
@@ -146,17 +150,17 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           return;
         }
 
-        const { response, error: apiError } = await updateBridgeData({
+        const { response, error: _apiError } = await updateBridgeData({
           address: account.address,
           contractType: _contractType,
           chainId: fromNetwork.id,
         });
 
         // TODO: Display the Toast Error
-        if (apiError) {
+        if (_apiError) {
           // @ts-ignore
-          setApiError(apiError);
-          toast.error(`${apiError}`);
+          setApiError(_apiError);
+          toast.error(`${_apiError}`);
         }
 
         if (response) {

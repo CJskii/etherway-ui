@@ -118,6 +118,10 @@ export default function NFTMint({ params }: NFTMintProps) {
     try {
       if (account && account.address) {
         let _contractType: ContractType = ContractType.OFT_ERC20;
+        if (!apiError) {
+          console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+          return;
+        }
 
         if (contractProvider.type == "layerzero") {
           if (contractProvider.contract == "ONFT") {
@@ -135,7 +139,7 @@ export default function NFTMint({ params }: NFTMintProps) {
           return;
         }
 
-        const { response, error: apiError } = await updateMintData({
+        const { response, error: _apiError } = await updateMintData({
           address: account.address,
           contractType: _contractType,
           chainId: mintNetwork.id,
@@ -143,10 +147,10 @@ export default function NFTMint({ params }: NFTMintProps) {
 
         // TODO: Display the Toast Error
         // @ts-ignore
-        if (apiError) {
+        if (_apiError) {
           // @ts-ignore
-          setApiError(apiError);
-          toast.error(`${apiError}`);
+          setApiError(_apiError);
+          toast.error(`${_apiError}`);
         }
 
         if (response) {
