@@ -223,8 +223,10 @@ enum ContractType {
 
 enum InteractionType {
   V1
-  MINT
-  BRIDGE
+  MINT_ONFT
+  MINT_OFT
+  BRIDGE_ONFT
+  BRIDGE_OFT
 }
 
 enum Role {

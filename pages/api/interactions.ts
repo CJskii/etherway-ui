@@ -3,6 +3,7 @@ import { prisma } from "../../prisma/client";
 import handleInteraction from "@/prisma/src/handlers/interaction";
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "./auth/[...nextauth]";
+import { getCsrfToken } from "next-auth/react";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,15 +13,26 @@ export default async function handler(
     return res.status(405).end();
   }
 
-  const { ethereumAddress, interactionType, contractType, chainId } = req.body;
+  const { ethereumAddress, interactionType, contractType, amount, chainId } =
+    req.body;
 
   if (!ethereumAddress || !interactionType || !contractType) {
     console.error("Missing parameters");
     return res.status(400).json({ message: "Missing parameters" });
   }
 
+  if (interactionType == "MINT_OFT" || interactionType == "BRIDGE_OFT") {
+    if (!amount) {
+      console.error("Missing parameters");
+      return res.status(400).json({ message: "Missing parameters" });
+    }
+  }
+
   const session = await getServerSession(req, res, getAuthOptions(req));
-  if (!session) {
+
+  const csrfToken = await getCsrfToken({ req: { headers: req.headers } });
+
+  if (!session && !csrfToken) {
     res.status(401).send({
       error: "You must be signed in to interact with the API",
     });
@@ -32,6 +44,7 @@ export default async function handler(
       contractType,
       interactionType,
       chainId,
+      amount,
     });
     console.log("Interaction recorded and points awarded");
     res

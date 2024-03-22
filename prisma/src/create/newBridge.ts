@@ -6,9 +6,10 @@ type BridgeInteraction = {
   contractType: ContractType;
   interactionType: InteractionType;
   chainId?: number;
+  amount?: number;
 };
 
-export default async function newBridge({
+export async function bridgeInteractionONFT({
   ethAddress,
   contractType,
   interactionType,
@@ -19,6 +20,34 @@ export default async function newBridge({
       type: interactionType as InteractionType,
       contractType: contractType as ContractType,
       points: 50,
+      user: {
+        connect: {
+          ethereumAddress: ethAddress.toLowerCase(),
+        },
+      },
+      chainId,
+    },
+  });
+  return interaction;
+}
+
+export async function bridgeInteractionOFT({
+  ethAddress,
+  contractType,
+  interactionType,
+  chainId,
+  amount,
+}: BridgeInteraction) {
+  if (!amount || amount > 0) {
+    return;
+  }
+  // We reward 50% points for bridging of whatever the amount of tokens they bridge
+  const pointsToAward = amount > 1 ? amount / 2 : 1;
+  const interaction = await prisma.interaction.create({
+    data: {
+      type: interactionType as InteractionType,
+      contractType: contractType as ContractType,
+      points: pointsToAward,
       user: {
         connect: {
           ethereumAddress: ethAddress.toLowerCase(),

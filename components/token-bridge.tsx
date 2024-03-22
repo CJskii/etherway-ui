@@ -21,9 +21,10 @@ import { activeChains } from "@/constants/config/chainsConfig";
 import TokenMintModal from "./modal-mint-token";
 import TokenBridgeModal from "./modal-bridge-token";
 import { toast } from "sonner";
-import { ContractType } from "@prisma/client";
+import { ContractType, InteractionType } from "@prisma/client";
 import { updateBridgeData } from "@/common/utils/api/bridge";
 import { updateMintData } from "@/common/utils/api/mintAPI";
+import { updateInteractionData } from "@/common/utils/api/interactions";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -278,20 +279,19 @@ export default function TokenMintAndBridge({
           return;
         }
         let _contractType: ContractType = ContractType.OFT_ERC20;
+        let _interactionType: InteractionType = InteractionType.MINT_OFT;
 
         if (contractProvider.type == "layerzero") {
-          if (contractProvider.contract == "ONFT") {
-            _contractType = ContractType.ONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
+          if (contractProvider.contract == "OFT") {
             _contractType = ContractType.OFT_ERC20;
+            _interactionType = InteractionType.MINT_OFT;
           } else {
             return;
           }
         } else if (contractProvider.type == "hyperlane") {
-          if (contractProvider.contract == "ONFT") {
-            _contractType = ContractType.HONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
+          if (contractProvider.contract == "OFT") {
             _contractType = ContractType.HOFT_ERC20;
+            _interactionType = InteractionType.MINT_OFT;
           } else {
             return;
           }
@@ -299,10 +299,12 @@ export default function TokenMintAndBridge({
           return;
         }
 
-        const { response, error: _apiError } = await updateMintData({
+        const { response, error: _apiError } = await updateInteractionData({
           address: account.address,
           contractType: _contractType,
           chainId: fromNetwork.id,
+          interactionType: _interactionType,
+          amount: Number(bridgeAmount),
         });
 
         // TODO: Display the Toast Error
@@ -332,20 +334,19 @@ export default function TokenMintAndBridge({
           return;
         }
         let _contractType: ContractType = ContractType.OFT_ERC20;
+        let _interactionType: InteractionType = InteractionType.MINT_OFT;
 
         if (contractProvider.type == "layerzero") {
-          if (contractProvider.contract == "ONFT") {
-            _contractType = ContractType.ONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
+          if (contractProvider.contract == "OFT") {
             _contractType = ContractType.OFT_ERC20;
+            _interactionType = InteractionType.BRIDGE_OFT;
           } else {
             return;
           }
         } else if (contractProvider.type == "hyperlane") {
-          if (contractProvider.contract == "ONFT") {
-            _contractType = ContractType.HONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
+          if (contractProvider.contract == "OFT") {
             _contractType = ContractType.HOFT_ERC20;
+            _interactionType = InteractionType.BRIDGE_OFT;
           } else {
             return;
           }
@@ -353,10 +354,12 @@ export default function TokenMintAndBridge({
           return;
         }
 
-        const { response, error: apiError } = await updateBridgeData({
+        const { response, error: apiError } = await updateInteractionData({
           address: account.address,
           contractType: _contractType,
           chainId: fromNetwork.id,
+          interactionType: _interactionType,
+          amount: Number(bridgeAmount),
         });
 
         // TODO: Display the Toast Error

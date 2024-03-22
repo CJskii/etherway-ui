@@ -1,12 +1,16 @@
 import { ContractType, InteractionType } from "prisma/prisma-client";
-import newMint from "../create/newMint";
+import { mintInteractionOFT, mintInteractionONFT } from "../create/newMint";
 import handleUser from "./user";
-import newBridge from "../create/newBridge";
+import {
+  bridgeInteractionOFT,
+  bridgeInteractionONFT,
+} from "../create/newBridge";
 
 type handleInteractionProps = {
   ethAddress: string;
   contractType: ContractType;
   interactionType: InteractionType;
+  amount?: number;
   chainId?: number;
 };
 
@@ -15,23 +19,40 @@ export default async function handleInteraction({
   contractType,
   interactionType,
   chainId,
+  amount,
 }: handleInteractionProps) {
   await handleUser({ ethAddress });
 
   switch (interactionType) {
-    case "MINT":
-      return await newMint({
-        ethAddress,
+    case InteractionType.MINT_ONFT:
+      return await mintInteractionONFT({
+        ethAddress: ethAddress.toLowerCase(),
         contractType,
         interactionType,
         chainId,
       });
-    case "BRIDGE":
-      return await newBridge({
-        ethAddress,
+    case InteractionType.MINT_OFT:
+      return await mintInteractionOFT({
+        ethAddress: ethAddress.toLowerCase(),
         contractType,
         interactionType,
         chainId,
+        amount,
+      });
+    case InteractionType.BRIDGE_ONFT:
+      return await bridgeInteractionONFT({
+        ethAddress: ethAddress.toLowerCase(),
+        contractType,
+        interactionType,
+        chainId,
+      });
+    case InteractionType.BRIDGE_OFT:
+      return await bridgeInteractionOFT({
+        ethAddress: ethAddress.toLowerCase(),
+        contractType,
+        interactionType,
+        chainId,
+        amount,
       });
     default:
       break;

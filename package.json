@@ -10,7 +10,8 @@
     "test": "jest",
     "vercel-build": "prisma generate && next build",
     "prisma-push": "npx prisma push db",
-    "build:analyze": "cross-env ANALYZE=true next build"
+    "build:analyze": "cross-env ANALYZE=true next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.0.8",

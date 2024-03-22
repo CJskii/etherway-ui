@@ -19,6 +19,7 @@ import BridgeModal from "./bridge-modal";
 import { ContractType } from "@prisma/client";
 import { updateBridgeData } from "@/common/utils/api/bridge";
 import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 interface NFTBridgeProps {
   params: {
@@ -32,6 +33,12 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const { type, contract } = contractProvider;
   const { openConnectModal } = useConnectModal();
   const { chains, switchChain } = useSwitchChain();
+  const router = useRouter();
+
+  useEffect(() => {
+    const queryParam = router.query;
+    setNftId(`${queryParam.nftId}`);
+  }, [router]);
   const account = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -128,21 +135,21 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const tryAPICall = async () => {
     try {
       if (account && account.address) {
+        // if (!apiError) {
+        //   console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+        //   return;
+        // }
         let _contractType: ContractType = ContractType.OFT_ERC20;
 
         if (contractProvider.type == "layerzero") {
           if (contractProvider.contract == "ONFT") {
             _contractType = ContractType.ONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
-            _contractType = ContractType.OFT_ERC20;
           } else {
             return;
           }
         } else if (contractProvider.type == "hyperlane") {
           if (contractProvider.contract == "ONFT") {
             _contractType = ContractType.HONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
-            _contractType = ContractType.HOFT_ERC20;
           } else {
             return;
           }
@@ -150,17 +157,17 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           return;
         }
 
-        const { response, error: apiError } = await updateBridgeData({
+        const { response, error: _apiError } = await updateBridgeData({
           address: account.address,
           contractType: _contractType,
           chainId: fromNetwork.id,
         });
 
         // TODO: Display the Toast Error
-        if (apiError) {
+        if (_apiError) {
           // @ts-ignore
-          setApiError(apiError);
-          toast.error(`${apiError}`);
+          setApiError(_apiError);
+          toast.error(`${_apiError}`);
         }
 
         if (response) {
@@ -295,6 +302,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
               NFT ID
             </Typography>
             <Input
+              value={nftId}
               placeholder="ID"
               className="p-6 rounded-xl dark:bg-white dark:text-black"
               onChange={(e) => setNftId(e.target.value)}
@@ -321,6 +329,13 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
               Bridge
             </Button>
           )}
+
+          <Button
+            className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+            onClick={tryAPICall}
+          >
+            Try Again
+          </Button>
         </div>
       </div>
     </div>
