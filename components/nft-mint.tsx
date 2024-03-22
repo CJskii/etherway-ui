@@ -116,10 +116,10 @@ export default function NFTMint({ params }: NFTMintProps) {
     try {
       if (account && account.address) {
         let _contractType: ContractType = ContractType.OFT_ERC20;
-        // if (!apiError) {
-        //   console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
-        //   return;
-        // }
+        if (!apiError) {
+          console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+          return;
+        }
 
         if (contractProvider.type == "layerzero") {
           if (contractProvider.contract == "ONFT") {
@@ -309,12 +309,6 @@ export default function NFTMint({ params }: NFTMintProps) {
               Mint
             </Button>
           )}
-          <Button
-            className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-            onClick={tryAPICall}
-          >
-            Try Again
-          </Button>
         </div>
       </div>
     </div>

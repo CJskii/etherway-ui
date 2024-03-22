@@ -135,10 +135,10 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const tryAPICall = async () => {
     try {
       if (account && account.address) {
-        // if (!apiError) {
-        //   console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
-        //   return;
-        // }
+        if (!apiError) {
+          console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+          return;
+        }
         let _contractType: ContractType = ContractType.OFT_ERC20;
 
         if (contractProvider.type == "layerzero") {
@@ -329,13 +329,6 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
               Bridge
             </Button>
           )}
-
-          <Button
-            className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-            onClick={tryAPICall}
-          >
-            Try Again
-          </Button>
         </div>
       </div>
     </div>
