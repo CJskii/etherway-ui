@@ -14,12 +14,11 @@ import { checkIfReferredUser } from "@/common/utils/validators/checkIfReferredUs
 import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
 import { ExtendedNetwork } from "@/common/types/network";
 import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
-import { useToast } from "./ui/use-toast";
 import { updateMintData } from "@/common/utils/api/mintAPI";
 import { ContractType } from "@prisma/client";
 import MintModal from "./modal-mint";
 import { useRouter } from "next/router";
-
+import { toast } from "sonner";
 interface NFTMintProps {
   params: {
     contractProvider: { type: string; contract: string };
@@ -43,7 +42,6 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [apiError, setApiError] = useState("");
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
-  const { toast } = useToast();
 
   // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
   const router = useRouter();
@@ -80,8 +78,11 @@ export default function NFTMint({ params }: NFTMintProps) {
         });
 
         // TODO: Display the Toast Error
-        // @ts-ignore
-        setApiError(data?.apiError);
+        if (data?.apiError) {
+          // @ts-ignore
+          setApiError(data?.apiError);
+          toast.error(`${data.apiError}`);
+        }
 
         if (data?.response) {
           handleAPIError(data.response);
@@ -141,7 +142,11 @@ export default function NFTMint({ params }: NFTMintProps) {
 
         // TODO: Display the Toast Error
         // @ts-ignore
-        setApiError(apiError);
+        if (apiError) {
+          // @ts-ignore
+          setApiError(apiError);
+          toast.error(`${apiError}`);
+        }
 
         if (response) {
           handleAPIError(response);
@@ -159,22 +164,28 @@ export default function NFTMint({ params }: NFTMintProps) {
 
     if (response?.status == 200) {
       console.log("API Call on update on db Completed");
+      toast.success("Interaction recorded in db");
     } else if (response?.status == 405) {
-      console.log("Method Not allowed");
-      setApiError("Method Not allowed");
+      console.log("405: Method Not allowed");
+      setApiError("405: Method Not allowed");
+      toast.error("405: Method Not allowed");
     } else if (response?.status == 400) {
       // let _error = await response.json();
-      setApiError("Missing parameters");
-      console.error("Missing parameters");
+      setApiError("400: Missing parameters");
+      console.error("400: Missing parameters");
+      toast.error("400: Missing parameters");
     } else if (response?.status == 401) {
       console.error("You must be signed in to interact with the API");
       setApiError("You must be signed in to interact with the API");
+      toast.error("401: You must be signed in to interact with the API");
     } else if (response?.status == 500) {
       console.error("Internal Server Error");
       setApiError("Internal Server Error");
+      toast.error("500: Internal Server Error");
     } else {
       console.error("Error occured during APICall");
       setApiError("Error occured during APICall");
+      toast.error("Error occured during APICall");
     }
   };
 

@@ -12,6 +12,7 @@ import { wagmiConfig, theme } from "../constants/config/wagmiConfig";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 import useReferalCode from "../common/hooks/useReferalCode";
+import { Toaster } from "@/components/ui/sonner";
 
 import Alert from "../common/elements/Alert";
 import { ThemeProvider } from "@/components/ui/theme-provider";
@@ -79,6 +80,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
                 >
                   <div className={`${raleway.variable}`}>
                     <Component {...pageProps} />
+                    <Toaster />
                   </div>
                 </ThemeProvider>
               </RainbowKitProvider>
