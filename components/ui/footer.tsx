@@ -57,7 +57,7 @@ export function Footer({ isDashboard }: FooterProps) {
           transactions.
         </Typography>
       </div>
-      // TODO: Add Zealy and Galxe icons + links
+      {/* TODO: Add Zealy and Galxe icons + links */}
       {!isDashboard && (
         <div className=" grid w-full grid-cols-6 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
           <Link href={"https://discord.gg/GcS5r5NWfh"} target="_blank">
