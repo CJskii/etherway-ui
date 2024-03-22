@@ -34,6 +34,8 @@ const MintModal = ({ props }: MintModalProps) => {
 
   const { type } = contractProvider;
 
+  const typeCapitalized = type.charAt(0).toUpperCase() + type.slice(1);
+
   const renderModalContent = () => {
     if (isLoading) {
       return (
@@ -63,9 +65,12 @@ const MintModal = ({ props }: MintModalProps) => {
             {errorMessage}
           </Typography>
 
-          {/* <Typography variant="small" className="text-center dark:text-black">
-            Please try again
-          </Typography> */}
+          <Typography
+            variant="small"
+            className="text-center dark:text-black font-normal pt-4"
+          >
+            If this is reocurring error, please contact us in Discord for help
+          </Typography>
         </>
       );
     } else {
@@ -87,7 +92,7 @@ const MintModal = ({ props }: MintModalProps) => {
 
           <div className="flex-grow relative w-full">
             <Image
-              src={`https://ipfs.io/ipfs/QmWhssC8rz2ma2gLpXCKYfxpP17ouYqdjWuUzRMeKwK4Mx/Etherway_x_${type}.png`}
+              src={`https://ipfs.io/ipfs/QmWhssC8rz2ma2gLpXCKYfxpP17ouYqdjWuUzRMeKwK4Mx/Etherway_x_${typeCapitalized}.png`}
               layout="fill"
               objectFit="cover"
               alt="NFT"

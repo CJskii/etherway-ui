@@ -19,6 +19,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 const Home: NextPage = () => {
   return (
     <>
+      <HeadComponent />
       <div className="relative h-auto">
         <Header />
         <div className=" z-10 ">
