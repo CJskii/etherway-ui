@@ -4,7 +4,8 @@ import { Network } from "../../../types/network";
 import handleInteraction from "./handleInteraction";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { updateBridgeData } from "../../api/bridge";
-import { ContractType } from "@prisma/client";
+import { ContractType, InteractionType } from "@prisma/client";
+import { updateInteractionData } from "../../api/interactions";
 
 export const handleBridging = async ({
   TOKEN_ID, // we use token-id as quantity for OFT
@@ -61,10 +62,12 @@ export const handleBridging = async ({
       txGasLimit: txGasLimit || 500000,
     });
     if (tx.hash) {
-      const { response, error: apiError } = await updateBridgeData({
+      const { response, error: apiError } = await updateInteractionData({
         address: ownerAddress,
         contractType: ContractType.OFT_ERC20,
         chainId: fromNetwork.id,
+        interactionType: InteractionType.BRIDGE_OFT,
+        amount: Number(TOKEN_ID),
       });
       return { tx, response, bridgeError, apiError };
     }
@@ -105,10 +108,12 @@ export const handleBridging = async ({
       txGasLimit: txGasLimit || 500000,
     });
     if (tx.hash) {
-      const { response, error: apiError } = await updateBridgeData({
+      const { response, error: apiError } = await updateInteractionData({
         address: ownerAddress,
-        contractType: ContractType.OFT_ERC20,
+        contractType: ContractType.HOFT_ERC20,
         chainId: fromNetwork.id,
+        interactionType: InteractionType.BRIDGE_OFT,
+        amount: Number(TOKEN_ID),
       });
       return { tx, response, bridgeError, apiError };
     }

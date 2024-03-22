@@ -31,7 +31,7 @@ export default async function handler(
     await handleInteraction({
       ethAddress: ethereumAddress,
       contractType,
-      interactionType: InteractionType.MINT,
+      interactionType: InteractionType.MINT_ONFT,
       chainId,
     });
     console.log("Mint recorded and points awarded");

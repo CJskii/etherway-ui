@@ -12,11 +12,19 @@ export default async function handler(
     return res.status(405).end();
   }
 
-  const { ethereumAddress, interactionType, contractType, chainId } = req.body;
+  const { ethereumAddress, interactionType, contractType, amount, chainId } =
+    req.body;
 
   if (!ethereumAddress || !interactionType || !contractType) {
     console.error("Missing parameters");
     return res.status(400).json({ message: "Missing parameters" });
+  }
+
+  if (interactionType == "MINT_OFT" || interactionType == "BRIDGE_OFT") {
+    if (!amount) {
+      console.error("Missing parameters");
+      return res.status(400).json({ message: "Missing parameters" });
+    }
   }
 
   const session = await getServerSession(req, res, getAuthOptions(req));
@@ -32,6 +40,7 @@ export default async function handler(
       contractType,
       interactionType,
       chainId,
+      amount,
     });
     console.log("Interaction recorded and points awarded");
     res

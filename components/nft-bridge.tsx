@@ -133,16 +133,12 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         if (contractProvider.type == "layerzero") {
           if (contractProvider.contract == "ONFT") {
             _contractType = ContractType.ONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
-            _contractType = ContractType.OFT_ERC20;
           } else {
             return;
           }
         } else if (contractProvider.type == "hyperlane") {
           if (contractProvider.contract == "ONFT") {
             _contractType = ContractType.HONFT_ERC721;
-          } else if (contractProvider.contract == "OFT") {
-            _contractType = ContractType.HOFT_ERC20;
           } else {
             return;
           }

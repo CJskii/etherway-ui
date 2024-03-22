@@ -4,7 +4,8 @@ import { Network } from "../../../types/network";
 import { getTokenId } from "../../getters/getTokenId";
 import { Signer } from "ethers";
 import { updateMintData } from "../../api/mintAPI";
-import { ContractType } from "@prisma/client";
+import { ContractType, InteractionType } from "@prisma/client";
+import { updateInteractionData } from "../../api/interactions";
 
 export const handleMinting = async ({
   mintNetwork,
@@ -52,10 +53,12 @@ export const handleMinting = async ({
     });
 
     if (result && result.txHash) {
-      const { response, error: apiError } = await updateMintData({
+      const { response, error: apiError } = await updateInteractionData({
         address: userAddress,
         contractType: ContractType.OFT_ERC20,
         chainId: mintNetwork.id,
+        interactionType: InteractionType.MINT_OFT,
+        amount: mintQuantity,
       });
       return { result, response, apiError };
     }
@@ -73,7 +76,7 @@ export const handleMinting = async ({
     if (result && result.txHash) {
       const { response, error: apiError } = await updateMintData({
         address: userAddress,
-        contractType: ContractType.OFT_ERC20,
+        contractType: ContractType.HONFT_ERC721,
         chainId: mintNetwork.id,
       });
       return { result, response, apiError };
@@ -91,10 +94,12 @@ export const handleMinting = async ({
     });
 
     if (result && result.txHash) {
-      const { response, error: apiError } = await updateMintData({
+      const { response, error: apiError } = await updateInteractionData({
         address: userAddress,
-        contractType: ContractType.OFT_ERC20,
+        contractType: ContractType.HOFT_ERC20,
         chainId: mintNetwork.id,
+        interactionType: InteractionType.MINT_OFT,
+        amount: mintQuantity,
       });
       return { result, response, apiError };
     }

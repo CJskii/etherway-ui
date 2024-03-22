@@ -31,7 +31,7 @@ export default async function handler(
     await handleInteraction({
       ethAddress: ethereumAddress,
       contractType,
-      interactionType: InteractionType.BRIDGE,
+      interactionType: InteractionType.BRIDGE_ONFT,
       chainId,
     });
     console.log("Bridge recorded and points awarded");
