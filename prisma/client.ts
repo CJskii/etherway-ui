@@ -6,9 +6,6 @@ let _prisma: PrismaClient;
 function getPrismaClient() {
   if (!_prisma) {
     _prisma = new PrismaClient();
-    console.log("New client initiated");
-  } else {
-    console.log("Old client initiated");
   }
   return _prisma;
 }
