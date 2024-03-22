@@ -7,8 +7,6 @@ import Image from "next/image";
 import { Typography } from "../ui/typography";
 import { Card } from "../ui/card";
 
-// TODO: Change old logo backaground to new logo background once received from Sara
-
 const features = [
   {
     title: "Multi-Network Support",
