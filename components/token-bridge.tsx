@@ -25,6 +25,7 @@ import { ContractType, InteractionType } from "@prisma/client";
 import { updateBridgeData } from "@/common/utils/api/bridge";
 import { updateMintData } from "@/common/utils/api/mintAPI";
 import { updateInteractionData } from "@/common/utils/api/interactions";
+import { set } from "date-fns";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -395,7 +396,7 @@ export default function TokenMintAndBridge({
 
   useEffect(() => {
     const getBalance = async () => {
-      if (isPageLoaded && fromNetwork.name == account.chain?.name) {
+      if (isPageLoaded && fromNetwork.id === account.chain?.id) {
         getUserBalance({
           fromNetwork,
           account,
@@ -426,6 +427,7 @@ export default function TokenMintAndBridge({
         ? setToNetwork(defaultNetwork as Network)
         : setToNetwork(networksByProvider[0] as Network);
     }
+    setIsPageLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromNetwork, toNetwork, setToNetwork]);
 
