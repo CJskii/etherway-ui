@@ -80,7 +80,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
                 >
                   <div className={`${raleway.variable}`}>
                     <Component {...pageProps} />
-                    <Toaster />
+                    <Toaster richColors />
                   </div>
                 </ThemeProvider>
               </RainbowKitProvider>

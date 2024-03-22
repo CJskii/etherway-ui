@@ -99,6 +99,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           address: account.address ? account.address : "",
         });
 
+        // TODO: Might want to return the execution if we have an API error\
         if (data?.APIerror) {
           // @ts-ignore
           setApiError(data.APIerror);

@@ -20,6 +20,10 @@ import { getUserBalance } from "@/common/utils/getters/getBalance";
 import { activeChains } from "@/constants/config/chainsConfig";
 import TokenMintModal from "./modal-mint-token";
 import TokenBridgeModal from "./modal-bridge-token";
+import { toast } from "sonner";
+import { ContractType } from "@prisma/client";
+import { updateBridgeData } from "@/common/utils/api/bridge";
+import { updateMintData } from "@/common/utils/api/mintAPI";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -51,6 +55,10 @@ export default function TokenMintAndBridge({
   const [userBalance, setUserBalance] = useState(0);
   const [showBridgingModal, setShowBridgingModal] = useState(false);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [apiMintError, setApiMintError] = useState(false);
+  const [apiBridgeError, setApiBridgeError] = useState(false);
+  const [hasMinted, setHasMinted] = useState(false);
+  const [hasBridged, setHasBridged] = useState(false);
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -120,23 +128,46 @@ export default function TokenMintAndBridge({
       try {
         setIsLoading(true);
         setShowMintModal(true);
+
+        if (!account.address) {
+          setIsLoading(false);
+          setShowMintModal(false);
+          return;
+        }
+
         // setIsMinting(true);
-        const result = await handleMinting({
+        const data = await handleMinting({
           mintNetwork: fromNetwork,
           contractProvider,
+          userAddress: account.address,
           mintQuantity: mintAmount,
         });
 
-        if (!result) {
+        // TODO: Might want to return the execution if we have an API error
+        if (data?.apiError) {
+          // @ts-ignore
+          setApiMintError(true);
+          toast.error(`${data.apiError}`);
+        }
+
+        if (data?.response) {
+          handleAPIError(data.response);
+          if (data?.response.status != 200) {
+            setApiMintError(true);
+          }
+        }
+
+        if (!data?.result) {
           throw new Error("Failed to mint NFT");
         }
 
-        const { mintedID, txHash } = result;
+        const { mintedID, txHash } = data.result;
         const newBalance = userBalance > 0 ? userBalance + mintedID : mintedID;
 
         setTxHash(txHash);
         setUserBalance(Number(newBalance));
         // setIsMinting(false);
+        setHasMinted(true);
         setIsLoading(false);
       } catch (e) {
         console.error(e);
@@ -182,10 +213,25 @@ export default function TokenMintAndBridge({
         }
 
         const { tx, bridgeError, response, apiError } = result;
+
+        if (apiError) {
+          // @ts-ignore
+          setApiBridgeError(true);
+          toast.error(`${apiError}`);
+        }
+
+        if (response) {
+          handleAPIError(response);
+          if (response.status != 200) {
+            setApiBridgeError(true);
+          }
+        }
+
         const newBalance = userBalance - Number(bridgeAmount);
 
         setTxHash(tx.hash);
         setUserBalance(newBalance > 0 ? newBalance : 0);
+        setHasBridged(true);
         // setIsBridging(false);
         setIsLoading(false);
       } catch (e) {
@@ -196,6 +242,138 @@ export default function TokenMintAndBridge({
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+
+  const handleAPIError = (response: Response) => {
+    // TODO: Display the Toast Error
+
+    if (response?.status == 200) {
+      console.log("API Call on update on db Completed");
+      toast.success("Interaction recorded in db");
+    } else if (response?.status == 405) {
+      console.log("405: Method Not allowed");
+      toast.error("405: Method Not allowed");
+    } else if (response?.status == 400) {
+      // let _error = await response.json();
+      console.error("400: Missing parameters");
+      toast.error("400: Missing parameters");
+    } else if (response?.status == 401) {
+      console.error("You must be signed in to interact with the API");
+      toast.error("401: You must be signed in to interact with the API");
+    } else if (response?.status == 500) {
+      console.error("Internal Server Error");
+      toast.error("500: Internal Server Error");
+    } else {
+      console.error("Error occured during APICall");
+      toast.error("Error occured during APICall");
+    }
+  };
+
+  const tryMintingAPICall = async () => {
+    try {
+      if (account && account.address) {
+        if (apiMintError) {
+          console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+          return;
+        }
+        let _contractType: ContractType = ContractType.OFT_ERC20;
+
+        if (contractProvider.type == "layerzero") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.ONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.OFT_ERC20;
+          } else {
+            return;
+          }
+        } else if (contractProvider.type == "hyperlane") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.HONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.HOFT_ERC20;
+          } else {
+            return;
+          }
+        } else {
+          return;
+        }
+
+        const { response, error: _apiError } = await updateMintData({
+          address: account.address,
+          contractType: _contractType,
+          chainId: fromNetwork.id,
+        });
+
+        // TODO: Display the Toast Error
+        // @ts-ignore
+        if (_apiError) {
+          // @ts-ignore
+          setApiError(_apiError);
+          toast.error(`${_apiError}`);
+        }
+
+        if (response) {
+          handleAPIError(response);
+        }
+      } else {
+        console.log("No Account found !!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const tryBridgingAPICall = async () => {
+    try {
+      if (account && account.address) {
+        if (apiBridgeError) {
+          console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+          return;
+        }
+        let _contractType: ContractType = ContractType.OFT_ERC20;
+
+        if (contractProvider.type == "layerzero") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.ONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.OFT_ERC20;
+          } else {
+            return;
+          }
+        } else if (contractProvider.type == "hyperlane") {
+          if (contractProvider.contract == "ONFT") {
+            _contractType = ContractType.HONFT_ERC721;
+          } else if (contractProvider.contract == "OFT") {
+            _contractType = ContractType.HOFT_ERC20;
+          } else {
+            return;
+          }
+        } else {
+          return;
+        }
+
+        const { response, error: apiError } = await updateBridgeData({
+          address: account.address,
+          contractType: _contractType,
+          chainId: fromNetwork.id,
+        });
+
+        // TODO: Display the Toast Error
+        if (apiError) {
+          // @ts-ignore
+          setApiError(apiError);
+          toast.error(`${apiError}`);
+        }
+
+        if (response) {
+          handleAPIError(response);
+        }
+      } else {
+        console.log("No Account found !!");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -320,13 +498,36 @@ export default function TokenMintAndBridge({
                 onChange={(e) => setMintAmount(Number(e.target.value))}
                 type="number"
               />
-              <Button
-                size={"sm"}
-                className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                onClick={handleMintButton}
-              >
-                Mint
-              </Button>
+              {hasMinted ? (
+                <>
+                  {apiMintError ? (
+                    <Button
+                      size={"sm"}
+                      className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
+                      onClick={tryMintingAPICall}
+                    >
+                      Try Again
+                    </Button>
+                  ) : (
+                    <Button
+                      disabled={true}
+                      size={"sm"}
+                      className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
+                      onClick={handleMintButton}
+                    >
+                      Mint
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <Button
+                  size={"sm"}
+                  className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
+                  onClick={handleMintButton}
+                >
+                  Mint
+                </Button>
+              )}
             </div>
           </Label>
           <Label className=" space-y-2">
@@ -353,13 +554,33 @@ export default function TokenMintAndBridge({
               </Button>
             </div>
           </Label>
-
-          <Button
-            className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-            onClick={handleBridgeButton}
-          >
-            Send
-          </Button>
+          {hasBridged ? (
+            <>
+              {apiBridgeError ? (
+                <Button
+                  className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+                  onClick={tryBridgingAPICall}
+                >
+                  Try Again
+                </Button>
+              ) : (
+                <Button
+                  disabled={true}
+                  className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+                  onClick={handleBridgeButton}
+                >
+                  Send
+                </Button>
+              )}
+            </>
+          ) : (
+            <Button
+              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handleBridgeButton}
+            >
+              Send
+            </Button>
+          )}
         </div>
       </div>
     </div>

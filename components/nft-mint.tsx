@@ -39,7 +39,7 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [mintedNFT, setMintedNFT] = useState("");
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [apiError, setApiError] = useState("");
+  const [apiError, setApiError] = useState(false);
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
 
@@ -77,15 +77,18 @@ export default function NFTMint({ params }: NFTMintProps) {
           userAddress: account.address,
         });
 
-        // TODO: Display the Toast Error
+        // TODO: Might want to return the execution if we have an API error
         if (data?.apiError) {
           // @ts-ignore
-          setApiError(data?.apiError);
+          setApiError(true);
           toast.error(`${data.apiError}`);
         }
 
         if (data?.response) {
           handleAPIError(data.response);
+          if (data?.response.status != 200) {
+            setApiError(true);
+          }
         }
 
         if (data?.result) {
@@ -167,24 +170,24 @@ export default function NFTMint({ params }: NFTMintProps) {
       toast.success("Interaction recorded in db");
     } else if (response?.status == 405) {
       console.log("405: Method Not allowed");
-      setApiError("405: Method Not allowed");
+
       toast.error("405: Method Not allowed");
     } else if (response?.status == 400) {
       // let _error = await response.json();
-      setApiError("400: Missing parameters");
+
       console.error("400: Missing parameters");
       toast.error("400: Missing parameters");
     } else if (response?.status == 401) {
       console.error("You must be signed in to interact with the API");
-      setApiError("You must be signed in to interact with the API");
+
       toast.error("401: You must be signed in to interact with the API");
     } else if (response?.status == 500) {
       console.error("Internal Server Error");
-      setApiError("Internal Server Error");
+
       toast.error("500: Internal Server Error");
     } else {
       console.error("Error occured during APICall");
-      setApiError("Error occured during APICall");
+
       toast.error("Error occured during APICall");
     }
   };
@@ -280,7 +283,7 @@ export default function NFTMint({ params }: NFTMintProps) {
 
           {mintedNFT ? (
             <>
-              {apiError != "" ? (
+              {apiError ? (
                 <Button
                   className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
                   onClick={tryAPICall}
