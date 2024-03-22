@@ -26,7 +26,6 @@ model User {
   UserTasks       UserTask[]
 }
 
-
 model Referral {
   id            Int      @id @default(autoincrement())
   referrerId    Int
@@ -35,8 +34,8 @@ model Referral {
   points        Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  referred      User  @relation("Referred", fields: [referredId], references: [id])
-  referrer      User  @relation("Referrer", fields: [referrerId], references: [id])
+  referred      User     @relation("Referred", fields: [referredId], references: [id])
+  referrer      User     @relation("Referrer", fields: [referrerId], references: [id])
 }
 
 model Interaction {
@@ -48,7 +47,7 @@ model Interaction {
   userId       Int
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
-  user         User         @relation(fields: [userId], references: [id])
+  user         User            @relation(fields: [userId], references: [id])
 }
 
 model Project {
@@ -104,7 +103,7 @@ model UserTask {
   taskId    Int
   completed Boolean @default(false)
   Task      Task    @relation(fields: [taskId], references: [id])
-  User      User @relation(fields: [userId], references: [id])
+  User      User    @relation(fields: [userId], references: [id])
 }
 
 model UserProject {
@@ -112,7 +111,7 @@ model UserProject {
   userId    Int
   projectId Int
   Project   Project @relation(fields: [projectId], references: [id])
-  User      User @relation(fields: [userId], references: [id])
+  User      User    @relation(fields: [userId], references: [id])
 }
 
 model Reward {
@@ -136,9 +135,8 @@ model UserReward {
   type      RewardType
   points    Int        @default(0)
   reward    Reward     @relation(fields: [rewardId], references: [id])
-  user      User    @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
 }
-
 
 model DiscordEvent {
   id             Int      @id @default(autoincrement())
@@ -190,7 +188,6 @@ model GnStreak {
   DiscordUser   DiscordUser @relation(fields: [discordUserId], references: [id])
 }
 
-
 enum RewardType {
   DAILY
 }
@@ -215,10 +212,10 @@ enum ContractType {
   NO_CONTRACT
   ONFT_ERC721
   OFT_ERC20
-  HONFT_ERC721
-  HOFT_ERC20
   GAS_REFUEL
   WNFT_ERC721
+  HONFT_ERC721
+  HOFT_ERC20
 }
 
 enum InteractionType {
