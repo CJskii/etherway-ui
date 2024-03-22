@@ -18,7 +18,8 @@ export async function getLastClaimedDailyReward({
   return lastReward;
 }
 
-export async function getNextReward({ lastReward }) {
+// TODO: Add types
+export async function getNextReward({ lastReward }: any) {
   const lastClaimedAt = lastReward?.claimedAt;
   const lastRewardDay = lastReward?.day;
 

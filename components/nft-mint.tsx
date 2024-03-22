@@ -44,6 +44,8 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [referredBy, setReferredBy] = useState("");
 
   // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
+
+  // TODO: Refactor this to dynamically return mint image
   const router = useRouter();
 
   const {

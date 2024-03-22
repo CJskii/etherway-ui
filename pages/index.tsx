@@ -9,13 +9,12 @@ import OnboardSection from "@/components/homepage/onboard-section";
 import StatsSection from "@/components/homepage/stats-section";
 import { Header } from "@/components/navigation/navbar";
 import Image from "next/image";
-import Hero from "../components/Landing/Hero";
-import Process from "../components/Landing/Process";
-import NewsLetter from "../components/Landing/NewsLetter";
 import HeadComponent from "../common/elements/HeadComponent";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/ui/footer";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+
+// TODO: Review all meta tags and SEO content
 
 const Home: NextPage = () => {
   return (
@@ -43,9 +42,6 @@ const Home: NextPage = () => {
         />
         <Footer />
       </div>
-      {/* <div className="flex justify-center items-center pt-8">
-        {"There's nothing here yet, but the devs are building something amazing!"}
-      </div> */}
     </>
   );
 };
