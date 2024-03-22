@@ -64,9 +64,12 @@ const TokenBridgeModal = ({ props }: TokenBridgeModalProps) => {
             {errorMessage}
           </Typography>
 
-          {/* <Typography variant="small" className="text-center dark:text-black">
-            Please try again
-          </Typography> */}
+          <Typography
+            variant="small"
+            className="text-center dark:text-black font-normal pt-4"
+          >
+            If this is reocurring error, please contact us in Discord for help
+          </Typography>
         </>
       );
     } else {

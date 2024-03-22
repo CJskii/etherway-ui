@@ -37,7 +37,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
 
   useEffect(() => {
     const queryParam = router.query;
-    setNftId(`${queryParam.nftId}`);
+    setNftId(`${queryParam.nftId ? queryParam.nftId : ""}`);
   }, [router]);
   const account = useAccount();
 
