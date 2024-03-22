@@ -57,6 +57,18 @@ import REMOTE_CHAIN_IDS from "./remoteChainIds";
 
 export const mainnetChains: Network[] = [
   {
+    ...arbitrum,
+    iconUrl: "/chain-icons/arbitrum.svg",
+    remoteChainId: 110,
+    lzEndpointAddress: "0x3c2269811836af69497E5F486A85D7316753cf62",
+  },
+  {
+    ...optimism,
+    iconUrl: "/chain-icons/optimism.svg",
+    remoteChainId: 111,
+    lzEndpointAddress: "0x3c2269811836af69497E5F486A85D7316753cf62",
+  },
+  {
     ...base,
     iconUrl: "/chain-icons/base.svg",
     remoteChainId: 184,
@@ -67,37 +79,16 @@ export const mainnetChains: Network[] = [
     iconUrl: "/chain-icons/blast.webp",
   },
   {
-    ...gnosis,
-    iconUrl: "/chain-icons/gnosis.svg",
-  },
-  {
     ...linea,
     iconUrl: "/chain-icons/linea.svg",
     remoteChainId: 183,
     lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
   },
   {
-    ...arbitrum,
-    iconUrl: "/chain-icons/arbitrum.svg",
-    remoteChainId: 110,
-    lzEndpointAddress: "0x3c2269811836af69497E5F486A85D7316753cf62",
-  },
-  // {
-  //   ...arbitrumNova,
-  //   iconUrl: "/chain-icons/arb-nova.svg",
-  //   remoteChainId: 175,
-  //   lzEndpointAddress: "0x4EE2F9B7cf3A68966c370F3eb2C16613d3235245",
-  // },
-  {
-    ...optimism,
-    iconUrl: "/chain-icons/optimism.svg",
-    remoteChainId: 111,
-    lzEndpointAddress: "0x3c2269811836af69497E5F486A85D7316753cf62",
-  },
-  {
-    ...opBNB,
-    iconUrl: "/chain-icons/opbnb.svg",
-    remoteChainId: 202,
+    ...manta,
+    name: "Manta Pacific",
+    iconUrl: "/chain-icons/manta.svg",
+    remoteChainId: 217,
     lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
   },
   {
@@ -119,6 +110,18 @@ export const mainnetChains: Network[] = [
     lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
   },
   {
+    ...opBNB,
+    iconUrl: "/chain-icons/opbnb.svg",
+    remoteChainId: 202,
+    lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
+  },
+  {
+    ...polygonZkEvm,
+    iconUrl: "/chain-icons/polygon-zkevm.svg",
+    remoteChainId: 158,
+    lzEndpointAddress: "0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
+  },
+  {
     ...bsc,
     iconUrl: "/chain-icons/bsc.svg",
     remoteChainId: 102,
@@ -130,25 +133,21 @@ export const mainnetChains: Network[] = [
     remoteChainId: 109,
     lzEndpointAddress: "0x3c2269811836af69497E5F486A85D7316753cf62",
   },
-  {
-    ...polygonZkEvm,
-    iconUrl: "/chain-icons/polygon-zkevm.svg",
-    remoteChainId: 158,
-    lzEndpointAddress: "0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
-  },
+
+  // {
+  //   ...arbitrumNova,
+  //   iconUrl: "/chain-icons/arb-nova.svg",
+  //   remoteChainId: 175,
+  //   lzEndpointAddress: "0x4EE2F9B7cf3A68966c370F3eb2C16613d3235245",
+  // },
+
   // {
   //   ...mantle,
   //   iconUrl: "/chain-icons/mantle.svg",
   //   remoteChainId: 181,
   //   lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
   // },
-  {
-    ...manta,
-    name: "Manta Pacific",
-    iconUrl: "/chain-icons/manta.svg",
-    remoteChainId: 217,
-    lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
-  },
+
   // {
   //   ...metis,
   //   iconUrl: "/chain-icons/metis.svg",
@@ -168,16 +167,20 @@ export const mainnetChains: Network[] = [
     lzEndpointAddress: "0x3c2269811836af69497E5F486A85D7316753cf62",
   },
   {
+    ...celo,
+    iconUrl: "/chain-icons/celo.svg",
+    remoteChainId: 125,
+    lzEndpointAddress: "0x3A73033C0b1407574C76BdBAc67f126f6b4a9AA9",
+  },
+  {
     ...fantom,
     iconUrl: "/chain-icons/fantom.svg",
     remoteChainId: 112,
     lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
   },
   {
-    ...celo,
-    iconUrl: "/chain-icons/celo.svg",
-    remoteChainId: 125,
-    lzEndpointAddress: "0x3A73033C0b1407574C76BdBAc67f126f6b4a9AA9",
+    ...gnosis,
+    iconUrl: "/chain-icons/gnosis.svg",
   },
   {
     ...moonbeam,
