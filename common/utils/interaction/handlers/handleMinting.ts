@@ -35,7 +35,7 @@ export const handleMinting = async ({
     if (result && result.txHash) {
       const { response, error: apiError } = await updateMintData({
         address: userAddress,
-        contractType: ContractType.OFT_ERC20,
+        contractType: ContractType.ONFT_ERC721,
         chainId: mintNetwork.id,
       });
       return { result, response, apiError };

@@ -293,7 +293,7 @@ export default function NFTMint({ params }: NFTMintProps) {
                   className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
                   onClick={() => {
                     router.push(
-                      `/${params.contractProvider.type}/onft-bridge?nftId=${mintedNFT}`,
+                      `/${params.contractProvider.type}/${params.contractProvider.type == "layerzero" ? "onft-bridge" : "nft-bridge"}?nftId=${mintedNFT}`,
                     );
                   }}
                 >

@@ -18,7 +18,7 @@ export async function updateInteractionData({
   let response;
   let error;
   try {
-    response = await fetch("/api/mint", {
+    response = await fetch("/api/interactions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -42,7 +42,7 @@ export async function bridgeInteractionOFT({
     return;
   }
   // We reward 50% points for bridging of whatever the amount of tokens they bridge
-  const pointsToAward = amount > 1 ? amount / 2 : 1;
+  const pointsToAward = amount > 1 ? Number((amount / 2).toFixed(0)) : 1;
   const interaction = await prisma.interaction.create({
     data: {
       type: interactionType as InteractionType,
