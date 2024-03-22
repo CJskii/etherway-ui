@@ -9,6 +9,7 @@ import { Instagram, Plane, PlaneLandingIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TelegramIcon } from "@/assets/icons/TelegramIcon";
 import { GitBookIcon } from "@/assets/icons/GitBookIcon";
+import Link from "next/link";
 
 interface FooterProps {
   isDashboard?: boolean;
@@ -50,28 +51,38 @@ export function Footer({ isDashboard }: FooterProps) {
             " font-light tracking-wide md:max-w-xl ",
           )}
         >
-          Lorem ipsum dolor sit amet consectetur. Suscipit ultricies lacus
-          tristique a feugiat nunc. Cursus mauris tempor pulvinar risus
-          tincidunt. Dictum
+          Discover seamless integration across diverse blockchains with
+          Etherway. Effortlessly mint and bridge NFTs and tokens using the
+          latest cross-chain technology. Your gateway to simplified cross-chain
+          transactions.
         </Typography>
       </div>
+      // TODO: Add Zealy and Galxe icons + links
       {!isDashboard && (
         <div className=" grid w-full grid-cols-6 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
-          <Button variant={"etherwaySecondary"}>
-            <DiscordIcon className="h-4 w-4 mx-2" />
-            Discord
-          </Button>
-          <Button variant={"etherwaySecondary"}>
-            <XIcon className="h-4 w-4 mx-2" /> Twitter
-          </Button>
+          <Link href={"https://discord.gg/GcS5r5NWfh"} target="_blank">
+            <Button variant={"etherwaySecondary"} className="w-full">
+              <DiscordIcon className="h-4 w-4 mx-2" />
+              Discord
+            </Button>
+          </Link>
+
+          <Link href={"https://twitter.com/etherway_io"} target="_blank">
+            <Button variant={"etherwaySecondary"} className="w-full">
+              <XIcon className="h-4 w-4 mx-2" /> Twitter
+            </Button>
+          </Link>
           {/* <Button variant={"etherwaySecondary"}>
             <Instagram className="h-4 w-4 mx-2" />
             Instagram
           </Button> */}
-          <Button variant={"etherwaySecondary"}>
-            <TelegramIcon className="h-4 w-4 mx-2" />
-            Telegram
-          </Button>
+          <Link href={"https://t.me/+IFXADMbhrSAyNTE0"} target="_blank">
+            <Button variant={"etherwaySecondary"} className="w-full">
+              <TelegramIcon className="h-4 w-4 mx-2" />
+              Telegram
+            </Button>
+          </Link>
+
           {/* TODO: Add Galxe, Zealy  */}
           {/* <Button variant={"etherwaySecondary"} className="">
             <GitBookIcon className="h-4 w-4 mx-2" />
@@ -81,23 +92,31 @@ export function Footer({ isDashboard }: FooterProps) {
       )}
       {isDashboard && (
         <div className=" grid w-full grid-cols-6 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
-          <Button variant={"dashboardFooter"}>
-            <DiscordIcon className="h-4 w-4 mx-2" />
-            Discord
-          </Button>
-          <Button variant={"dashboardFooter"}>
-            <XIcon className="h-4 w-4 mx-2" /> Twitter
-          </Button>
-          {/* <Button variant={"dashboardFooter"}>
+          <Link href={"https://discord.gg/GcS5r5NWfh"} target="_blank">
+            <Button variant={"etherwaySecondary"} className="w-full">
+              <DiscordIcon className="h-4 w-4 mx-2" />
+              Discord
+            </Button>
+          </Link>
+
+          <Link href={"https://twitter.com/etherway_io"} target="_blank">
+            <Button variant={"etherwaySecondary"} className="w-full">
+              <XIcon className="h-4 w-4 mx-2" /> Twitter
+            </Button>
+          </Link>
+          {/* <Button variant={"etherwaySecondary"}>
             <Instagram className="h-4 w-4 mx-2" />
             Instagram
           </Button> */}
-          <Button variant={"dashboardFooter"}>
-            <TelegramIcon className="h-4 w-4 mx-2" />
-            Telegram
-          </Button>
+          <Link href={"https://t.me/+IFXADMbhrSAyNTE0"} target="_blank">
+            <Button variant={"etherwaySecondary"} className="w-full">
+              <TelegramIcon className="h-4 w-4 mx-2" />
+              Telegram
+            </Button>
+          </Link>
+
           {/* TODO: Add Galxe, Zealy  */}
-          {/* <Button variant={"dashboardFooter"} className="">
+          {/* <Button variant={"etherwaySecondary"} className="">
             <GitBookIcon className="h-4 w-4 mx-2" />
             GitBook
           </Button> */}

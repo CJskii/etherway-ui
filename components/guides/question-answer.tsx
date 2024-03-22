@@ -7,7 +7,7 @@ const QnA = ({
 }: {
   question: string;
   answer: string;
-  step: number;
+  step: number | string;
 }) => {
   return (
     <div className="flex items-start">

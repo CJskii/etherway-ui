@@ -29,7 +29,7 @@ export default function HeroSection() {
         </Typography>
         <div className=" flex items-center gap-3">
           {/* <Button variant={"etherway"}>Launch Airdrop</Button> */}
-          <Link href={"/guides/how-to-start"}>
+          <Link href={"/guides/how-to-use"}>
             <Button variant={"etherway"}>How to use</Button>
           </Link>
           <Link href={"/chains"}>

@@ -127,12 +127,6 @@ export function Header() {
 export function NavLinks() {
   return (
     <>
-      <Link
-        href={"/dashboard"}
-        className={cn(buttonVariants({ variant: "navbar" }))}
-      >
-        Airdrop Marketplace
-      </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full">
           <Button className="" variant={"navbar"}>
@@ -198,13 +192,18 @@ export function NavLinks() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/guides/faq"}>
-            <DropdownMenuItem className="cursor-pointer">FAQ</DropdownMenuItem>
+          <Link href={"/guides/how-to-use"}>
+            <DropdownMenuItem className="cursor-pointer">
+              How to use
+            </DropdownMenuItem>
           </Link>
           <Link href={"/chains"}>
             <DropdownMenuItem className="cursor-pointer">
-              Supported Chains
+              Supported chains
             </DropdownMenuItem>
+          </Link>
+          <Link href={"/guides/faq"}>
+            <DropdownMenuItem className="cursor-pointer">FAQ</DropdownMenuItem>
           </Link>
           {/* href={"/blogs"} */}
           <Link href={""}>
@@ -214,6 +213,12 @@ export function NavLinks() {
           </Link>
         </DropdownMenuContent>
       </DropdownMenu>
+      <Link
+        href={"/dashboard"}
+        className={cn(buttonVariants({ variant: "navbar" }))}
+      >
+        Airdrop Marketplace
+      </Link>
     </>
   );
 }
