@@ -3,6 +3,7 @@ import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { ethers, Signer, Contract } from "ethers";
 
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
@@ -13,13 +14,20 @@ import { handleBridging } from "@/common/utils/interaction/handlers/handleBridgi
 import NetworkModal from "./networkModal";
 import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 
-import { useAccount, useSwitchChain } from "wagmi";
+import {
+  useAccount,
+  usePublicClient,
+  useSwitchChain,
+  useWalletClient,
+} from "wagmi";
 
 import BridgeModal from "./bridge-modal";
 import { ContractType } from "@prisma/client";
 import { updateBridgeData } from "@/common/utils/api/bridge";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
+import { abi } from "@/constants/contracts/abi/etherwayOFT";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 
 interface NFTBridgeProps {
   params: {
@@ -48,6 +56,10 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [apiError, setApiError] = useState("");
+
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+  const { address } = useAccount();
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({

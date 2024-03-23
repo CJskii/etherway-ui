@@ -11,7 +11,12 @@ import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
 import { getValidToNetworks } from "@/common/utils/getters/getValidToNetworks";
 import { Network } from "@/common/types/network";
 
-import { useAccount, useSwitchChain } from "wagmi";
+import {
+  useAccount,
+  usePublicClient,
+  useSwitchChain,
+  useWalletClient,
+} from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { handleMinting } from "@/common/utils/interaction/handlers/handleMinting";
 import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
@@ -26,6 +31,8 @@ import { updateBridgeData } from "@/common/utils/api/bridge";
 import { updateMintData } from "@/common/utils/api/mintAPI";
 import { updateInteractionData } from "@/common/utils/api/interactions";
 import { set } from "date-fns";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
+import { ethers } from "ethers";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -41,6 +48,10 @@ interface TokenMintAndBridgeProps {
 export default function TokenMintAndBridge({
   params,
 }: TokenMintAndBridgeProps) {
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+  const { address } = useAccount();
+
   const { contractProvider, headerDescription, stepDescription } = params;
   const { type, contract } = contractProvider;
   const { openConnectModal } = useConnectModal();
@@ -198,6 +209,38 @@ export default function TokenMintAndBridge({
       try {
         setIsLoading(true);
         setShowBridgingModal(true);
+
+        const remoteChainId = toNetwork.params?.layerzero.remoteChainId;
+        const lzOptionsGas = toNetwork.params?.gasLimit.lzOptionsGas;
+        const tokensToSend = ethers.utils.parseEther(bridgeAmount);
+        const paddedAddress = ethers.utils.zeroPad(address?.toString(), 32);
+
+        // create options
+        const options = Options.newOptions()
+          .addExecutorLzReceiveOption(lzOptionsGas || 200000, 0)
+          .toHex()
+          .toString();
+
+        const sendParam = [
+          remoteChainId,
+          paddedAddress,
+          tokensToSend,
+          tokensToSend,
+          options,
+          "0x",
+          "0x",
+        ];
+
+        const data = await publicClient?.readContract({
+          address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+          abi: abi,
+          account: address,
+          functionName: "quoteSend",
+          args: [sendParam, false],
+        });
+
+        console.log(data);
+
         // setIsBridging(true);
         if (Number(bridgeAmount) > userBalance)
           throw new Error("insufficient OFT balance for transfer");
