@@ -151,7 +151,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
           return;
         }
-        let _contractType: ContractType = ContractType.OFT_ERC20;
+        let _contractType: ContractType = ContractType.ONFT_ERC721;
 
         if (contractProvider.type == "layerzero") {
           if (contractProvider.contract == "ONFT") {
@@ -320,7 +320,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
               onChange={(e) => setNftId(e.target.value)}
             />
           </Label>
-          {txHash ? (
+          {/* {txHash ? (
             <>
               {apiError ? (
                 <Button
@@ -340,7 +340,13 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
             >
               Bridge
             </Button>
-          )}
+          )} */}
+          <Button
+            className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+            onClick={txHash && apiError ? tryAPICall : handleBridgeButton}
+          >
+            {txHash && apiError ? "Try again" : "Bridge"}
+          </Button>
         </div>
       </div>
     </div>

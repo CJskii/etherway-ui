@@ -508,7 +508,7 @@ export default function TokenMintAndBridge({
                 onChange={(e) => setMintAmount(Number(e.target.value))}
                 type="number"
               />
-              {hasMinted ? (
+              {/* {hasMinted ? (
                 <>
                   {apiMintError ? (
                     <Button
@@ -537,7 +537,18 @@ export default function TokenMintAndBridge({
                 >
                   Mint
                 </Button>
-              )}
+              )} */}
+              <Button
+                size={"sm"}
+                className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
+                onClick={
+                  hasMinted && apiMintError
+                    ? tryMintingAPICall
+                    : handleMintButton
+                }
+              >
+                {hasMinted && apiMintError ? "Try again" : "Mint"}
+              </Button>
             </div>
           </Label>
           <Label className=" space-y-2">
@@ -564,7 +575,7 @@ export default function TokenMintAndBridge({
               </Button>
             </div>
           </Label>
-          {hasBridged ? (
+          {/* {hasBridged ? (
             <>
               {apiBridgeError ? (
                 <Button
@@ -590,7 +601,13 @@ export default function TokenMintAndBridge({
             >
               Send
             </Button>
-          )}
+          )} */}
+          <Button
+            className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+            onClick={apiBridgeError ? tryBridgingAPICall : handleBridgeButton}
+          >
+            {hasBridged && apiBridgeError ? "Try again" : "Send"}
+          </Button>
         </div>
       </div>
     </div>
