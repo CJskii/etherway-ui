@@ -353,17 +353,14 @@ const handleHyperlaneOFTBridging = async ({
   const amountInWei = ethers.utils.parseEther(TOKEN_ID);
 
   try {
-    const [estimatedFee, totalCost] = await contract.getBridgeGas(
+    const nativeFee = await contract.getBridgeGas(
       targetChainId,
       targetAddress,
       amountInWei,
     );
-    console.log(
-      `Estimated fee: ${estimatedFee.toString()} | Total cost: ${totalCost.toString()}`,
-    );
 
     tx = await contract.sendPayload(targetChainId, targetAddress, amountInWei, {
-      value: totalCost,
+      value: nativeFee,
       gasLimit: txGasLimit,
     });
 

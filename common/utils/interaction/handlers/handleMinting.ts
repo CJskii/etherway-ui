@@ -285,7 +285,7 @@ const handleHyperlaneOFTMinting = async ({
 
     const tx = await contract.mint(toAddress, mintQuantity, {
       value: totalFee,
-      mintGasLimit,
+      gasLimit: mintGasLimit,
     });
 
     await tx.wait();
