@@ -257,7 +257,7 @@ export default function TokenMintAndBridge({
 
     if (response?.status == 200) {
       console.log("API Call on update on db Completed");
-      toast.success("Interaction recorded in db");
+      toast.success("Interaction successfully recorded");
     } else if (response?.status == 405) {
       console.log("405: Method Not allowed");
       toast.error("405: Method Not allowed");

@@ -46,7 +46,7 @@ export default async function handler(
       chainId,
       amount,
     });
-    console.log("Interaction recorded and points awarded");
+    console.log(`Interaction recorded and ${amount} points awarded`);
     res
       .status(200)
       .json({ message: "Interaction recorded and points awarded" });
