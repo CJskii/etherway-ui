@@ -6,6 +6,8 @@ import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { updateBridgeData } from "../../api/bridge";
 import { ContractType, InteractionType } from "@prisma/client";
 import { updateInteractionData } from "../../api/interactions";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { abi } from "@/constants/contracts/abi/etherwayOFT";
 
 export const handleBridging = async ({
   TOKEN_ID, // we use token-id as quantity for OFT
@@ -161,6 +163,7 @@ const handleLayerZeroONFTBridging = async ({
       .toString();
 
     let nativeFee = 0;
+
     [nativeFee] = await contract.quote(
       remoteChainId,
       TOKEN_ID,
@@ -217,6 +220,10 @@ const handleLayerZeroOFTBridging = async ({
     signer,
   );
 
+  const publicClient = usePublicClient();
+  const walletClient = useWalletClient();
+  const { address } = useAccount();
+
   let tx;
   let error;
 
@@ -246,7 +253,17 @@ const handleLayerZeroOFTBridging = async ({
 
     let nativeFee = 0;
 
-    [nativeFee] = await contract.quoteSend(sendParam, false);
+    const data = await publicClient?.readContract({
+      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+      abi: abi,
+      account: address,
+      functionName: "quoteSend",
+      args: [sendParam, false],
+    });
+
+    console.log(data);
+
+    // [nativeFee] = await contract.quoteSend(sendParam, false);
 
     tx = await contract
       .send(sendParam, [nativeFee, 0], ownerAddress, {
