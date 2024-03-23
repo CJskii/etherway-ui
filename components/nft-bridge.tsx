@@ -318,7 +318,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
                   Try Again
                 </Button>
               ) : (
-                <a>Bridge Complete</a>
+                <></>
               )}
             </>
           ) : (

@@ -21,7 +21,6 @@ interface ChainDetailCardProps {
 
 const Chains = () => {
   const account = useAccount();
-  console.log(activeChains[0]);
 
   return (
     <>
