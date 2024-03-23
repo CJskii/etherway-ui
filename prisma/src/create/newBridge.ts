@@ -38,7 +38,7 @@ export async function bridgeInteractionOFT({
   chainId,
   amount,
 }: BridgeInteraction) {
-  if (!amount || amount > 0) {
+  if (!amount || amount < 0) {
     return;
   }
   // We reward 50% points for bridging of whatever the amount of tokens they bridge
