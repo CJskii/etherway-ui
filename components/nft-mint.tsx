@@ -52,7 +52,7 @@ export default function NFTMint({ params }: NFTMintProps) {
     filteredChains: fromFilteredChains,
   } = useNetworkSelection(contractProvider);
 
-  const isConnected = account !== undefined && account !== null;
+  const isConnected = account.isConnected;
   const isCorrectNetwork = mintNetwork.id === (account.chainId ?? "");
 
   const handleMintButton = async () => {
