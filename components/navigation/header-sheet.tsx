@@ -29,11 +29,11 @@ export function HeaderSheet() {
         </div>
         <div className="flex flex-col items-stretch gap-4">
           <NavLinks />
-          <Link href={"/contact-us"}>
+          {/* <Link href={"/contact-us"}>
             <Button className="bg-gradient rounded-xl font-normal w-full  text-white hover:opacity-90">
               Contact Us
             </Button>
-          </Link>
+          </Link> */}
         </div>
         <div className=" absolute bottom-4 left-4">
           <ThemeToggler />

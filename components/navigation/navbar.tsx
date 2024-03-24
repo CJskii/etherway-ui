@@ -125,6 +125,8 @@ export function Header() {
 }
 
 export function NavLinks() {
+  // TODO: fix navbar on the mobile, sometimes the dropdown don't respond to the click
+
   return (
     <>
       <DropdownMenu>
