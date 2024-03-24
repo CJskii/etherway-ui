@@ -21,7 +21,7 @@ export default function DashboardPage() {
       <div className="flex flex-col justify-center items-center pt-8 ">
         <Image src={image} alt="Under Construction" className="scale-75" />
         <span className="text-secondary text-5xl font-bold pb-8">
-          Page Under Construction
+          Product Under Construction
         </span>
         <Link href={"/"}>
           <Button variant={"etherway"}>Go Back</Button>

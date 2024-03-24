@@ -83,6 +83,12 @@ export const mainnetChains: Network[] = [
     iconUrl: "/chain-icons/linea.svg",
     remoteChainId: 183,
     lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
+    blockExplorers: {
+      default: {
+        name: "LineaScan",
+        url: "https://explorer.linea.build",
+      },
+    },
   },
   {
     ...manta,
@@ -102,6 +108,12 @@ export const mainnetChains: Network[] = [
     iconUrl: "/chain-icons/zksync.svg",
     remoteChainId: 165,
     lzEndpointAddress: "0x9b896c0e23220469C7AE69cb4BbAE391eAa4C8da",
+    blockExplorers: {
+      default: {
+        name: "zkSync Scan",
+        url: "https://era.zksync.network",
+      },
+    },
   },
   {
     ...zora,
