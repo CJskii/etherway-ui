@@ -7,11 +7,19 @@ import { NavLinks } from "./navbar";
 import { Button } from "../ui/button";
 import { ThemeToggler } from "../ui/toggle-theme";
 import Link from "next/link";
+import { useState } from "react";
+import { ConnectWalletButton } from "../ui/connect-button";
 
 export function HeaderSheet() {
   // TODO: fix navbar on mobile
+
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet
+      open={isNavbarOpen}
+      onOpenChange={() => setIsNavbarOpen(!isNavbarOpen)}
+    >
       <SheetTrigger asChild className="z-[500]">
         <MenuIcon className="rotate-90" />
       </SheetTrigger>
@@ -35,6 +43,7 @@ export function HeaderSheet() {
               Contact Us
             </Button>
           </Link> */}
+          <ConnectWalletButton />
         </div>
         <div className=" absolute bottom-4 left-4">
           <ThemeToggler />
