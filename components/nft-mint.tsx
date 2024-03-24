@@ -235,17 +235,6 @@ export default function NFTMint({ params }: NFTMintProps) {
             className=" h-[600px] w-full object-cover rounded-xl "
           />
           <div className=" md:rounded-bl-xl absolute bottom-0 py-14 px-8 bg-gradient-to-b from-black/5  to-black flex items-center flex-wrap gap-y-4 gap-x-6 text-white">
-            <MintModal
-              props={{
-                isOpen: showMintModal,
-                setIsOpen: setShowMintModal,
-                isLoading: isLoading,
-                errorMessage: errorMessage,
-                setErrorMessage: setErrorMessage,
-                nftId: mintedNFT,
-                contractProvider: contractProvider,
-              }}
-            />
             <div className=" flex items-center gap-2">
               <SparkleIcon className=" w-5 h-5" />
               <Typography variant={"smallTitle"}>
@@ -270,6 +259,17 @@ export default function NFTMint({ params }: NFTMintProps) {
           <Typography variant={"h3"} className=" dark:text-black">
             Step 1 : {stepDescription}
           </Typography>
+          <MintModal
+            props={{
+              isOpen: showMintModal,
+              setIsOpen: setShowMintModal,
+              isLoading: isLoading,
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              nftId: mintedNFT,
+              contractProvider: contractProvider,
+            }}
+          />
           <div className="flex flex-col">
             <Label className="py-2 w-full">
               <Typography variant={"large"} className="dark:text-black">
