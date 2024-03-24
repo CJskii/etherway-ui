@@ -90,7 +90,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
     onClose: onToClose,
   } = useNetworkSelection(contractProvider, isValidToNetwork);
 
-  const isConnected = account !== undefined && account !== null;
+  const isConnected = account.isConnected;
   const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
 
   const handleBridgeButton = async () => {

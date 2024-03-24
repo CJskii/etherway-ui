@@ -119,7 +119,7 @@ export default function TokenMintAndBridge({
     commandHeading: "Select a network",
   };
 
-  const isConnected = account !== undefined && account !== null;
+  const isConnected = account.isConnected;
   const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
 
   const handleMintButton = async () => {
