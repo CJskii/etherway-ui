@@ -29,6 +29,7 @@ import {
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
+import Script from "next/script";
 
 import React from "react";
 
@@ -50,7 +51,7 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   useReferalCode(router);
   return (
     <>
-      {/* <Script
+      <Script
         strategy="lazyOnload"
         src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
       />
@@ -62,8 +63,8 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
           gtag('js', new Date());
           gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}');
          `}
-      </Script> */}
-      {/* <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} /> */}
+      </Script>
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS || ""} />
 
       <WagmiProvider config={wagmiConfig}>
         <SessionProvider refetchInterval={0} session={pageProps.session}>

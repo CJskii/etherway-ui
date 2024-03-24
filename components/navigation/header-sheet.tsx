@@ -9,9 +9,10 @@ import { ThemeToggler } from "../ui/toggle-theme";
 import Link from "next/link";
 
 export function HeaderSheet() {
+  // TODO: fix navbar on mobile
   return (
     <Sheet>
-      <SheetTrigger>
+      <SheetTrigger asChild className="z-[500]">
         <MenuIcon className="rotate-90" />
       </SheetTrigger>
       <SheetContent className=" border-neutral-600">
