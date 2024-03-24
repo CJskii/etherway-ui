@@ -27,14 +27,14 @@ export default function HeroSection() {
           Uniting <span className="text-secondary">Blockchain</span> Ecosystems
           on One Platform
         </Typography>
-        <div className=" flex items-center gap-3">
+        <div className="flex items-center gap-3">
           {/* <Button variant={"etherway"}>Launch Airdrop</Button> */}
-          <Link href={"/guides/how-to-use"}>
-            <Button variant={"etherway"}>How to use</Button>
+          <Link href={"/layerzero/onft-mint"}>
+            <Button variant={"etherway"}>LayerZero</Button>
           </Link>
-          <Link href={"/chains"}>
+          <Link href={"/hyperlane/nft-mint"}>
             <Button variant={"ghost"} className="md:w-32">
-              Explore Chains <ChevronRightIcon />
+              Hyperlane <ChevronRightIcon />
             </Button>
           </Link>
         </div>
