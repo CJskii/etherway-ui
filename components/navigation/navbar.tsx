@@ -65,13 +65,15 @@ export function Header() {
           />
         </Link>
       </div>
-      <Image
-        src={logo}
-        alt="Icon"
-        className="block md:hidden"
-        width={30}
-        height={30}
-      />
+      <Link href={"/"} className="md:hidden">
+        <Image
+          src={logo}
+          alt="Icon"
+          className="block md:hidden"
+          width={30}
+          height={30}
+        />
+      </Link>
       <div className="flex-1 justify-center hidden items-center gap-3 md:flex">
         <NavLinks />
       </div>
