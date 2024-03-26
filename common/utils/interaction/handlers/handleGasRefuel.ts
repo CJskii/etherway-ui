@@ -66,8 +66,8 @@ const handleGasTransaction = async ({
     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
 
   const contract = new Contract(
-    fromNetwork.deployedContracts.layerzero.REFUEL.address,
-    fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
+    fromNetwork.deployedContracts.layerzero.OFT.address,
+    fromNetwork.deployedContracts.layerzero.OFT.ABI,
     signer,
   );
 

@@ -52,8 +52,8 @@ const estimateGasBridgeFee = async ({
   if (!fromNetwork.deployedContracts)
     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
   const contract = new Contract(
-    fromNetwork.deployedContracts.layerzero.REFUEL.address,
-    fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
+    fromNetwork.deployedContracts.layerzero.OFT.address,
+    fromNetwork.deployedContracts.layerzero.OFT.ABI,
     signer,
   );
   const paddedAddress = ethers.utils.zeroPad(refundAddress, 32);
