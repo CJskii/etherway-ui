@@ -30,6 +30,7 @@ const Confirm = ({
         setToNetworkPrice(toPrice);
         setFromNetworkPrice(fromPrice);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const estimatedUSDValue = toNetworkPrice

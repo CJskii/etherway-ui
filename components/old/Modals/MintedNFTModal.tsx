@@ -74,6 +74,7 @@ const MintedNFTModal = (props: MintedNFTModalProps) => {
     if (mintedNFT) {
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mintedNFT]);
 
   const handleBridgeClick = () => {

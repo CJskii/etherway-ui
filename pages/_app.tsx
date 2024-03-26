@@ -1,7 +1,5 @@
 import "../styles/globals.css";
 import { Inter, Raleway } from "next/font/google";
-
-// import "@fontsource/ibm-plex-mono";
 import type { AppProps } from "next/app";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
@@ -31,7 +29,7 @@ import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import Script from "next/script";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +47,11 @@ const inter = Inter({ subsets: ["latin"] });
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
   const router = useRouter();
   useReferalCode(router);
+
+  useEffect(() => {
+    document.body.style.pointerEvents = "";
+  }, [router.pathname]);
+
   return (
     <>
       <Script
