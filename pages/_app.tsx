@@ -1,7 +1,5 @@
 import "../styles/globals.css";
 import { Inter, Raleway } from "next/font/google";
-
-// import "@fontsource/ibm-plex-mono";
 import type { AppProps } from "next/app";
 import { GoogleAnalytics } from "@next/third-parties/google";
 

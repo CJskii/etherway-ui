@@ -1,6 +1,5 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { darkTheme, getDefaultConfig } from "@rainbow-me/rainbowkit";
-import "@fontsource/ibm-plex-mono";
 import { getSupportedChains } from "@/constants/config/chainsConfig";
 
 const customChains = getSupportedChains();
