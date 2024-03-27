@@ -1,4 +1,8 @@
 import { IPreview } from "../../../common/types/gas-refuel";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Typography } from "@/components/ui/typography";
 
 const Preview = ({
   nativeCurrencySymbol,
@@ -10,33 +14,50 @@ const Preview = ({
 }: IPreview) => {
   return (
     <>
-      <p className="pt-5 pb-3">
-        Step 1: Input amount of ${nativeCurrencySymbol} to receive on{" "}
-        {networkName}
-      </p>
-      <div className="w-full flex justify-center items-center gap-4 max-[400px]:flex-col">
-        <input
-          className="input input-bordered flex-grow"
-          placeholder="Amount"
-          type="number"
-          value={inputAmount}
-          onChange={(e) => setInputAmount(e.target.value)}
-        />
-        <button
-          className="btn btn-primary flex-shrink-0 w-1/3 max-w-[30%]"
-          onClick={handleMaxButton}
+      <Label className=" space-y-2">
+        <Typography
+          variant={"smallTitle"}
+          className="dark:text-black font-semibold"
         >
-          Max
-        </button>
+          {`Step 1: Input amount of ${nativeCurrencySymbol} to receive on ${networkName}`}
+        </Typography>
+        <div className="relative">
+          <Input
+            placeholder="Enter amount to bridge"
+            className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
+            onChange={(e) => setInputAmount(e.target.value)}
+            type="number"
+            value={inputAmount}
+            // ref={userBalanceRef}
+          />
+          <Button
+            size={"sm"}
+            className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
+            onClick={handleMaxButton}
+          >
+            Max
+          </Button>
+        </div>
+      </Label>
+      <div className="flex flex-col gap-2">
+        <Label className=" space-y-2">
+          <Typography
+            variant={"smallTitle"}
+            className="dark:text-black font-semibold"
+          >
+            Step 2: {"Preview transaction"}
+          </Typography>
+        </Label>
+        <Button
+          className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+          disabled={inputAmount === ""}
+          // onClick={apiBridgeError ? tryBridgingAPICall : handleBridgeButton}
+          onClick={handlePreviewClick}
+        >
+          {/* {hasBridged && apiBridgeError ? "Try again" : "Send"} */}
+          {"Confirm"}
+        </Button>
       </div>
-      <p className="pt-5 pb-3">Step 2: Check transaction details</p>
-      <button
-        className="btn btn-primary"
-        onClick={handlePreviewClick}
-        disabled={inputAmount == ""}
-      >
-        Preview
-      </button>
     </>
   );
 };

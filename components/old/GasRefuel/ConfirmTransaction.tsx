@@ -3,6 +3,10 @@ import { IConfirm } from "../../../common/types/gas-refuel";
 import { useEffect, useState } from "react";
 import { coingeckoMapping } from "../../../constants/tokenMappings";
 import GasPriceDisplay from "./GasPriceDisplay";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Typography } from "@/components/ui/typography";
+import { Separator } from "@radix-ui/react-separator";
 
 const Confirm = ({
   toNetwork,
@@ -45,40 +49,61 @@ const Confirm = ({
 
   return (
     <>
-      <div className="mt-4 border-[1px] border-base-100 border-opacity-70 rounded-lg p-2 flex flex-col hover:border-opacity-100">
-        <GasPriceDisplay
-          label={`Receive on ${toNetwork.name}`}
-          amount={inputAmount}
-          currencySymbol={toNetwork.nativeCurrency.symbol}
-          usdValue={estimatedUSDValue ? estimatedUSDValue : undefined}
-        />
-        <div className="divider p-0 m-0"></div>
-        <GasPriceDisplay
-          label="Estimated total cost"
-          amount={totalCost}
-          currencySymbol={fromNetwork.nativeCurrency.symbol}
-          usdValue={totalCostUSD ? totalCostUSD : undefined}
-        />
+      <div>
+        <Label>
+          <Typography
+            variant={"smallTitle"}
+            className="dark:text-black font-semibold"
+          >
+            Step 3: {"Check estimates"}
+          </Typography>
+        </Label>
+        <div className="mt-4 border-[1px] border-black bg-white/30 rounded-lg p-2 flex flex-col hover:border-opacity-100">
+          <GasPriceDisplay
+            label={`Receive on ${toNetwork.name}`}
+            amount={inputAmount}
+            currencySymbol={toNetwork.nativeCurrency.symbol}
+            usdValue={estimatedUSDValue ? estimatedUSDValue : undefined}
+            tooltipDescription="This is the amount you will receive on the destination network"
+          />
+          <Separator className="border-[1px] dark:border-black/20 rounded-lg" />
+          <GasPriceDisplay
+            label="Estimated total cost"
+            amount={totalCost}
+            currencySymbol={fromNetwork.nativeCurrency.symbol}
+            usdValue={totalCostUSD ? totalCostUSD : undefined}
+            tooltipDescription="This is the total estimated cost of the transaction including gas fees"
+          />
+        </div>
       </div>
 
-      <p className="pt-5 pb-3">Step 3: Confirm transaction</p>
-
-      <button
-        className="btn btn-primary"
-        onClick={handleConfirmButton}
-        disabled={isLoading ? true : false}
-      >
-        {" "}
-        Confirm{" "}
-      </button>
-      <button
-        className="btn btn-primary mt-2"
-        onClick={() => {
-          setGasFee("");
-        }}
-      >
-        Return
-      </button>
+      <div>
+        <Label className="flex flex-col gap-2">
+          <Typography
+            variant={"smallTitle"}
+            className="dark:text-black font-semibold"
+          >
+            Step 4: {"Confirm transaction"}
+          </Typography>
+        </Label>
+        <Button
+          className="py-6 my-2 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+          disabled={isLoading ? true : false}
+          onClick={() => {
+            console.log("Confirming transaction");
+          }}
+        >
+          {"Confirm"}
+        </Button>
+        <Button
+          className="py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+          onClick={() => {
+            setGasFee("");
+          }}
+        >
+          Return
+        </Button>
+      </div>
     </>
   );
 };
