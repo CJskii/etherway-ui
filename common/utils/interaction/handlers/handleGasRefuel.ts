@@ -3,6 +3,7 @@ import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { handleErrors } from "./handleErrors";
 import { GasTransferParams } from "../../../types/gas-refuel";
 import { Network } from "../../../types/network";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 
 export const gasTransferRequest = async ({
   fromNetwork,
@@ -65,39 +66,39 @@ const handleGasTransaction = async ({
     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
 
   const contract = new Contract(
-    fromNetwork.deployedContracts.layerzero.REFUEL.address,
-    fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
+    fromNetwork.deployedContracts.layerzero.OFT.address,
+    fromNetwork.deployedContracts.layerzero.OFT.ABI,
     signer,
   );
 
-  const gasInWei = ethers.utils.parseUnits(value, "ether");
+  const paddedAddress = ethers.utils.zeroPad(refundAddress, 32);
+  const tokensToSend = ethers.utils.parseUnits(value, "ether");
+  const options = Options.newOptions()
+    .addExecutorNativeDropOption(
+      tokensToSend.toString(),
+      paddedAddress.toString(),
+    )
+    .addExecutorLzReceiveOption(200000, 0)
+    .toHex()
+    .toString();
 
-  let adapterParams = ethers.utils.solidityPack(
-    ["uint16", "uint", "uint", "address"],
-    [2, 200000, gasInWei.toString(), refundAddress],
-  );
+  const sendParam = [
+    targetNetwork.params?.layerzero?.remoteChainId,
+    paddedAddress,
+    0,
+    0,
+    options,
+    "0x",
+    "0x",
+  ];
 
-  const gasPrice = await signer.getGasPrice();
   try {
-    const [_nativeFee, _zroFee, totalCost] = await contract.estimateSendFee(
-      targetNetwork.params?.layerzero?.remoteChainId,
-      refundAddress,
-      gasInWei,
-      adapterParams,
-    );
+    let nativeFee = 0;
+    [nativeFee] = await contract.quoteSend(sendParam, false);
 
-    const tx = await contract.bridgeGas(
-      targetNetwork.params?.layerzero?.remoteChainId,
-      refundAddress,
-      gasInWei,
-      adapterParams,
-      {
-        value: totalCost,
-        // gasLimit: ethers.utils.parseUnits("250000", "wei"),
-        gasPrice: gasPrice.mul(5).div(4),
-        gasLimit: fromNetwork.name == "Arbitrum One" ? 2000000 : 1500000,
-      },
-    );
+    const tx = await contract
+      .send(sendParam, [nativeFee, 0], refundAddress, { value: nativeFee })
+      .then((tx: any) => tx.wait());
 
     const receipt = await tx.wait();
 

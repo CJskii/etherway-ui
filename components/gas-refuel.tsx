@@ -3,29 +3,26 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { IoSwapHorizontalSharp } from "react-icons/io5";
 import dynamic from "next/dynamic";
-import { Network } from "../../../common/types/network";
-import { useNetworkSelection } from "../../../common/hooks/useNetworkSelection";
+import { Network } from "../common/types/network";
+import { useNetworkSelection } from "../common/hooks/useNetworkSelection";
 import { useChainModal } from "@rainbow-me/rainbowkit";
-import { activeChains } from "../../../constants/config/chainsConfig";
-import { estimateGasRequest } from "../../../common/utils/interaction/handlers/estimateGas";
-import { gasTransferRequest } from "../../../common/utils/interaction/handlers/handleGasRefuel";
-import { getValidToNetworks } from "../../../common/utils/getters/getValidToNetworks";
-import { getMaxGasValue } from "../../../common/utils/getters/getMaxGasValue";
-import { requestNetworkSwitch } from "../../../common/utils/requestNetworkSwitch";
-import { handleErrors } from "../../../common/utils/interaction/handlers/handleErrors";
-import Preview from "./Preview";
-import Confirm from "./ConfirmTransaction";
-import DiscordLink from "../../../common/elements/DiscordLink";
+import { activeChains } from "../constants/config/chainsConfig";
+import { estimateGasRequest } from "../common/utils/interaction/handlers/estimateGas";
+import { gasTransferRequest } from "../common/utils/interaction/handlers/handleGasRefuel";
+import { getValidToNetworks } from "../common/utils/getters/getValidToNetworks";
+import { getMaxGasValue } from "../common/utils/getters/getMaxGasValue";
+import { requestNetworkSwitch } from "../common/utils/requestNetworkSwitch";
+import { handleErrors } from "../common/utils/interaction/handlers/handleErrors";
+import Preview from "./old/GasRefuel/Preview";
+import Confirm from "./old/GasRefuel/ConfirmTransaction";
+import DiscordLink from "../common/elements/DiscordLink";
 
-const NetworkModal = dynamic(
-  () => import("../../../common/elements/NetworkModal"),
-  {
-    loading: () => <span className="loading loading-dots loading-lg"></span>,
-    ssr: true,
-  },
-);
+const NetworkModal = dynamic(() => import("../common/elements/NetworkModal"), {
+  loading: () => <span className="loading loading-dots loading-lg"></span>,
+  ssr: true,
+});
 
-const GasModal = dynamic(() => import("../Modals/GasModal"), {
+const GasModal = dynamic(() => import("./old/Modals/GasModal"), {
   loading: () => <span className="loading loading-dots loading-lg"></span>,
   ssr: true,
 });
