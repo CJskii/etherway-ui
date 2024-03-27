@@ -228,6 +228,7 @@ const Gas = ({
                   placeholder="Enter recipent's  EVM address"
                   className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
                   onChange={(e) => setRecipientAddress(e.target.value)}
+                  value={recipientAddress}
                 />
               </div>
             </Label>

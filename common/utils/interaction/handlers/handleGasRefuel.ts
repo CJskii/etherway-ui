@@ -71,11 +71,12 @@ const handleGasTransaction = async ({
     signer,
   );
 
+  const lzOptionsGas = targetNetwork.params?.gasLimit.lzOptionsGas;
   const paddedAddress = ethers.utils.zeroPad(refundAddress, 32);
   const tokensToSend = ethers.utils.parseEther(value);
   const options = Options.newOptions()
     .addExecutorNativeDropOption(tokensToSend as any, paddedAddress as any)
-    .addExecutorLzReceiveOption(200000, 0)
+    .addExecutorLzReceiveOption(lzOptionsGas || 250000, 0)
     .toHex()
     .toString();
 
