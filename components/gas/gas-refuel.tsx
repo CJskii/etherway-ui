@@ -17,6 +17,7 @@ import { Label } from "@radix-ui/react-label";
 import { Input } from "../ui/input";
 import BridgeModal from "../modal-bridge";
 import { useAccount, useSwitchChain } from "wagmi";
+import HowItWorks from "./how-it-works";
 
 const Gas = ({
   contractProvider,
@@ -179,15 +180,7 @@ const Gas = ({
           <Typography variant={"h3"} className=" dark:text-black text-center">
             {"Gas refuel ⛽"}
           </Typography>
-          <DashboardCard className="px-6 py-4 mx-auto w-max  bg-white/30">
-            <Typography
-              variant={"smallTitle"}
-              className="dark:text-black font-semibold"
-            >
-              How it works?
-            </Typography>
-          </DashboardCard>
-
+          <HowItWorks />
           <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
             <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
               <NetworkModal props={fromBridgeProps} />
