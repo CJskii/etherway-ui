@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
-import { IConfirm } from "../../../common/types/gas-refuel";
+import { IConfirm } from "../../common/types/gas-refuel";
 import { useEffect, useState } from "react";
-import { coingeckoMapping } from "../../../constants/tokenMappings";
-import GasPriceDisplay from "./GasPriceDisplay";
+import { coingeckoMapping } from "../../constants/tokenMappings";
+import GasPriceDisplay from "./gas-price-display";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Typography } from "@/components/ui/typography";

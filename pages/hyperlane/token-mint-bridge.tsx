@@ -1,4 +1,4 @@
-import TokenMintAndBridge from "@/components/token-bridge";
+import TokenMintAndBridge from "@/components/token/mint-bridge";
 import { Layout } from "@/components/dashboard/layout";
 import HeadComponent from "@/common/elements/HeadComponent";
 

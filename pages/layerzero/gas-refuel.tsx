@@ -1,5 +1,5 @@
 import HeadComponent from "@/common/elements/HeadComponent";
-import Gas from "@/components/gas-refuel";
+import Gas from "@/components/gas/gas-refuel";
 import { Layout } from "@/components/dashboard/layout";
 
 const GasRefuel = () => {

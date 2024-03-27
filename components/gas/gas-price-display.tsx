@@ -1,4 +1,4 @@
-import { GasPriceProps } from "../../../common/types/gas-refuel";
+import { GasPriceProps } from "../../common/types/gas-refuel";
 import { Typography } from "@/components/ui/typography";
 import {
   Tooltip,

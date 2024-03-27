@@ -1,11 +1,12 @@
 "use client";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Typography } from "./ui/typography";
-import { Button } from "./ui/button";
+import { Typography } from "../ui/typography";
+import Image from "next/image";
+import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 
-interface TokenMintModalProps {
+interface TokenBridgeModalProps {
   props: {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
@@ -19,7 +20,7 @@ interface TokenMintModalProps {
   };
 }
 
-const TokenMintModal = ({ props }: TokenMintModalProps) => {
+const TokenBridgeModal = ({ props }: TokenBridgeModalProps) => {
   const {
     isOpen: open,
     setIsOpen: setOpen,
@@ -39,7 +40,7 @@ const TokenMintModal = ({ props }: TokenMintModalProps) => {
       return (
         <div className="flex flex-col justify-center items-center gap-6 h-full">
           <Typography variant="h4" className="text-center dark:text-black">
-            We&apos;re working hard to mint your tokens
+            We&apos;re working hard to bridge your tokens
           </Typography>
           <Typography variant="small" className="text-center dark:text-black">
             This might take a few seconds...
@@ -57,35 +58,42 @@ const TokenMintModal = ({ props }: TokenMintModalProps) => {
             variant="smallTitle"
             className="text-center dark:text-black"
           >
-            There was an error while minting your tokens
+            There was an error while bridging your tokens
           </Typography>
           <Typography variant="small" className="text-center dark:text-black">
             {errorMessage}
           </Typography>
 
-          {/* <Typography variant="small" className="text-center dark:text-black">
-            Please try again
-          </Typography> */}
+          <Typography
+            variant="small"
+            className="text-center dark:text-black font-normal pt-4"
+          >
+            If this is reocurring error, please contact us in Discord for help
+          </Typography>
         </>
       );
     } else {
       return (
         <>
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-4">
             <Typography
               variant="smallTitle"
               className="text-center dark:text-black"
             >
-              Successfully minted {amount} {amount > 1 ? "tokens" : "token"}{" "}
+              Tokens Sent
             </Typography>
             <Typography variant="small" className="text-center dark:text-black">
-              You can now bridge to other networks
+              Please allow few minutes for the transaction to finalise on the
+              destination network
             </Typography>
+            {/* <Typography variant="small" className="text-center dark:text-black">
+              TX ID: We can get this from the response
+            </Typography> */}
             <Button
               className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
               onClick={() => setOpen(false)}
             >
-              Continue
+              Close
             </Button>
           </div>
         </>
@@ -103,7 +111,7 @@ const TokenMintModal = ({ props }: TokenMintModalProps) => {
         }}
       >
         <DialogContent
-          className={`rounded-xl bg-gradient border-0 flex flex-col justify-center items-between ${
+          className={`rounded-xl bg-gradient border-0 flex flex-col justify-center items-between  ${
             errorMessage ? "border-4 border-red-500" : ""
           }`}
         >
@@ -114,4 +122,4 @@ const TokenMintModal = ({ props }: TokenMintModalProps) => {
   );
 };
 
-export default TokenMintModal;
+export default TokenBridgeModal;

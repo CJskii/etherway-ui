@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import { Network } from "../common/types/network";
-import { useNetworkSelection } from "../common/hooks/useNetworkSelection";
+import { Network } from "../../common/types/network";
+import { useNetworkSelection } from "../../common/hooks/useNetworkSelection";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { activeChains } from "../constants/config/chainsConfig";
-import { estimateGasRequest } from "../common/utils/interaction/handlers/estimateGas";
-import { gasTransferRequest } from "../common/utils/interaction/handlers/handleGasRefuel";
-import { getValidToNetworks } from "../common/utils/getters/getValidToNetworks";
-import { handleErrors } from "../common/utils/interaction/handlers/handleErrors";
-import Preview from "./old/GasRefuel/Preview";
-import Confirm from "./old/GasRefuel/ConfirmTransaction";
-import { Typography } from "./ui/typography";
-import DashboardCard from "./dashboard/dashboard-card";
-import NetworkModal from "./networkModal";
+import { activeChains } from "../../constants/config/chainsConfig";
+import { estimateGasRequest } from "../../common/utils/interaction/handlers/estimateGas";
+import { gasTransferRequest } from "../../common/utils/interaction/handlers/handleGasRefuel";
+import { getValidToNetworks } from "../../common/utils/getters/getValidToNetworks";
+import { handleErrors } from "../../common/utils/interaction/handlers/handleErrors";
+import Preview from "./preview";
+import Confirm from "./confirm-transaction";
+import { Typography } from "../ui/typography";
+import DashboardCard from "../dashboard/dashboard-card";
+import NetworkModal from "../networkModal";
 import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
-import { Input } from "./ui/input";
-import BridgeModal from "./modal-bridge";
+import { Input } from "../ui/input";
+import BridgeModal from "../modal-bridge";
 import { useAccount, useSwitchChain } from "wagmi";
 
 const Gas = ({
