@@ -508,36 +508,6 @@ export default function TokenMintAndBridge({
                 onChange={(e) => setMintAmount(Number(e.target.value))}
                 type="number"
               />
-              {/* {hasMinted ? (
-                <>
-                  {apiMintError ? (
-                    <Button
-                      size={"sm"}
-                      className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                      onClick={tryMintingAPICall}
-                    >
-                      Try Again
-                    </Button>
-                  ) : (
-                    <Button
-                      disabled={true}
-                      size={"sm"}
-                      className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                      onClick={handleMintButton}
-                    >
-                      Mint
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <Button
-                  size={"sm"}
-                  className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                  onClick={handleMintButton}
-                >
-                  Mint
-                </Button>
-              )} */}
               <Button
                 size={"sm"}
                 className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
@@ -575,33 +545,6 @@ export default function TokenMintAndBridge({
               </Button>
             </div>
           </Label>
-          {/* {hasBridged ? (
-            <>
-              {apiBridgeError ? (
-                <Button
-                  className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-                  onClick={tryBridgingAPICall}
-                >
-                  Try Again
-                </Button>
-              ) : (
-                <Button
-                  disabled={true}
-                  className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-                  onClick={handleBridgeButton}
-                >
-                  Send
-                </Button>
-              )}
-            </>
-          ) : (
-            <Button
-              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-              onClick={handleBridgeButton}
-            >
-              Send
-            </Button>
-          )} */}
           <Button
             className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
             onClick={apiBridgeError ? tryBridgingAPICall : handleBridgeButton}
