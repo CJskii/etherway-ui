@@ -181,8 +181,9 @@ const Gas = ({
             {"Gas refuel ⛽"}
           </Typography>
           <HowItWorks />
+
           <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
-            <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
+            <div className="grid lg:grid-cols-[1fr,auto,1fr] gap-2 min-w-full">
               <NetworkModal props={fromBridgeProps} />
               <div
                 onClick={handleSwapButton}

@@ -4,7 +4,7 @@ import { Layout } from "@/components/dashboard/layout";
 
 const GasRefuel = () => {
   return (
-    <Layout>
+    <Layout className="px-0 pt-24 pb-8 min-h-[90vh]">
       <HeadComponent
         title="Etherway: Gas Refuel Service - Refuel Your Wallet with Native Tokens"
         description="Stay ahead in your blockchain transactions with Etherway's Gas Refuel service. Efficiently manage your gas reserves, ensuring uninterrupted cross-chain activities with LayerZero technology."

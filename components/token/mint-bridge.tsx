@@ -452,36 +452,8 @@ export default function TokenMintAndBridge({
             </Typography>
           </DashboardCard>
 
-          <TokenMintModal
-            props={{
-              isOpen: showMintModal,
-              setIsOpen: setShowMintModal,
-              isLoading: isLoading,
-              modalTitle: "Minting Tokens",
-              modalDescription: "This might take a few seconds...",
-              modalButtonText: "Mint",
-              errorMessage: errorMessage,
-              setErrorMessage: setErrorMessage,
-              amount: mintAmount,
-            }}
-          />
-
-          <TokenBridgeModal
-            props={{
-              isOpen: showBridgingModal,
-              setIsOpen: setShowBridgingModal,
-              isLoading: isLoading,
-              modalTitle: "Bridging Tokens",
-              modalDescription: "This might take a few seconds...",
-              modalButtonText: "Bridge",
-              errorMessage: errorMessage,
-              setErrorMessage: setErrorMessage,
-              amount: Number(bridgeAmount),
-            }}
-          />
-
           <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
-            <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
+            <div className="grid lg:grid-cols-[1fr,auto,1fr] gap-2 w-full">
               <NetworkModal props={fromBridgeProps} />
               <div
                 onClick={handleSwapButton}
@@ -545,12 +517,39 @@ export default function TokenMintAndBridge({
               </Button>
             </div>
           </Label>
+          <TokenMintModal
+            props={{
+              isOpen: showMintModal,
+              setIsOpen: setShowMintModal,
+              isLoading: isLoading,
+              modalTitle: "Minting Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Mint",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: mintAmount,
+            }}
+          />
           <Button
             className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
             onClick={apiBridgeError ? tryBridgingAPICall : handleBridgeButton}
           >
             {hasBridged && apiBridgeError ? "Try again" : "Send"}
           </Button>
+
+          <TokenBridgeModal
+            props={{
+              isOpen: showBridgingModal,
+              setIsOpen: setShowBridgingModal,
+              isLoading: isLoading,
+              modalTitle: "Bridging Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Bridge",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: Number(bridgeAmount),
+            }}
+          />
         </div>
       </div>
     </div>
