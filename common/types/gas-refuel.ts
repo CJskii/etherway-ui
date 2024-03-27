@@ -64,4 +64,5 @@ export interface GasPriceProps {
   amount: string;
   currencySymbol: string;
   usdValue?: string;
+  tooltipDescription: string;
 }

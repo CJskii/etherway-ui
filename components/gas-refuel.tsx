@@ -1,8 +1,4 @@
-// import { useNetwork } from "wagmi";
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { IoSwapHorizontalSharp } from "react-icons/io5";
-import dynamic from "next/dynamic";
 import { Network } from "../common/types/network";
 import { useNetworkSelection } from "../common/hooks/useNetworkSelection";
 import { useChainModal } from "@rainbow-me/rainbowkit";
@@ -10,22 +6,15 @@ import { activeChains } from "../constants/config/chainsConfig";
 import { estimateGasRequest } from "../common/utils/interaction/handlers/estimateGas";
 import { gasTransferRequest } from "../common/utils/interaction/handlers/handleGasRefuel";
 import { getValidToNetworks } from "../common/utils/getters/getValidToNetworks";
-import { getMaxGasValue } from "../common/utils/getters/getMaxGasValue";
-import { requestNetworkSwitch } from "../common/utils/requestNetworkSwitch";
 import { handleErrors } from "../common/utils/interaction/handlers/handleErrors";
 import Preview from "./old/GasRefuel/Preview";
 import Confirm from "./old/GasRefuel/ConfirmTransaction";
-import DiscordLink from "../common/elements/DiscordLink";
-
-const NetworkModal = dynamic(() => import("../common/elements/NetworkModal"), {
-  loading: () => <span className="loading loading-dots loading-lg"></span>,
-  ssr: true,
-});
-
-const GasModal = dynamic(() => import("./old/Modals/GasModal"), {
-  loading: () => <span className="loading loading-dots loading-lg"></span>,
-  ssr: true,
-});
+import { Typography } from "./ui/typography";
+import DashboardCard from "./dashboard/dashboard-card";
+import NetworkModal from "./networkModal";
+import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
+import { Label } from "@radix-ui/react-label";
+import { Input } from "./ui/input";
 
 const Gas = ({
   contractProvider,
@@ -60,19 +49,13 @@ const Gas = ({
   const {
     selectedNetwork: fromNetwork,
     onNetworkSelect: setFromNetwork,
-    searchTerm: fromSearchTerm,
-    onSearchChange: setFromSearchTerm,
     filteredChains: fromFilteredChains,
-    onClose: onFromClose,
   } = useNetworkSelection(contractProvider);
 
   const {
     selectedNetwork: toNetwork,
     onNetworkSelect: setToNetwork,
-    searchTerm: toSearchTerm,
-    onSearchChange: setToSearchTerm,
     filteredChains: toFilteredChains,
-    onClose: onToClose,
   } = useNetworkSelection(contractProvider, isValidToNetwork);
 
   useEffect(() => {
@@ -114,7 +97,7 @@ const Gas = ({
   };
 
   const handleMaxButton = () => {
-    const maxGas = getMaxGasValue(toNetwork.name);
+    const maxGas = toNetwork.params?.layerzero?.maxRefuelGas;
     if (maxGas) {
       setInputAmount(maxGas.toString());
     }
@@ -145,108 +128,101 @@ const Gas = ({
     }
   };
 
+  const handleSwapButton = () => {
+    const temp = fromNetwork;
+    setFromNetwork(toNetwork);
+    setToNetwork(temp);
+  };
+
+  const fromBridgeProps = {
+    selectedNetwork: fromNetwork,
+    onNetworkSelect: setFromNetwork,
+    filteredChains: fromFilteredChains,
+    dialogTitle: "Select from network",
+    dialogDescription: "From",
+    commandHeading: "Select a network to bridge from",
+  };
+
+  const toBridgeProps = {
+    selectedNetwork: toNetwork,
+    onNetworkSelect: setToNetwork,
+    filteredChains: toFilteredChains,
+    dialogTitle: "Select to network",
+    dialogDescription: "To",
+    commandHeading: "Select a network to bridge to",
+  };
+
   return (
-    <div className="flex flex-col justify-between items-center min-w-full">
-      <section className="bg-base card card-side bg-base-200 shadow-xl rounded-none">
-        <div className="flex items-center justify-center px-4 py-10 sm:px-6 lg:px-8 sm:p-8">
-          <div className="md:w-full xl:max-w-2xl 2xl:max-w-2xl xl:mx-auto 2xl:pl-8 h-full flex flex-col justify-between lg:p-8">
-            <GasModal
-              showGasModal={showGasModal}
-              setShowGasModal={setShowGasModal}
-              txHash={txHash}
-              setTxHash={setTxHash}
-              errorMessage={errorMessage}
-              setErrorMessage={setErrorMessage}
-              isLoading={isLoading}
-              data={{
-                inputAmount,
-                toNetwork,
-                transactionBlockNumber,
-              }}
-              recipentAddress={recipientAddress}
-            />
-            <h2 className="text-xl font-bold leading-tight sm:text-4xl text-content-focus text-center">
-              Gas Refuel
-            </h2>
-            <p className="text-sm text-center p-2">
-              Note: this is experimental feature, please proceed with caution!
-            </p>
-            <p className="text-sm text-center">
-              If you run into any issues please contact us in our{" "}
-              <DiscordLink />
-            </p>
+    // TODO: Add gas modal here
+    <div className="z-10 py-20 md:py-16 flex items-center justify-center min-h-[90vh]">
+      <div className="bg-gradient my-auto md:rounded-xl md:w-8/12 lg:w-5/12 w-full items-start">
+        <div className="p-8 md:py-10 md:px-16 flex flex-col gap-8">
+          <Typography variant={"h3"} className=" dark:text-black text-center">
+            {"Gas refuel ⛽"}
+          </Typography>
+          <DashboardCard className="px-6 py-4 mx-auto w-max  bg-white/30">
+            <Typography
+              variant={"smallTitle"}
+              className="dark:text-black font-semibold"
+            >
+              How it works?
+            </Typography>
+          </DashboardCard>
 
-            <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-4 py-4 px-2 mt-4 max-sm:flex max-sm:flex-col">
-              <NetworkModal
-                selectedNetwork={fromNetwork}
-                onNetworkSelect={setFromNetwork}
-                searchTerm={fromSearchTerm}
-                onSearchChange={setFromSearchTerm}
-                filteredChains={fromFilteredChains}
-                onClose={onFromClose}
-                dialogId="fromNetworkModal"
-                title="From"
-              />
-              <div className="py-4 px-2 ">
-                <IoSwapHorizontalSharp
-                  className="text-2xl cursor-pointer"
-                  onClick={() => {
-                    setFromNetwork(toNetwork);
-                    setToNetwork(fromNetwork);
-                  }}
-                />
+          <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
+            <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
+              <NetworkModal props={fromBridgeProps} />
+              <div
+                onClick={handleSwapButton}
+                className="flex justify-center items-center justify-self-center self-center active:scale-90 transition-all ease-in-out cursor-pointer w-12 h-12"
+              >
+                <ArrowUpDown className="md:hidden block md:h-12 md:w-12" />
+                <ArrowLeftRight className="hidden md:block md:h-12 md:w-12" />
               </div>
-              <NetworkModal
-                selectedNetwork={toNetwork}
-                onNetworkSelect={setToNetwork}
-                searchTerm={toSearchTerm}
-                onSearchChange={setToSearchTerm}
-                filteredChains={toFilteredChains}
-                onClose={onToClose}
-                dialogId="toNetworkModal"
-                title="To"
-              />
+              <NetworkModal props={toBridgeProps} />
             </div>
+          </div>
 
-            {gasFee === "" && (
-              <div className="flex flex-col gap-2">
-                <label htmlFor="recipientAddress">
-                  Sending to a friend? (optional):
-                </label>
-                <input
-                  type="text"
-                  id="recipientAddress"
-                  placeholder="Enter recipient's Ethereum address"
-                  value={recipientAddress}
+          {gasFee === "" && (
+            <Label className=" space-y-2">
+              <Typography
+                variant={"smallTitle"}
+                className="dark:text-black font-semibold"
+              >
+                {"Sending to a friend? (optional):"}
+              </Typography>
+              <div className="relative">
+                <Input
+                  placeholder="Enter recipent's  EVM address"
+                  className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
                   onChange={(e) => setRecipientAddress(e.target.value)}
-                  className="input input-bordered flex-grow"
                 />
               </div>
-            )}
+            </Label>
+          )}
 
-            {gasFee != "" ? (
-              <Confirm
-                toNetwork={toNetwork}
-                fromNetwork={fromNetwork}
-                inputAmount={inputAmount}
-                gasFee={gasFee}
-                setGasFee={setGasFee}
-                handleConfirmButton={handleConfirmButton}
-                isLoading={isLoading}
-              />
-            ) : (
-              <Preview
-                nativeCurrencySymbol={toNetwork.nativeCurrency.symbol}
-                networkName={toNetwork.name}
-                inputAmount={inputAmount}
-                setInputAmount={setInputAmount}
-                handleMaxButton={handleMaxButton}
-                handlePreviewClick={handlePreviewClick}
-              />
-            )}
-          </div>
+          {gasFee != "" ? (
+            <Confirm
+              toNetwork={toNetwork}
+              fromNetwork={fromNetwork}
+              inputAmount={inputAmount}
+              gasFee={gasFee}
+              setGasFee={setGasFee}
+              handleConfirmButton={handleConfirmButton}
+              isLoading={isLoading}
+            />
+          ) : (
+            <Preview
+              nativeCurrencySymbol={toNetwork.nativeCurrency.symbol}
+              networkName={toNetwork.name}
+              inputAmount={inputAmount}
+              setInputAmount={setInputAmount}
+              handleMaxButton={handleMaxButton}
+              handlePreviewClick={handlePreviewClick}
+            />
+          )}
         </div>
-      </section>
+      </div>
     </div>
   );
 };
