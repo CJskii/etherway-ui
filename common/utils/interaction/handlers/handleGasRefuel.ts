@@ -72,12 +72,9 @@ const handleGasTransaction = async ({
   );
 
   const paddedAddress = ethers.utils.zeroPad(refundAddress, 32);
-  const tokensToSend = ethers.utils.parseUnits(value, "ether");
+  const tokensToSend = ethers.utils.parseEther(value);
   const options = Options.newOptions()
-    .addExecutorNativeDropOption(
-      tokensToSend.toString(),
-      paddedAddress.toString(),
-    )
+    .addExecutorNativeDropOption(tokensToSend as any, paddedAddress as any)
     .addExecutorLzReceiveOption(200000, 0)
     .toHex()
     .toString();

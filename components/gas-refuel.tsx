@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Network } from "../common/types/network";
 import { useNetworkSelection } from "../common/hooks/useNetworkSelection";
-import { useChainModal } from "@rainbow-me/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { activeChains } from "../constants/config/chainsConfig";
 import { estimateGasRequest } from "../common/utils/interaction/handlers/estimateGas";
 import { gasTransferRequest } from "../common/utils/interaction/handlers/handleGasRefuel";
@@ -15,6 +15,8 @@ import NetworkModal from "./networkModal";
 import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
+import BridgeModal from "./modal-bridge";
+import { useAccount, useSwitchChain } from "wagmi";
 
 const Gas = ({
   contractProvider,
@@ -25,8 +27,10 @@ const Gas = ({
   };
 }) => {
   // const { chain } = useNetwork();
-  const { openChainModal } = useChainModal();
+  const { openConnectModal } = useConnectModal();
   const { type, contract } = contractProvider;
+  const account = useAccount();
+  const { switchChain } = useSwitchChain();
 
   const [inputAmount, setInputAmount] = useState("");
   const [gasFee, setGasFee] = useState("");
@@ -80,7 +84,18 @@ const Gas = ({
     setGasFee("");
   }, [fromNetwork, toNetwork]);
 
+  const isConnected = account.isConnected;
+  const isCorrectNetwork = fromNetwork.id === (account.chainId ?? "");
+
   const handleConfirmButton = async () => {
+    if (fromNetwork.id === toNetwork.id) return;
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+      return;
+    } else if (!isCorrectNetwork && switchChain) {
+      switchChain({ chainId: fromNetwork.id });
+      return;
+    }
     await gasTransferRequest({
       fromNetwork,
       toNetwork,
@@ -106,9 +121,14 @@ const Gas = ({
   const handlePreviewClick = async () => {
     setIsLoading(true);
     try {
-      // if (chain?.name !== fromNetwork.name) {
-      //   await requestNetworkSwitch(fromNetwork.id, openChainModal);
-      // }
+      if (fromNetwork.id === toNetwork.id) return;
+      if (!isConnected && openConnectModal) {
+        openConnectModal();
+        return;
+      } else if (!isCorrectNetwork && switchChain) {
+        switchChain({ chainId: fromNetwork.id });
+        return;
+      }
       await estimateGasRequest({
         fromNetwork,
         toNetwork,
@@ -153,7 +173,6 @@ const Gas = ({
   };
 
   return (
-    // TODO: Add gas modal here
     <div className="z-10 py-20 md:py-16 flex items-center justify-center min-h-[90vh]">
       <div className="bg-gradient my-auto md:rounded-xl md:w-8/12 lg:w-5/12 w-full items-start">
         <div className="p-8 md:py-10 md:px-16 flex flex-col gap-8">
@@ -181,6 +200,19 @@ const Gas = ({
               </div>
               <NetworkModal props={toBridgeProps} />
             </div>
+            <BridgeModal
+              props={{
+                isOpen: showGasModal,
+                setIsOpen: setShowGasModal,
+                isLoading,
+                errorMessage,
+                setErrorMessage,
+                nftId: txHash,
+                errorHeader: "There was an error while bridging gas",
+                successHeader: "Transaction successful",
+                loadingHeader: "We're working hard to bridge your tokens",
+              }}
+            />
           </div>
 
           {gasFee === "" && (

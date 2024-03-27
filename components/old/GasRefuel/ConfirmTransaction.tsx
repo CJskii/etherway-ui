@@ -89,9 +89,7 @@ const Confirm = ({
         <Button
           className="py-6 my-2 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
           disabled={isLoading ? true : false}
-          onClick={() => {
-            console.log("Confirming transaction");
-          }}
+          onClick={handleConfirmButton}
         >
           {"Confirm"}
         </Button>
