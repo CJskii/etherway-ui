@@ -49,8 +49,9 @@ const HowItWorks = () => {
           <DialogDescription>
             <Typography className="text-black pb-2">
               Our Gas Refuel feature simplifies the process of replenishing your
-              wallet across various networks, ensuring you're always ready for
-              transactions. Follow these four straightforward steps to use it.
+              wallet across various networks, ensuring you&apos;re always ready
+              for transactions. Follow these four straightforward steps to use
+              it.
             </Typography>
           </DialogDescription>
 
