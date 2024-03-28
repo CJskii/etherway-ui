@@ -42,10 +42,10 @@ export const gasTransferRequest = async ({
 
     const { response, error: apiError } = await updateInteractionData({
       address: ownerAddress,
-      contractType: ContractType.GAS_REFUEL,
+      contractType: ContractType.OFT_ERC20,
       chainId: fromNetwork.id,
       interactionType: InteractionType.GAS_REFUEL,
-      amount: Number(inputAmount),
+      amount: 10,
     });
     setGasFee("");
     setIsLoading(false);
@@ -115,11 +115,9 @@ const handleGasTransaction = async ({
       .send(sendParam, [nativeFee, 0], refundAddress, { value: nativeFee })
       .then((tx: any) => tx.wait());
 
-    const receipt = await tx.wait();
-
     return {
       txHash: tx.hash,
-      blockNumber: receipt.blockNumber,
+      blockNumber: tx.blockNumber,
     };
   } catch (error) {
     console.error(`Error in transaction: ${(error as any).message}`);

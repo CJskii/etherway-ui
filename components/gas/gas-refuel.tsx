@@ -129,8 +129,9 @@ const Gas = ({
     // TODO: Display the Toast Error
 
     if (response?.status == 200) {
-      console.log("API Call on update on db Completed");
+      console.log("Interaction successfully recorded");
       toast.success("Interaction successfully recorded");
+      setApiError("");
     } else if (response?.status == 405) {
       console.log("405: Method Not allowed");
       setApiError("405: Method Not allowed");
@@ -165,10 +166,10 @@ const Gas = ({
 
         const { response, error: _apiError } = await updateInteractionData({
           address: account.address,
-          contractType: ContractType.GAS_REFUEL,
+          contractType: ContractType.OFT_ERC20,
           chainId: fromNetwork.id,
           interactionType: InteractionType.GAS_REFUEL,
-          amount: Number(inputAmount),
+          amount: 10,
         });
 
         // TODO: Display the Toast Error
