@@ -4,6 +4,8 @@ import { handleErrors } from "./handleErrors";
 import { GasTransferParams } from "../../../types/gas-refuel";
 import { Network } from "../../../types/network";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
+import { updateInteractionData } from "../../api/interactions";
+import { ContractType, InteractionType } from "@prisma/client";
 
 export const gasTransferRequest = async ({
   fromNetwork,
@@ -35,8 +37,23 @@ export const gasTransferRequest = async ({
     const { txHash, blockNumber } = result;
     setTxHash(txHash);
     setTransactionBlockNumber(blockNumber);
+    const signer = (await getProviderOrSigner(true)) as Signer;
+    const ownerAddress = await signer.getAddress();
+
+    const { response, error: apiError } = await updateInteractionData({
+      address: ownerAddress,
+      contractType: ContractType.GAS_REFUEL,
+      chainId: fromNetwork.id,
+      interactionType: InteractionType.GAS_REFUEL,
+      amount: Number(inputAmount),
+    });
     setGasFee("");
     setIsLoading(false);
+    return {
+      response,
+      apiError,
+      txHash,
+    };
   } catch (e) {
     console.error(e);
     handleErrors({ e, setErrorMessage });

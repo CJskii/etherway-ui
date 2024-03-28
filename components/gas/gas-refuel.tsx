@@ -18,6 +18,9 @@ import { Input } from "../ui/input";
 import BridgeModal from "../modal-bridge";
 import { useAccount, useSwitchChain } from "wagmi";
 import HowItWorks from "./how-it-works";
+import { toast } from "sonner";
+import { ContractType, InteractionType } from "@prisma/client";
+import { updateInteractionData } from "@/common/utils/api/interactions";
 
 const Gas = ({
   contractProvider,
@@ -41,6 +44,7 @@ const Gas = ({
   const [transactionBlockNumber, setTransactionBlockNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [recipientAddress, setRecipientAddress] = useState("");
+  const [apiError, setApiError] = useState("");
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -97,7 +101,7 @@ const Gas = ({
       switchChain({ chainId: fromNetwork.id });
       return;
     }
-    await gasTransferRequest({
+    const data = await gasTransferRequest({
       fromNetwork,
       toNetwork,
       inputAmount,
@@ -110,6 +114,79 @@ const Gas = ({
       gasFee,
       recipientAddress,
     });
+
+    if (data?.apiError) {
+      // @ts-ignore
+      setApiError(data.apiError);
+      toast.error(`${data.apiError}`);
+    }
+
+    if (data?.response) {
+      handleAPIError(data.response);
+    }
+  };
+  const handleAPIError = (response: Response) => {
+    // TODO: Display the Toast Error
+
+    if (response?.status == 200) {
+      console.log("API Call on update on db Completed");
+      toast.success("Interaction successfully recorded");
+    } else if (response?.status == 405) {
+      console.log("405: Method Not allowed");
+      setApiError("405: Method Not allowed");
+      toast.error("405: Method Not allowed");
+    } else if (response?.status == 400) {
+      // let _error = await response.json();
+      setApiError("400: Missing parameters");
+      console.error("400: Missing parameters");
+      toast.error("400: Missing parameters");
+    } else if (response?.status == 401) {
+      console.error("You must be signed in to interact with the API");
+      setApiError("You must be signed in to interact with the API");
+      toast.error("401: You must be signed in to interact with the API");
+    } else if (response?.status == 500) {
+      console.error("Internal Server Error");
+      setApiError("Internal Server Error");
+      toast.error("500: Internal Server Error");
+    } else {
+      console.error("Error occured during APICall");
+      setApiError("Error occured during APICall");
+      toast.error("Error occured during APICall");
+    }
+  };
+
+  const tryAPICall = async () => {
+    try {
+      if (account && account.address) {
+        if (!apiError) {
+          console.log("NO ERROR RECORDED , CAN'T TRY AGAIN");
+          return;
+        }
+
+        const { response, error: _apiError } = await updateInteractionData({
+          address: account.address,
+          contractType: ContractType.GAS_REFUEL,
+          chainId: fromNetwork.id,
+          interactionType: InteractionType.GAS_REFUEL,
+          amount: Number(inputAmount),
+        });
+
+        // TODO: Display the Toast Error
+        if (_apiError) {
+          // @ts-ignore
+          setApiError(_apiError);
+          toast.error(`${_apiError}`);
+        }
+
+        if (response) {
+          handleAPIError(response);
+        }
+      } else {
+        console.log("No Account found !!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleMaxButton = () => {

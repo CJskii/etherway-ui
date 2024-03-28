@@ -5,6 +5,7 @@ import {
   bridgeInteractionOFT,
   bridgeInteractionONFT,
 } from "../create/newBridge";
+import { gasRefuel } from "../create/newGasRefuel";
 
 type handleInteractionProps = {
   ethAddress: string;
@@ -48,6 +49,14 @@ export default async function handleInteraction({
       });
     case InteractionType.BRIDGE_OFT:
       return await bridgeInteractionOFT({
+        ethAddress: ethAddress.toLowerCase(),
+        contractType,
+        interactionType,
+        chainId,
+        amount,
+      });
+    case InteractionType.GAS_REFUEL:
+      return await gasRefuel({
         ethAddress: ethAddress.toLowerCase(),
         contractType,
         interactionType,

@@ -224,6 +224,7 @@ enum InteractionType {
   MINT_OFT
   BRIDGE_ONFT
   BRIDGE_OFT
+  GAS_REFUEL
 }
 
 enum Role {
