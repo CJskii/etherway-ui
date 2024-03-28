@@ -57,6 +57,8 @@ export interface IConfirm {
   setGasFee: (value: string) => void;
   handleConfirmButton: () => void;
   isLoading: boolean;
+  apiError: string;
+  tryAPICall: () => void;
 }
 
 export interface GasPriceProps {

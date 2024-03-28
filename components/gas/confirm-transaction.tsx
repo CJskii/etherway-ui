@@ -16,6 +16,8 @@ const Confirm = ({
   setGasFee,
   handleConfirmButton,
   isLoading,
+  apiError,
+  tryAPICall,
 }: IConfirm) => {
   const [toNetworkPrice, setToNetworkPrice] = useState<number | null>(null);
   const [fromNetworkPrice, setFromNetworkPrice] = useState<number | null>(null);
@@ -89,9 +91,9 @@ const Confirm = ({
         <Button
           className="py-6 my-2 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
           disabled={isLoading ? true : false}
-          onClick={handleConfirmButton}
+          onClick={apiError ? tryAPICall : handleConfirmButton}
         >
-          {"Confirm"}
+          {apiError ? "Try Again" : "Confirm"}
         </Button>
         <Button
           className="py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"

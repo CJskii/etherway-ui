@@ -314,6 +314,8 @@ const Gas = ({
               setGasFee={setGasFee}
               handleConfirmButton={handleConfirmButton}
               isLoading={isLoading}
+              apiError={apiError}
+              tryAPICall={tryAPICall}
             />
           ) : (
             <Preview
