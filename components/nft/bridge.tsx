@@ -42,7 +42,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const [showBridgingModal, setShowBridgingModal] = useState(false);
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [apiError, setApiError] = useState("");
+  const [apiError, setApiError] = useState<boolean>(false);
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -104,7 +104,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         // TODO: Might want to return the execution if we have an API error\
         if (data?.APIerror) {
           // @ts-ignore
-          setApiError(data.APIerror);
+          setApiError(true);
           toast.error(`${data.APIerror}`);
         }
 
@@ -161,7 +161,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         // TODO: Display the Toast Error
         if (_apiError) {
           // @ts-ignore
-          setApiError(_apiError);
+          setApiError(true);
           toast.error(`${_apiError}`);
         }
 
@@ -182,26 +182,29 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
     if (response?.status == 200) {
       console.log("API Call on update on db Completed");
       toast.success("Interaction successfully recorded");
+      setApiError(false);
     } else if (response?.status == 405) {
       console.log("405: Method Not allowed");
-      setApiError("405: Method Not allowed");
+      setApiError(true);
       toast.error("405: Method Not allowed");
     } else if (response?.status == 400) {
       // let _error = await response.json();
-      setApiError("400: Missing parameters");
+      setApiError(true);
+
       console.error("400: Missing parameters");
       toast.error("400: Missing parameters");
     } else if (response?.status == 401) {
       console.error("You must be signed in to interact with the API");
-      setApiError("You must be signed in to interact with the API");
+      setApiError(true);
+
       toast.error("401: You must be signed in to interact with the API");
     } else if (response?.status == 500) {
       console.error("Internal Server Error");
-      setApiError("Internal Server Error");
+      setApiError(true);
       toast.error("500: Internal Server Error");
     } else {
       console.error("Error occured during APICall");
-      setApiError("Error occured during APICall");
+      setApiError(true);
       toast.error("Error occured during APICall");
     }
   };

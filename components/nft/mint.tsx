@@ -39,7 +39,7 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [mintedNFT, setMintedNFT] = useState("");
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [apiError, setApiError] = useState(false);
+  const [apiError, setApiError] = useState<boolean>(false);
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
 
@@ -170,24 +170,19 @@ export default function NFTMint({ params }: NFTMintProps) {
       toast.success("Interaction successfully recorded");
     } else if (response?.status == 405) {
       console.log("405: Method Not allowed");
-
       toast.error("405: Method Not allowed");
     } else if (response?.status == 400) {
       // let _error = await response.json();
-
       console.error("400: Missing parameters");
       toast.error("400: Missing parameters");
     } else if (response?.status == 401) {
       console.error("You must be signed in to interact with the API");
-
       toast.error("401: You must be signed in to interact with the API");
     } else if (response?.status == 500) {
       console.error("Internal Server Error");
-
       toast.error("500: Internal Server Error");
     } else {
       console.error("Error occured during APICall");
-
       toast.error("Error occured during APICall");
     }
   };

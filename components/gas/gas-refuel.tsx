@@ -44,7 +44,7 @@ const Gas = ({
   const [transactionBlockNumber, setTransactionBlockNumber] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [recipientAddress, setRecipientAddress] = useState("");
-  const [apiError, setApiError] = useState("");
+  const [apiError, setApiError] = useState<boolean>(false);
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -117,7 +117,7 @@ const Gas = ({
 
     if (data?.apiError) {
       // @ts-ignore
-      setApiError(data.apiError);
+      setApiError(true);
       toast.error(`${data.apiError}`);
     }
 
@@ -131,28 +131,28 @@ const Gas = ({
     if (response?.status == 200) {
       console.log("Interaction successfully recorded");
       toast.success("Interaction successfully recorded");
-      setApiError("");
+      setApiError(false);
     } else if (response?.status == 405) {
       console.log("405: Method Not allowed");
-      setApiError("405: Method Not allowed");
       toast.error("405: Method Not allowed");
+      setApiError(true);
     } else if (response?.status == 400) {
       // let _error = await response.json();
-      setApiError("400: Missing parameters");
       console.error("400: Missing parameters");
       toast.error("400: Missing parameters");
+      setApiError(true);
     } else if (response?.status == 401) {
       console.error("You must be signed in to interact with the API");
-      setApiError("You must be signed in to interact with the API");
       toast.error("401: You must be signed in to interact with the API");
+      setApiError(true);
     } else if (response?.status == 500) {
       console.error("Internal Server Error");
-      setApiError("Internal Server Error");
       toast.error("500: Internal Server Error");
+      setApiError(true);
     } else {
       console.error("Error occured during APICall");
-      setApiError("Error occured during APICall");
       toast.error("Error occured during APICall");
+      setApiError(true);
     }
   };
 
@@ -175,7 +175,7 @@ const Gas = ({
         // TODO: Display the Toast Error
         if (_apiError) {
           // @ts-ignore
-          setApiError(_apiError);
+          setApiError(true);
           toast.error(`${_apiError}`);
         }
 
