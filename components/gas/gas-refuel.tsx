@@ -10,7 +10,6 @@ import { handleErrors } from "../../common/utils/interaction/handlers/handleErro
 import Preview from "./preview";
 import Confirm from "./confirm-transaction";
 import { Typography } from "../ui/typography";
-import DashboardCard from "../dashboard/dashboard-card";
 import NetworkModal from "../networkModal";
 import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
 import { Label } from "@radix-ui/react-label";
