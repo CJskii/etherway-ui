@@ -3,31 +3,19 @@ import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { ethers, Signer, Contract } from "ethers";
-
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
 import { Network } from "@/common/types/network";
 import { getValidToNetworks } from "@/common/utils/getters/getValidToNetworks";
 import { handleBridging } from "@/common/utils/interaction/handlers/handleBridging";
-
-import NetworkModal from "./networkModal";
+import NetworkModal from "../networkModal";
 import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
-
-import {
-  useAccount,
-  usePublicClient,
-  useSwitchChain,
-  useWalletClient,
-} from "wagmi";
-
-import BridgeModal from "./bridge-modal";
+import { useAccount, useSwitchChain } from "wagmi";
+import BridgeModal from "../modal-bridge";
 import { ContractType } from "@prisma/client";
 import { updateBridgeData } from "@/common/utils/api/bridge";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
-import { abi } from "@/constants/contracts/abi/etherwayOFT";
-import { Options } from "@layerzerolabs/lz-v2-utilities";
 
 interface NFTBridgeProps {
   params: {
@@ -52,14 +40,9 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [nftId, setNftId] = useState("");
   const [showBridgingModal, setShowBridgingModal] = useState(false);
-  // const [wrongNetwork, setWrongNetwork] = useState(false);
   const [txHash, setTxHash] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [apiError, setApiError] = useState("");
-
-  const publicClient = usePublicClient();
-  const { data: walletClient } = useWalletClient();
-  const { address } = useAccount();
+  const [apiError, setApiError] = useState<boolean>(false);
 
   const isValidToNetwork = (toNetwork: Network) => {
     const validToNetworks = getValidToNetworks({
@@ -121,7 +104,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         // TODO: Might want to return the execution if we have an API error\
         if (data?.APIerror) {
           // @ts-ignore
-          setApiError(data.APIerror);
+          setApiError(true);
           toast.error(`${data.APIerror}`);
         }
 
@@ -178,7 +161,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         // TODO: Display the Toast Error
         if (_apiError) {
           // @ts-ignore
-          setApiError(_apiError);
+          setApiError(true);
           toast.error(`${_apiError}`);
         }
 
@@ -199,26 +182,29 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
     if (response?.status == 200) {
       console.log("API Call on update on db Completed");
       toast.success("Interaction successfully recorded");
+      setApiError(false);
     } else if (response?.status == 405) {
       console.log("405: Method Not allowed");
-      setApiError("405: Method Not allowed");
+      setApiError(true);
       toast.error("405: Method Not allowed");
     } else if (response?.status == 400) {
       // let _error = await response.json();
-      setApiError("400: Missing parameters");
+      setApiError(true);
+
       console.error("400: Missing parameters");
       toast.error("400: Missing parameters");
     } else if (response?.status == 401) {
       console.error("You must be signed in to interact with the API");
-      setApiError("You must be signed in to interact with the API");
+      setApiError(true);
+
       toast.error("401: You must be signed in to interact with the API");
     } else if (response?.status == 500) {
       console.error("Internal Server Error");
-      setApiError("Internal Server Error");
+      setApiError(true);
       toast.error("500: Internal Server Error");
     } else {
       console.error("Error occured during APICall");
-      setApiError("Error occured during APICall");
+      setApiError(true);
       toast.error("Error occured during APICall");
     }
   };
@@ -281,12 +267,12 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
               isOpen: showBridgingModal,
               setIsOpen: setShowBridgingModal,
               isLoading: isLoading,
-              modalTitle: "NFT Bridged",
-              modalDescription: "Your NFT has been Bridged successfully",
-              modalButtonText: "View NFT",
               errorMessage: errorMessage,
               setErrorMessage: setErrorMessage,
               nftId: nftId,
+              errorHeader: "There was an error while bridging your NFT",
+              successHeader: "NFT Sent",
+              loadingHeader: "We're working hard to bridge your NFT",
             }}
           />
 

@@ -1,4 +1,4 @@
-import NFTBridge from "@/components/nft-bridge";
+import NFTBridge from "@/components/nft/bridge";
 import { Layout } from "@/components/dashboard/layout";
 import HeadComponent from "@/common/elements/HeadComponent";
 

@@ -2,21 +2,19 @@
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Typography } from "./ui/typography";
-import Image from "next/image";
 import { Button } from "./ui/button";
-import { useRouter } from "next/router";
 
 interface BridgeModalProps {
   props: {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
     isLoading: boolean;
-    modalTitle: string;
-    modalDescription: string;
-    modalButtonText: string;
     errorMessage: string;
     setErrorMessage: (value: string) => void;
     nftId: string;
+    errorHeader: string;
+    successHeader: string;
+    loadingHeader: string;
   };
 }
 
@@ -25,22 +23,20 @@ const BridgeModal = ({ props }: BridgeModalProps) => {
     isOpen: open,
     setIsOpen: setOpen,
     isLoading,
-    modalTitle,
-    modalDescription,
-    modalButtonText,
     errorMessage,
     setErrorMessage,
     nftId,
+    errorHeader,
+    successHeader,
+    loadingHeader,
   } = props;
-
-  const router = useRouter();
 
   const renderModalContent = () => {
     if (isLoading) {
       return (
         <div className="flex flex-col justify-center items-center gap-6 h-full">
           <Typography variant="h4" className="text-center dark:text-black">
-            We&apos;re working hard to bridge your NFT
+            {loadingHeader}
           </Typography>
           <Typography variant="small" className="text-center dark:text-black">
             This might take a few seconds...
@@ -58,7 +54,7 @@ const BridgeModal = ({ props }: BridgeModalProps) => {
             variant="smallTitle"
             className="text-center dark:text-black"
           >
-            There was an error while bridging your NFT
+            {errorHeader}
           </Typography>
           <Typography variant="small" className="text-center dark:text-black">
             {errorMessage}
@@ -80,7 +76,7 @@ const BridgeModal = ({ props }: BridgeModalProps) => {
               variant="smallTitle"
               className="text-center dark:text-black"
             >
-              NFT Sent
+              {successHeader}
             </Typography>
             <Typography variant="small" className="text-center dark:text-black">
               Please allow few minutes for the transaction to finalise on the

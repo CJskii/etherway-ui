@@ -3,6 +3,7 @@ import { ethers, Signer, Contract } from "ethers";
 import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { estimateGasParams } from "../../../types/gas-refuel";
 import { Network } from "../../../types/network";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
 
 export const estimateGasRequest = async ({
   fromNetwork,
@@ -23,7 +24,7 @@ export const estimateGasRequest = async ({
       recipientAddress,
     });
 
-    setGasFee(estimatedFee);
+    setGasFee(estimatedFee.toString());
     setIsLoading(false);
   } catch (e) {
     console.error(e);
@@ -51,26 +52,35 @@ const estimateGasBridgeFee = async ({
   if (!fromNetwork.deployedContracts)
     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
   const contract = new Contract(
-    fromNetwork.deployedContracts.layerzero.REFUEL.address,
-    fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
+    fromNetwork.deployedContracts.layerzero.OFT.address,
+    fromNetwork.deployedContracts.layerzero.OFT.ABI,
     signer,
   );
+  const lzOptionsGas = targetNetwork.params?.gasLimit.lzOptionsGas;
+  const paddedAddress = ethers.utils.zeroPad(refundAddress, 32);
+  const tokensToSend = ethers.utils.parseEther(value);
 
-  const gasInWei = ethers.utils.parseUnits(value, "ether");
-  let adapterParams = ethers.utils.solidityPack(
-    ["uint16", "uint", "uint", "address"],
-    [2, 200000, gasInWei.toString(), refundAddress],
-  );
+  const options = Options.newOptions()
+    .addExecutorNativeDropOption(tokensToSend as any, paddedAddress as any)
+    .addExecutorLzReceiveOption(lzOptionsGas || 250000, 0)
+    .toHex()
+    .toString();
+
+  const sendParam = [
+    targetNetwork.params?.layerzero?.remoteChainId,
+    paddedAddress,
+    0,
+    0,
+    options,
+    "0x",
+    "0x",
+  ];
 
   try {
-    const [_nativeFee, _zroFee, totalCost] = await contract.estimateSendFee(
-      targetNetwork.params?.layerzero?.remoteChainId,
-      refundAddress,
-      gasInWei.toString(),
-      adapterParams,
-    );
+    let nativeFee = 0;
+    [nativeFee] = await contract.quoteSend(sendParam, false);
 
-    return totalCost;
+    return nativeFee;
   } catch (error) {
     console.error(`Error estimating gas fee: ${(error as any).message}`);
     throw error; // Propagate the error to handle it in the UI layer

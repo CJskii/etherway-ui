@@ -195,6 +195,12 @@ export function NavLinks() {
           </Link>
         </DropdownMenuContent>
       </DropdownMenu>
+      <Link
+        href={"/layerzero/gas-refuel"}
+        className={cn(buttonVariants({ variant: "navbar" }))}
+      >
+        ⛽ Refuel
+      </Link>
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full">
           <Button className="" variant={"navbar"}>
