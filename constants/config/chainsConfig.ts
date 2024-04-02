@@ -46,6 +46,7 @@ import { tenet } from "../customChains/tenet";
 import { astar } from "../customChains/astar";
 import { kava } from "../customChains/kava";
 import { pgn } from "../customChains/pgn";
+import { inEVM } from "../customChains/inEVM";
 import { Network, ExtendedNetwork } from "../../common/types/network";
 
 //
@@ -77,6 +78,10 @@ export const mainnetChains: Network[] = [
   {
     ...blast,
     iconUrl: "/chain-icons/blast.webp",
+  },
+  {
+    ...inEVM,
+    iconUrl: "/chain-icons/inEVM.svg",
   },
   {
     ...linea,
