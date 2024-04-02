@@ -257,6 +257,16 @@ const LAYERZERO_CONTRACTS = {
   //     ABI: LZ_OFT.abi,
   //   },
   // },
+  2525: {
+    ONFT: {
+      address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",
+      ABI: LZ_ONFT.abi,
+    },
+    OFT: {
+      address: "0x89BAfaD9B675973F374EE541634afb9242d65Ffc",
+      ABI: LZ_OFT.abi,
+    },
+  },
   // "3776": {
   //   ONFT: {
   //     address: "0x4f4f540AB854518fc37DEA8084BB9e2EE0Ba1ac8",

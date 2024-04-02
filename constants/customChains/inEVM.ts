@@ -6,8 +6,8 @@ export const inEVM: Chain = {
   iconUrl: "/chain-icons/inEVM.svg",
   iconBackground: "#000000",
   nativeCurrency: {
-    name: "Ethereum",
-    symbol: "ETH",
+    name: "Injective",
+    symbol: "INJ",
     decimals: 18,
   },
   rpcUrls: {
