@@ -160,6 +160,11 @@ const GAS_REFUEL_VALUE_JSON = {
   //   hyperlane: 1000000,
   //   polyhedra: 250000,
   // },
+  2525: {
+    layerzero: 0.05,
+    hyperlane: 1000000,
+    polyhedra: 250000,
+  },
   // Astar-zkEVM
   // "3776": {
   //    layerzero: 500000,

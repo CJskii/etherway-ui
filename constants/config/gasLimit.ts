@@ -159,6 +159,11 @@ const GAS_LIMIT_JSON = {
   //   bridge: 1000000,
   //   lzOptionsGas: 250000,
   // },
+  2525: {
+    mint: 500000,
+    bridge: 1000000,
+    lzOptionsGas: 250000,
+  },
   // Astar-zkEVM
   // "3776": {
   //    mint: 500000,
