@@ -132,12 +132,12 @@ export const mainnetChains: Network[] = [
     remoteChainId: 202,
     lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
   },
-  {
-    ...polygonZkEvm,
-    iconUrl: "/chain-icons/polygon-zkevm.svg",
-    remoteChainId: 158,
-    lzEndpointAddress: "0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
-  },
+  // {
+  //   ...polygonZkEvm,
+  //   iconUrl: "/chain-icons/polygon-zkevm.svg",
+  //   remoteChainId: 158,
+  //   lzEndpointAddress: "0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
+  // },
   {
     ...bsc,
     iconUrl: "/chain-icons/bsc.svg",
