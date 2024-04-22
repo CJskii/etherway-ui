@@ -10,7 +10,7 @@ const mailjet = new Mailjet({
   apiKey: process.env.MAILJET_API_KEY,
   apiSecret: process.env.MAILJET_SECRET_KEY,
 });
-const listId = 0;
+const listId = 10331420; // TODO: For production replace with the main list ID from Mailjet
 
 function isValidEmail(email: string) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,10 +38,10 @@ export default async function handler(
     return res.status(400).json({ message: "Missing parameters" });
   }
 
-  if (isValidEmail(email)) {
-    console.error("Invalid Email ID");
-    return res.status(400).json({ message: "Invalid Email ID" });
-  }
+  // if (isValidEmail(email)) {
+  //   console.error("Invalid Email ID");
+  //   return res.status(400).json({ message: "Invalid Email ID" });
+  // }
 
   const session = await getServerSession(req, res, getAuthOptions(req));
 
@@ -89,6 +89,8 @@ export default async function handler(
       Total: number;
     };
 
+    // TODO: handle the case when user email is already in the list
+
     const listdata = listresponse.Data[0];
     const listRecepientId = listdata.ID;
 
@@ -111,7 +113,7 @@ export default async function handler(
 
     <!-- Logo Image -->
     <div style="background-color: #f4f4f4;">
-        <img src="https://sxhnq.mjt.lu/tplimg/sxhnq/b/m42qp/7hu39.jpeg" alt="Mintly Logo" style="display: block; width: 100%; height: auto;">
+        <img src="https://pbs.twimg.com/profile_banners/1634697370247233538/1710699959/1500x500" alt="Etherway Logo" style="display: block; width: 100%; height: auto;">
     </div>
 
     <!-- Content Area -->

@@ -9,6 +9,8 @@ export async function subscribeEmail({
 }) {
   let response;
   let error;
+  console.log("Subscribing email", address, email);
+  // TODO - Resend the email verification link handler
   try {
     response = await fetch("/api/email/subscribe", {
       method: "POST",
