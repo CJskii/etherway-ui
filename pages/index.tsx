@@ -40,7 +40,7 @@ const Home: NextPage = () => {
             {/* <OnboardSection /> */}
             <StatsSection />
             <FeaturesSection />
-            {/* <ContactSection /> */}
+            <ContactSection />
           </Container>
         </div>
         {/* <SquidWidget config={config} /> */}
