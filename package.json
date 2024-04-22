@@ -16,7 +16,6 @@
   "dependencies": {
     "@0xsquid/sdk": "2.8.0-beta.0",
     "@0xsquid/squid-types": "^0.1.59",
-    "@0xsquid/widget": "^1.7.9",
     "@hookform/resolvers": "^3.3.4",
     "@layerzerolabs/lz-v2-utilities": "^2.1.18",
     "@next/third-parties": "^14.1.3",
