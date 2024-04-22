@@ -7,6 +7,7 @@ export async function verifySubscription({
 }) {
   let response;
   let error;
+  console.log("Verifying email", listRecepientId);
   try {
     response = await fetch("/api/email/verify", {
       method: "POST",
