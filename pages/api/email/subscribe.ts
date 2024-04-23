@@ -129,7 +129,7 @@ export default async function handler(
         <p>If you've received this email by mistake, ignore it. You'll only receive future emails from us if you've confirmed your subscription.</p>
 
         <p>Thanks,</p>
-        <p>Mintly Team</p>
+        <p>Etherway Team</p>
     </div>
 </div>
     `,

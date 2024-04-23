@@ -96,7 +96,7 @@ export default async function handler(
 
         <!-- Logo Image -->
         <div style="background-color: #f4f4f4;">
-            <img src="https://sxhnq.mjt.lu/tplimg/sxhnq/b/m42qp/7hu39.jpeg" alt="Mintly Logo" style="display: block; width: 100%; height: auto;">
+            <img src="https://pbs.twimg.com/profile_banners/1634697370247233538/1710699959/1500x500" alt="Etherway Logo" style="display: block; width: 100%; height: auto;">
         </div>
 
         <!-- Content Area -->
@@ -112,7 +112,7 @@ export default async function handler(
             <p>If you've received this email by mistake, ignore it. You'll only receive future emails from us if you've confirmed your subscription.</p>
 
             <p>Thanks,</p>
-            <p>Mintly Team</p>
+            <p>Etherway Team</p>
         </div>
     </div>
         `,
