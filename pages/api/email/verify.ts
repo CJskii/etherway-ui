@@ -75,9 +75,9 @@ export default async function handler(
     };
 
     const contactdata = contactresponse.Data[0];
-    const contactemail = listdata.Email;
+    const contactemail = contactdata.Email;
 
-    //   -> POST /send - email for welcoming the user to etherway
+    // TODO:   -> POST /send - email for welcoming the user to etherway
     const unsubscribeLink = `${process.env.VERCEL_URL}/email/unsubscribe?listRecepientId=${listRecepientId}`;
 
     const verifyEmailData = {
