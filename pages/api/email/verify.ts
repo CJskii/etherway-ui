@@ -80,7 +80,7 @@ export default async function handler(
     // TODO:   -> POST /send - email for welcoming the user to etherway
     const unsubscribeLink = `${process.env.VERCEL_URL}/email/unsubscribe?listRecepientId=${listRecepientId}`;
 
-    const verifyEmailData = {
+    const welcomeEmailData = {
       From: {
         Email: "hello@etherway.io",
         Name: "Etherway",
@@ -90,36 +90,41 @@ export default async function handler(
           Email: contactemail,
         },
       ],
-      Subject: "Verify your email address",
+      Subject: "Welcome to Etherway!",
       HTMLPart: `
-        <div style="max-width: 600px; margin: 0 auto; border: 1px solid #e7e7e7; font-family: Arial, sans-serif;">
-
-        <!-- Logo Image -->
-        <div style="background-color: #f4f4f4;">
-            <img src="https://pbs.twimg.com/profile_banners/1634697370247233538/1710699959/1500x500" alt="Etherway Logo" style="display: block; width: 100%; height: auto;">
+        <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
+          <!-- Header Image -->
+          <img src="https://pbs.twimg.com/profile_banners/1634697370247233538/1710699959/1500x500" alt="Welcome to Etherway" style="width: 100%; height: auto;">
+    
+          <!-- Content Area -->
+          <div style="padding: 20px;">
+            <h1 style="color: #333;">Welcome aboard,</h1>
+            <p>We're happy to have you with us. Etherway is your gateway to minting, bridging and airdrops across various chains.</p>
+            
+            <p>Start your journey by checking out what's happening right now:</p>
+    
+            <!-- Social Links -->
+            <p>🐦 <a href="https://twitter.com/etherway_io" style="color: #0077cc; text-decoration: none;">Twitter: Join the conversation</a></p>
+            <p>📢 <a href="https://t.me/+IFXADMbhrSAyNTE0" style="color: #0077cc; text-decoration: none;">Telegram: Get real-time updates</a></p>
+            <p>💬 <a href="https://discord.gg/GcS5r5NWfh" style="color: #0077cc; text-decoration: none;">Discord: Connect with the community</a></p>
+    
+            <p>If you ever have questions or need a helping hand, our community and support team are here for you. Let's make something great together!</p>
+    
+            <p>Warm regards,</p>
+            <p>The Etherway Team</p>
+          </div>
+    
+          <!-- Footer -->
+          <div style="background-color: #f4f4f4; padding: 10px; text-align: center;">
+            <p>If you'd like to learn more, visit our <a href="https://www.etherway.io" style="color: #0077cc; text-decoration: none;">website</a> or reach out to us directly.</p>
+            <p>This message was sent to <a href="mailto:${contactemail}" style="color: #0077cc;">${contactemail}</a>. If you no longer wish to receive these emails, you can <a href="${unsubscribeLink}" style="color: #0077cc; text-decoration: none;">unsubscribe at any time</a>.</p>
+          </div>
         </div>
-
-        <!-- Content Area -->
-        <div style="padding: 20px;">
-            <p>Hello,</p>
-
-            <p>Thanks for signing up for our waitlist. Please confirm your subscription by clicking the button below.</p>
-
-            <a href="${unsubscribeLink}" style="display: inline-block; margin-top: 15px; margin-bottom: 15px; padding: 10px 20px; background-color: #0077cc; color: #fff; text-decoration: none; border-radius: 5px;">Confirm my subscription</a>
-
-            <p>If the above button doesn’t work, copy and paste the following link into your web browser: <span style="word-wrap: break-word;">${unsubscribeLink}</span></p>
-
-            <p>If you've received this email by mistake, ignore it. You'll only receive future emails from us if you've confirmed your subscription.</p>
-
-            <p>Thanks,</p>
-            <p>Etherway Team</p>
-        </div>
-    </div>
-        `,
+      `,
     };
 
     const sendresult = await mailjet.post("send", { version: "v3.1" }).request({
-      Messages: [verifyEmailData],
+      Messages: [welcomeEmailData],
     });
 
     console.log("Subscription verified");
