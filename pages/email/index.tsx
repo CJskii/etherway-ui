@@ -21,6 +21,11 @@ const Email = () => {
       return;
     }
 
+    if (!account?.address) {
+      setStatusMessage("Please connect your wallet to proceed.");
+      return;
+    }
+
     let response, error;
     if (actionType === "subscribe" && account?.address) {
       ({ response, error } = await subscribeEmail({

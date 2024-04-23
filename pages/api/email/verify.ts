@@ -64,7 +64,7 @@ export default async function handler(
     const contactId = listdata.ContactID;
 
     const contactresult = await mailjet
-      .put("contact", { version: "v3" })
+      .get("contact", { version: "v3" })
       .id(contactId)
       .request();
 
