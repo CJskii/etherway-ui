@@ -47,7 +47,57 @@
 //   );
 // }
 
+const darkTheme = {
+  neutralContent: "#959BB2",
+  baseContent: "#E8ECF2",
+  base100: "#10151B",
+  base200: "#272D3D",
+  base300: "#171D2B",
+  error: "#ED6A5E",
+  warning: "#FFB155",
+  success: "#2EAEB0",
+  primary: "#FF8F8F",
+  secondary: "#71B4BD",
+  secondaryContent: "#191C29",
+  neutral: "#110E14",
+  roundedBtn: "5px",
+  roundedCornerBtn: "999px",
+  roundedBox: "8px",
+  roundedDropDown: "7px",
+};
+
+const lightTheme = {
+  neutralContent: "#747379",
+  baseContent: "#2E2C33",
+  base100: "#F5F5F7",
+  base200: "#F2F2F2",
+  base300: "#DADADA",
+  error: "#ED6A5E",
+  warning: "#FFB155",
+  success: "#2EAEB0",
+  primary: "#FF8F8F",
+  secondary: "#070707",
+  secondaryContent: "#FFFFFF",
+  neutral: "#f1efef",
+  roundedBtn: "999px",
+  roundedCornerBtn: "999px",
+  roundedBox: "1rem",
+  roundedDropDown: "999px",
+};
+
+import { useTheme } from "next-themes";
+
 export function SquidRouterIFrame() {
+  const { theme } = useTheme();
+
+  const style = () => {
+    if (theme === "light") {
+      return lightTheme;
+    } else {
+      return darkTheme;
+    }
+  };
+
   const config = {
     companyName: "Etherway",
     integratorId: "etherway-2c794744-6972-4f23-bdcb-784032b1a377",
@@ -65,24 +115,7 @@ export function SquidRouterIFrame() {
       destination: [81457],
     },
     internalSameChainSwapAllowed: true,
-    style: {
-      neutralContent: "#24232a",
-      baseContent: "#2E2C33",
-      base100: "#F5F5F7",
-      base200: "#F2F2F2",
-      base300: "#DADADA",
-      error: "#ED6A5E",
-      warning: "#FFB155",
-      success: "#2EAEB0",
-      primary: "#2E2C33",
-      secondary: "#070707",
-      secondaryContent: "#FFFFFF",
-      neutral: "#FFFFFF",
-      roundedBtn: "999px",
-      roundedCornerBtn: "999px",
-      roundedBox: "1rem",
-      roundedDropDown: "999px",
-    },
+    style: style(),
   };
 
   const configString = encodeURIComponent(JSON.stringify(config));

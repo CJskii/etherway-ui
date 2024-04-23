@@ -3,7 +3,7 @@ import { Layout } from "@/components/dashboard/layout";
 import HeadComponent from "@/common/elements/HeadComponent";
 import { SquidRouterIFrame } from "@/common/utils/squid";
 
-const ONFTBridge = () => {
+const SquidBridge = () => {
   const params = {
     contractProvider: { type: "layerzero", contract: "ONFT" },
     stepDescription: "Bridge ONFT",
@@ -20,4 +20,4 @@ const ONFTBridge = () => {
   );
 };
 
-export default ONFTBridge;
+export default SquidBridge;
