@@ -13,6 +13,9 @@ import HeadComponent from "../common/elements/HeadComponent";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/ui/footer";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { SquidRouterIFrame } from "@/common/utils/squid";
+
+// import SquidRouter from "@/common/utils/squid";
 
 // TODO: Review all meta tags and SEO content
 
@@ -31,6 +34,7 @@ const Home: NextPage = () => {
             {/* <ContactSection /> */}
           </Container>
         </div>
+        {/* <SquidWidget config={config} /> */}
         <Image
           src={grid}
           alt="grid"

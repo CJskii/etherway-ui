@@ -11,7 +11,7 @@ const nextConfig = {
           analyzerMode: "server",
           analyzerPort: isServer ? 8888 : 8889,
           openAnalyzer: true,
-        })
+        }),
       );
     }
 
@@ -33,6 +33,7 @@ const nextConfig = {
   images: {
     domains: ["ipfs.io"],
   },
+  transpilePackages: ["@0xsquid/widget"],
 };
 
 module.exports = nextConfig;
