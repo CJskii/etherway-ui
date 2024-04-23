@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Layout from "@/components/dashboard/layout";
+import { Layout } from "@/components/dashboard/layout";
 import HeadComponent from "@/common/elements/HeadComponent";
-import { Button } from "@/components/ui/button";
 import { unsubscribeEmail } from "@/common/utils/api/email/unsubscribe";
 import { Typography } from "@/components/ui/typography";
+import { toast } from "sonner";
 
 const Unsubscribe = () => {
   const [statusMessage, setStatusMessage] = useState("");
@@ -21,8 +21,10 @@ const Unsubscribe = () => {
     const { response, error } = await unsubscribeEmail({ listRecepientId });
     if (response && response.ok) {
       setStatusMessage("You have been unsubscribed successfully.");
+      toast.success("You have been unsubscribed successfully.");
     } else {
       setStatusMessage("Failed to unsubscribe.");
+      toast.error("Failed to unsubscribe.");
       console.error(error);
     }
   };
