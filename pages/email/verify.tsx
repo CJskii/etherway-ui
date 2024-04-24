@@ -4,6 +4,7 @@ import { Layout } from "@/components/dashboard/layout";
 import HeadComponent from "@/common/elements/HeadComponent";
 import { verifySubscription } from "@/common/utils/api/email/verify";
 import { Typography } from "@/components/ui/typography";
+import { toast } from "sonner";
 
 const VerifyEmail = () => {
   const router = useRouter();
@@ -19,18 +20,12 @@ const VerifyEmail = () => {
   const handleVerifySubscription = async (listRecepientId: number) => {
     const { response, error } = await verifySubscription({ listRecepientId });
 
-    // TODO: Handle response and error - user is getting verified but the response is not OK ?? returning 304
-
-    // const data = await response.json();
-    // console.log("Data", data);
-
     if (response && response.ok) {
       setStatusMessage("Your email has been successfully verified!");
-      const data = await response.json();
-      console.log("Data", data);
-      //TODO: Send welcome email
+      toast.success("Your email has been successfully verified!");
     } else {
       setStatusMessage("Failed to verify email.");
+      toast.error("Failed to verify email.");
       console.error(error);
     }
   };
