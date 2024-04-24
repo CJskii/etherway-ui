@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import handleInteraction from "@/prisma/src/handlers/interaction";
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "../auth/[...nextauth]";
 import { InteractionType } from "@prisma/client";
@@ -26,22 +25,17 @@ export default async function handler(
   }
 
   const {
-    ethereumAddress,
+    listRecepientId,
     email,
   }: {
-    ethereumAddress: string;
+    listRecepientId: number;
     email: string;
   } = req.body;
 
-  if (!ethereumAddress || !email) {
+  if (!listRecepientId || !email) {
     console.error("Missing parameters");
     return res.status(400).json({ message: "Missing parameters" });
   }
-
-  // if (isValidEmail(email)) {
-  //   console.error("Invalid Email ID");
-  //   return res.status(400).json({ message: "Invalid Email ID" });
-  // }
 
   const session = await getServerSession(req, res, getAuthOptions(req));
 
@@ -54,46 +48,6 @@ export default async function handler(
   }
 
   try {
-    //    -> POST /contact - create a new Contact in the mail jet List
-    const createresult = await mailjet
-      .post("contact", { version: "v3" })
-      .request({
-        IsExcludedFromCampaigns: "false",
-        Name: ethereumAddress,
-        Email: email,
-      });
-
-    const createresponse = createresult.response.data as {
-      Count: number;
-      Data: any[];
-      Total: number;
-    };
-
-    const createdata = createresponse.Data[0];
-    const contactId = createdata?.ID;
-
-    //    -> POST /listrecipient - create a new list recipient for a relationship b/w contact and contact List with the listId & contactID , isUnsubscribed as true
-
-    const listresult = await mailjet
-      .post("listrecipient", { version: "v3" })
-      .request({
-        IsUnsubscribed: "true",
-        ContactID: contactId,
-        ContactAlt: email,
-        ListID: listId,
-      });
-
-    const listresponse = listresult.response.data as {
-      Count: number;
-      Data: any[];
-      Total: number;
-    };
-
-    // TODO: handle the case when user email is already in the list
-
-    const listdata = listresponse.Data[0];
-    const listRecepientId = listdata.ID;
-
     //    -> POST /send - email containing a dynamic link with listID
     const verificationLink = `${process.env.VERCEL_URL}/email/verify?listRecepientId=${listRecepientId}`;
 
@@ -142,12 +96,9 @@ export default async function handler(
     console.log("Subscription contact created and Email sent");
     res
       .status(200)
-      .json({
-        message: "Subscription contact created and Email sent",
-        listRecepientId: listRecepientId,
-      });
+      .json({ message: "Subscription contact created and Email sent" });
   } catch (error) {
-    console.error("Error in /api/email/subscribe:", error);
+    console.error("Error in /api/email/verify:", error);
     res.status(500).json({
       message: "Internal Server Error",
       error: (error as any).message,
