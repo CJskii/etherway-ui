@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Typography } from "@/components/ui/typography";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const mockData = [
   {
@@ -42,7 +42,35 @@ const mockData = [
   },
 ];
 
+interface LeaderboardData {}
+
 export default function LeaderboardTable() {
+  const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
+
+  const calculateUserLevel = (totalXP: number): number => {
+    let level = 0;
+    let xpForNextLevel = 0;
+
+    while (totalXP >= xpForNextLevel) {
+      level++;
+      xpForNextLevel = Math.pow(level, 2) * 10; // XP required for next level (quadratic formula)
+    }
+
+    return level - 1;
+  };
+
+  useEffect(() => {
+    // fetch leaderboard data and set it to state
+    const fetchData = async () => {
+      // const response = await callLeaderboardAPI();
+      // const data = await response.json();
+      // setLeaderboard(data.data);
+      setLeaderboard(mockData);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="space-y-1 py-6 ">
