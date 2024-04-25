@@ -8,7 +8,13 @@ import { toast } from "sonner";
 import { isValidEmail } from "@/common/utils/validators/isValidEmail";
 import { resendEmail } from "@/common/utils/api/email/resend";
 
-export default function NewsletterSection() {
+export default function NewsletterSection({
+  title = "Sign up for our newsletter",
+  description = "Stay up to date with our latest updates and news.",
+}: {
+  title?: string;
+  description?: string;
+}) {
   const { address } = useAccount();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -108,10 +114,10 @@ export default function NewsletterSection() {
     <div className="flex flex-col items-stretch justify-between gap-4 pb-16 pt-12 md:flex-row md:items-center md:pb-0 md:pt-12">
       <div className="space-y-1">
         <Typography variant={"h3"} className="tracking-wide">
-          Sign up for our newsletter
+          {title}
         </Typography>
         <Typography variant={"paragraph"} className="tracking-wide">
-          Stay up to date with our latest updates and news.
+          {description}
         </Typography>
       </div>
 
