@@ -23,6 +23,8 @@ const typographyVariants = cva("", {
       muted: "text-[#00000066] dark:text-white/40",
       navbarTitle: "text-lg text-[#FF8F8F] font-semibold",
       navbarMuted: "text-sm text-[#FF8F8F] dark:text-white/40 text-black/40",
+      footerLink:
+        "text-base font-normal dark:text-black hover:text-white/80 dark:hover:text-black/80 hover:underline",
     },
   },
   defaultVariants: {
@@ -52,6 +54,7 @@ const variantElementMap: Record<
   muted: "p",
   navbarTitle: "span",
   navbarMuted: "p",
+  footerLink: "small",
 };
 
 export interface TypographyProps
