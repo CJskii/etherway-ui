@@ -24,7 +24,6 @@ export type RouteType = {
 export async function getSquidRoute(
   routeParams: RouteRequest,
 ): Promise<RouteType | undefined> {
-  // initialize the Squid client
   try {
     await squid.init();
 
@@ -40,15 +39,20 @@ export async function getSquidRoute(
 }
 
 export async function executeSquidRoute(route: RouteType, signer: Signer) {
-  await squid.init();
+  try {
+    await squid.init();
 
-  const tx = (await squid.executeRoute({
-    signer: signer,
-    route,
-  })) as unknown as ethers.providers.TransactionResponse;
-  const txReceipt = await tx.wait();
+    const tx = (await squid.executeRoute({
+      signer: signer,
+      route,
+    })) as unknown as ethers.providers.TransactionResponse;
+    const txReceipt = await tx.wait();
 
-  return txReceipt;
+    return txReceipt;
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 }
 
 export type txDataType = {
@@ -60,19 +64,24 @@ export type txDataType = {
 };
 
 async function getTxStatus(txData: txDataType) {
-  // Retrieve the transaction's route status
-  const getStatusParams = {
-    transactionId: txData.transactionId,
-    requestId: txData.requestId,
-    integratorId: txData.integratorId,
-    fromChainId: txData.fromChainId,
-    toChainId: txData.toChainId,
-  };
+  try {
+    // Retrieve the transaction's route status
+    const getStatusParams = {
+      transactionId: txData.transactionId,
+      requestId: txData.requestId,
+      integratorId: txData.integratorId,
+      fromChainId: txData.fromChainId,
+      toChainId: txData.toChainId,
+    };
 
-  const status = await squid.getStatus(getStatusParams);
+    const status = await squid.getStatus(getStatusParams);
 
-  // Display the route status
-  console.log(`Route status: ${status.squidTransactionStatus}`);
+    // Display the route status
+    console.log(`Route status: ${status.squidTransactionStatus}`);
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 }
 
 export async function getSquidTokens() {
