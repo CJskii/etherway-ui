@@ -39,7 +39,7 @@ interface NavLinks {
   }[];
 }
 
-const navLinks = [
+const productLinks = [
   {
     label: "Layerzero",
     paths: [
@@ -84,6 +84,17 @@ const navLinks = [
           "Mint ERC20 tokens and bridge them to other chains with ease.",
       },
     ],
+  },
+];
+
+const otherLinks = [
+  {
+    label: "Airdrop Marketplace",
+    href: "/dashboard",
+  },
+  {
+    label: "Gas Refuel",
+    href: "/layerzero/gas-refuel",
   },
 ];
 
@@ -179,7 +190,7 @@ export function NaviLinks() {
         <NavigationMenuItem>
           <NavigationMenuTrigger className="">Products</NavigationMenuTrigger>
           <NavigationMenuContent className="flex">
-            {navLinks.map((navLink, index) => (
+            {productLinks.map((navLink, index) => (
               <ul
                 key={index}
                 className="flex flex-col w-[200px] gap-3 p-4 md:w-[250px] md:grid-cols-2 lg:w-[300px] "
@@ -204,13 +215,16 @@ export function NaviLinks() {
             ))}
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="gas-refuel" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Gas Refuel
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+
+        {otherLinks.map((navLink, index) => (
+          <NavigationMenuItem key={index}>
+            <Link href={navLink.href} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                {navLink.label}
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        ))}
       </NavigationMenuList>
     </NavigationMenu>
   );
