@@ -6,12 +6,14 @@ import { useAccount } from "wagmi";
 import { useState, ChangeEvent, useEffect } from "react";
 import { toast } from "sonner";
 import { isValidEmail } from "@/common/utils/validators/isValidEmail";
+import { resendEmail } from "@/common/utils/api/email/resend";
 
 export default function NewsletterSection() {
   const { address } = useAccount();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [lastSentTime, setLastSentTime] = useState<number | null>(null);
+  const [recipentId, setRecipentId] = useState<number | null>(null);
 
   const cooldownPeriod = 60000;
 
@@ -58,6 +60,8 @@ export default function NewsletterSection() {
       toast.success(
         "Subscription successful! Check your email for verification.",
       );
+      const data = await response.json();
+      setRecipentId(data.listRecepientId);
       const currentTime = Date.now();
       localStorage.setItem("etherway_lastSentTime", currentTime.toString());
       setLastSentTime(currentTime);
@@ -79,9 +83,13 @@ export default function NewsletterSection() {
       return;
     }
 
-    // TODO: Add resend API logic here
-    const { response, error } = await subscribeEmail({
-      address: address,
+    if (!recipentId) {
+      toast.error("Failed to resend. Please try again.");
+      return;
+    }
+
+    const { response, error } = await resendEmail({
+      listRecepientId: recipentId,
       email,
     });
 
