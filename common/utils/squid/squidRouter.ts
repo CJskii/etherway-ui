@@ -5,13 +5,10 @@ import {
   RouteResponse,
   SquidData,
 } from "@0xsquid/squid-types";
-import { getWalletClient } from "@wagmi/core";
 import { Signer, ethers } from "ethers";
-import { WalletClient } from "viem";
-import { useWalletClient } from "wagmi";
 
 const userAddress = "0x62C43323447899acb61C18181e34168903E033Bf";
-const integratorId = "<your integrator id>";
+const integratorId = "etherway-2c794744-6972-4f23-bdcb-784032b1a377";
 
 const squid = new Squid({
   baseUrl: "https://v2.api.squidrouter.com",
@@ -24,28 +21,25 @@ export type RouteType = {
   params: RouteRequest;
 };
 
-async function getSquidRoute(routeParams: RouteRequest): Promise<RouteType> {
+export async function getSquidRoute(
+  routeParams: RouteRequest,
+): Promise<RouteType | undefined> {
   // initialize the Squid client
-  await squid.init();
+  try {
+    await squid.init();
 
-  const { route, requestId, integratorId } = await squid.getRoute(routeParams);
-  // {
-  //   fromChain: "43114", // Avalanche
-  //   fromAmount: "10000000000000000", // 0.1 AVAX
-  //   fromToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-  //   toChain: "137", // Polygon
-  //   toToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-  //   fromAddress: userAddress,
-  //   toAddress: userAddress,
-  //   slippageConfig: {
-  //     autoMode: 1,
-  //   },
-  // }
-  console.log(route, requestId);
-  return route;
+    const { route, requestId, integratorId } =
+      await squid.getRoute(routeParams);
+
+    console.log(route, requestId);
+    return route;
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 }
 
-async function executeSquidRoute(route: RouteType, signer: Signer) {
+export async function executeSquidRoute(route: RouteType, signer: Signer) {
   await squid.init();
 
   const tx = (await squid.executeRoute({
@@ -81,10 +75,14 @@ async function getTxStatus(txData: txDataType) {
   console.log(`Route status: ${status.squidTransactionStatus}`);
 }
 
-async function getSquidTokens() {
+export async function getSquidTokens() {
+  await squid.init();
+
   return squid.tokens;
 }
 
-async function getSquidChains() {
+export async function getSquidChains() {
+  await squid.init();
+
   return squid.chains;
 }
