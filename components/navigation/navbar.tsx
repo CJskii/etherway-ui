@@ -124,12 +124,12 @@ export function Header() {
           height={30}
         />
       </Link>
-      <div className="flex-1 justify-center hidden items-center gap-3 md:flex">
+      <div className="flex-1 justify-center hidden items-center gap-3 lg:flex">
         {/* <NavLinks /> */}
         <NaviLinks />
       </div>
 
-      <div className="flex-1  justify-end items-center gap-3 hidden  md:flex">
+      <div className="flex-1  justify-end items-center gap-3 hidden  lg:flex">
         <ThemeToggler />
         <ConnectWalletButton />
         {/* <Link href={"/contact-us"}>
@@ -139,48 +139,11 @@ export function Header() {
         </Link> */}
       </div>
 
-      <div className="block md:hidden">
+      <div className="block lg:hidden">
         <HeaderSheet />
       </div>
     </div>
   );
-
-  // return (
-  //   <div className="fixed z-50 flex w-full justify-between items-center border-b border-neutral-400/50 bg-white/50 p-4 backdrop-blur-xl dark:bg-black/50 md:px-16 md:py-4">
-  //
-  //     <div className="flex-1 hidden md:block">
-  //       <Link href="/" className="flex items-center justify-start">
-  //
-  //         <Image
-  //           src={logoDark}
-  //           alt="etherway logo"
-  //           className="block w-40 dark:hidden"
-  //         />
-  //         <Image
-  //           src={logoLight}
-  //           alt="etherway logo"
-  //           className="hidden w-40 dark:block"
-  //         />
-  //       </Link>
-  //     </div>
-
-  //
-  //     <div className="flex-1 justify-center hidden items-center gap-3 md:flex">
-  //       <NavLinks />
-  //     </div>
-
-  //
-  //     <div className="flex-1  justify-end items-center gap-3 hidden  md:flex">
-  //       <ThemeToggler />
-  //       <ConnectWalletButton />
-  //     </div>
-
-  //
-  //     <div className="block md:hidden">
-  //       <HeaderSheet />
-  //     </div>
-  //   </div>
-  // );
 }
 
 export function NaviLinks() {
@@ -230,109 +193,34 @@ export function NaviLinks() {
   );
 }
 
-export function NavLinks() {
-  // TODO: fix navbar on the mobile, sometimes the dropdown don't respond to the click
-
+export function MobileNavLinks() {
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="w-full">
-          <Button className="" variant={"navbar"}>
-            Layerzero
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/layerzero/onft-mint"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              ONFT Mint
-            </DropdownMenuItem>
+      {otherLinks.map((navLink, index) => (
+        <React.Fragment key={index}>
+          <Link href={navLink.href} passHref>
+            <Button className="w-full" variant={"navbarMobile"}>
+              {navLink.label}
+            </Button>
           </Link>
-
-          <Link href={"/layerzero/onft-bridge"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              ONFT Bridge
-            </DropdownMenuItem>
-          </Link>
-          <Link aria-disabled href={"/layerzero/oft-mint-bridge"}>
-            <DropdownMenuItem>OFT & Mint Bridge</DropdownMenuItem>
-          </Link>
-          <Link href={"https://layerzeroscan.com/"} target="_blank">
-            <DropdownMenuItem className=" cursor-pointer">
-              Explorer
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="w-full">
-          <Button className="" variant={"navbar"}>
-            Hyperlane
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/hyperlane/nft-mint"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              hNFT Mint
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/hyperlane/nft-bridge"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              hNFT Bridge
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/hyperlane/token-mint-bridge"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              ERC20 & Mint Bridge
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"https://explorer.hyperlane.xyz"}>
-            <DropdownMenuItem className=" cursor-pointer">
-              Explorer
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <Link
-        href={"/layerzero/gas-refuel"}
-        className={cn(buttonVariants({ variant: "navbar" }))}
-      >
-        ⛽ Refuel
-      </Link>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="w-full">
-          <Button className="" variant={"navbar"}>
-            Resources
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="border-0 bg-[#E8E8E8]/70 dark:bg-black/30 backdrop-blur-xl">
-          <Link href={"/guides/how-to-use"}>
-            <DropdownMenuItem className="cursor-pointer">
-              How to use
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/chains"}>
-            <DropdownMenuItem className="cursor-pointer">
-              Supported chains
-            </DropdownMenuItem>
-          </Link>
-          <Link href={"/guides/faq"}>
-            <DropdownMenuItem className="cursor-pointer">FAQ</DropdownMenuItem>
-          </Link>
-          {/* href={"/blogs"} */}
-          <Link href={""}>
-            <DropdownMenuItem disabled className="cursor-pointer">
-              Blogs
-            </DropdownMenuItem>
-          </Link>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <Link
-        href={"/dashboard"}
-        className={cn(buttonVariants({ variant: "navbar" }))}
-      >
-        Airdrop Marketplace
-      </Link>
+        </React.Fragment>
+      ))}
+      {productLinks.map((navLink, index) => (
+        <React.Fragment key={index}>
+          <Typography key={index} variant="navbarTitle">
+            {navLink.label}
+          </Typography>
+          {navLink.paths.map((path, index) => (
+            <React.Fragment key={index}>
+              <Link href={path.href} passHref>
+                <Button className="w-full" variant={"navbarMobile"}>
+                  {path.label}
+                </Button>
+              </Link>
+            </React.Fragment>
+          ))}
+        </React.Fragment>
+      ))}
     </>
   );
 }
