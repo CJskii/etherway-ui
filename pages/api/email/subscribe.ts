@@ -5,11 +5,13 @@ import { getAuthOptions } from "../auth/[...nextauth]";
 import { InteractionType } from "@prisma/client";
 import { getCsrfToken } from "next-auth/react";
 import Mailjet from "node-mailjet";
+import { getVerifyEmailData } from "@/common/utils/getters/getEmail";
 
 const mailjet = new Mailjet({
   apiKey: process.env.MAILJET_API_KEY,
   apiSecret: process.env.MAILJET_SECRET_KEY,
 });
+// TODO: Ensure all emails are saved in the db with .toLowerCase()
 const listId = 10331420; // TODO: For production replace with the main list ID from Mailjet
 
 function isValidEmail(email: string) {
@@ -97,46 +99,10 @@ export default async function handler(
     //    -> POST /send - email containing a dynamic link with listID
     const verificationLink = `${process.env.VERCEL_URL}/email/verify?listRecepientId=${listRecepientId}`;
 
-    const verifyEmailData = {
-      From: {
-        Email: "hello@etherway.io",
-        Name: "Etherway",
-      },
-      To: [
-        {
-          Email: email,
-        },
-      ],
-      Subject: "Verify Your Etherway Account",
-      HTMLPart: `
-      <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto;">
-        <!-- Header Image -->
-        <img src="https://pbs.twimg.com/profile_banners/1634697370247233538/1710699959/1500x500" alt="Etherway Logo" style="width: 100%; height: auto;">
-    
-        <!-- Main Content Area -->
-        <div style="padding: 20px; text-align: center;">
-          <h1 style="color: #333;">Hello,</h1>
-          <p>Welcome to Etherway! You're one step away from completing your sign-up.</p>
-          
-          <p>Please activate your account by clicking the button below:</p>
-          
-          <!-- Activation Button -->
-          <a href="${verificationLink}" style="display: inline-block; margin-top: 15px; margin-bottom: 15px; padding: 10px 20px; background-color: #0077cc; color: #fff; text-decoration: none; border-radius: 5px;">Activate Account</a>
-    
-          <p>If the button above doesn't work, copy and paste the following link into your web browser:</p>
-          <p style="word-wrap: break-word; color: #0077cc;">${verificationLink}</p>
-    
-          <p>If you didn't sign up for an Etherway account, you can safely ignore this email.</p>
-        </div>
-    
-        <!-- Footer -->
-        <div style="background-color: #f4f4f4; padding: 10px; text-align: center;">
-          <p>If you'd like to learn more, visit our <a href="https://www.etherway.io" style="color: #0077cc; text-decoration: none;">website</a> or reach out to us directly.</p>
-          <p>This message was sent to <a href="mailto:${email}" style="color: #0077cc;">${email}</a>.</p>
-        </div>
-      </div>
-      `,
-    };
+    const verifyEmailData = getVerifyEmailData({
+      email,
+      verificationLink,
+    });
 
     //     const verifyEmailData = {
     //       From: {
@@ -181,12 +147,10 @@ export default async function handler(
     });
 
     console.log("Subscription contact created and Email sent");
-    res
-      .status(200)
-      .json({
-        message: "Subscription contact created and Email sent",
-        listRecepientId: listRecepientId,
-      });
+    res.status(200).json({
+      message: "Subscription contact created and Email sent",
+      listRecepientId: listRecepientId,
+    });
   } catch (error) {
     console.error("Error in /api/email/subscribe:", error);
     res.status(500).json({

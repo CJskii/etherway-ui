@@ -1,6 +1,6 @@
 import { ContractType } from "@prisma/client";
 
-export async function subscribeEmail({
+export async function resendEmail({
   listRecepientId,
   email,
 }: {
@@ -15,7 +15,7 @@ export async function subscribeEmail({
   // parse the response to get the listRecepientId in the body of subcribe call
 
   try {
-    response = await fetch("/api/email/verify", {
+    response = await fetch("/api/email/resend", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
