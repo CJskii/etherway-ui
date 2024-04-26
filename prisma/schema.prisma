@@ -50,6 +50,13 @@ model Interaction {
   user         User            @relation(fields: [userId], references: [id])
 }
 
+// Model for Materialized view for User Points
+model Mv_top_users {
+  id           Int       @id 
+  userAddress  String
+  total_points Int
+}
+
 model Project {
   id               Int            @id @default(autoincrement())
   name             String
