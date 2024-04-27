@@ -96,6 +96,10 @@ const otherLinks = [
     label: "Gas Refuel",
     href: "/layerzero/gas-refuel",
   },
+  {
+    label: "Leaderboard",
+    href: "/leaderboard",
+  },
 ];
 
 export function Header() {
