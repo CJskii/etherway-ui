@@ -286,7 +286,7 @@ const ClaimLegacyPoints = ({
               <div className="mt-2 ">
                 {hasClaimed ? (
                   <Typography variant={"h4"}>
-                    Looks like you've already claimed your points
+                    Looks like you&apos;ve already claimed your points
                   </Typography>
                 ) : (
                   <Typography variant={"h3"}>
