@@ -8,6 +8,9 @@ import {
 } from "@/components/ui/table";
 import { Typography } from "@/components/ui/typography";
 import React, { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const mockData = [
   {
@@ -42,10 +45,38 @@ const mockData = [
   },
 ];
 
+interface OldUserData {
+  ethereumAddress: string;
+  totalPoints: number;
+  inviteCount: number;
+  bridges: [
+    {
+      count: number;
+      createdAt: string;
+      ethereumAddress: string;
+      id: string;
+      layerzeroCount: number;
+      updatedAt: string;
+      wormholeCount: number;
+    },
+  ];
+  mints: [
+    {
+      count: number;
+      createdAt: string;
+      ethereumAddress: string;
+      id: string;
+      updatedAt: string;
+    },
+  ];
+}
+
 interface LeaderboardData {}
 
 export default function LeaderboardTable() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
+  const account = useAccount();
+  const [oldUserData, setOldUserData] = useState<OldUserData | null>(null);
 
   const calculateUserLevel = (totalXP: number): number => {
     let level = 0;
@@ -71,6 +102,44 @@ export default function LeaderboardTable() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchOldData = async () => {
+      if (!account.address) {
+        console.log("No account address provided.");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "https://omnichain-minter-ppkm.vercel.app/api/userData",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ethereumAddress: account.address,
+            }),
+          },
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setOldUserData(data.user);
+        } else if (response.status === 404) {
+          toast.error("No data found for this address.");
+        } else {
+          toast.error("Error fetching old data.");
+        }
+      } catch (error) {
+        console.error("Error fetching old data:", error);
+        toast.error("Error fetching old data.");
+      }
+    };
+
+    fetchOldData();
+  }, [account.address]);
+
   return (
     <>
       <div className="space-y-1 py-6 ">
@@ -84,6 +153,9 @@ export default function LeaderboardTable() {
           Your stats on Etherway
         </Typography>
       </div>
+
+      {oldUserData && <ClaimLegacyPoints oldUserData={oldUserData} />}
+
       <Table>
         <TableHeader>
           <TableRow className="">
@@ -98,7 +170,7 @@ export default function LeaderboardTable() {
             </TableHead>
           </TableRow>
         </TableHeader>
-        <div className="my-2" />
+        {/* <div className="my-2" /> */}
         <TableBody>
           {mockData.map(({ rank, walletAddress, level }, idx) => (
             <React.Fragment key={idx}>
@@ -111,7 +183,7 @@ export default function LeaderboardTable() {
                   {level}
                 </TableCell>
               </TableRow>
-              <div className="my-4" />
+              {/* <div className="my-4" /> */}
             </React.Fragment>
           ))}
         </TableBody>
@@ -119,3 +191,30 @@ export default function LeaderboardTable() {
     </>
   );
 }
+
+const ClaimLegacyPoints = ({ oldUserData }: { oldUserData: OldUserData }) => {
+  return (
+    <div>
+      <Typography variant={"h3"} className="font-raleway">
+        Legacy Points
+      </Typography>
+
+      <Typography variant={"paragraph"} className="font-raleway font-[500]">
+        You have {oldUserData.totalPoints} legacy points.
+      </Typography>
+
+      <Typography variant={"paragraph"} className="font-raleway font-[500]">
+        You have {oldUserData.inviteCount} invites.
+      </Typography>
+
+      <Typography variant={"paragraph"} className="font-raleway font-[500]">
+        You have {oldUserData.bridges[0].count} bridges.
+      </Typography>
+
+      <Typography variant={"paragraph"} className="font-raleway font-[500]">
+        You have {oldUserData.mints[0].count} mints.
+      </Typography>
+      <Button variant={"etherway"}>Claim</Button>
+    </div>
+  );
+};
