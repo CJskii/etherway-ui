@@ -171,7 +171,7 @@ export default function LeaderboardTable() {
         </Typography>
       </div>
 
-      {oldUserData && (
+      {oldUserData && !hasClaimed && (
         <ClaimLegacyPoints
           oldUserData={oldUserData}
           hasClaimed={hasClaimed}
@@ -193,7 +193,6 @@ export default function LeaderboardTable() {
             </TableHead>
           </TableRow>
         </TableHeader>
-        {/* <div className="my-2" /> */}
         <TableBody>
           {mockData.map(({ rank, walletAddress, level }, idx) => (
             <React.Fragment key={idx}>
@@ -207,6 +206,9 @@ export default function LeaderboardTable() {
                 </TableCell>
               </TableRow>
               {/* <div className="my-4" /> */}
+              {idx < mockData.length - 1 && (
+                <tr className="spacer" style={{ height: "10px" }}></tr>
+              )}
             </React.Fragment>
           ))}
         </TableBody>
