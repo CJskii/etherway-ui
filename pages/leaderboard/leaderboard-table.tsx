@@ -12,6 +12,17 @@ import { useAccount } from "wagmi";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
 const mockData = [
   {
     rank: 1,
@@ -77,6 +88,7 @@ export default function LeaderboardTable() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
   const account = useAccount();
   const [oldUserData, setOldUserData] = useState<OldUserData | null>(null);
+  const [hasClaimed, setHasClaimed] = useState(false);
 
   const calculateUserLevel = (totalXP: number): number => {
     let level = 0;
@@ -91,12 +103,13 @@ export default function LeaderboardTable() {
   };
 
   useEffect(() => {
-    // fetch leaderboard data and set it to state
+    // TODO:  fetch leaderboard data and set it to state
     const fetchData = async () => {
       // const response = await callLeaderboardAPI();
       // const data = await response.json();
       // setLeaderboard(data.data);
       setLeaderboard(mockData);
+      // TODO: check if the user already claimed legacy points (hasClaimed state)
     };
 
     fetchData();
@@ -126,6 +139,10 @@ export default function LeaderboardTable() {
         if (response.ok) {
           const data = await response.json();
           setOldUserData(data.user);
+          if (!hasClaimed)
+            toast.success(
+              "Looks like you might be eligible to claim legacy points!",
+            );
         } else if (response.status === 404) {
           toast.error("No data found for this address.");
         } else {
@@ -154,7 +171,13 @@ export default function LeaderboardTable() {
         </Typography>
       </div>
 
-      {oldUserData && <ClaimLegacyPoints oldUserData={oldUserData} />}
+      {oldUserData && (
+        <ClaimLegacyPoints
+          oldUserData={oldUserData}
+          hasClaimed={hasClaimed}
+          setHasClaimed={setHasClaimed}
+        />
+      )}
 
       <Table>
         <TableHeader>
@@ -192,29 +215,102 @@ export default function LeaderboardTable() {
   );
 }
 
-const ClaimLegacyPoints = ({ oldUserData }: { oldUserData: OldUserData }) => {
+const ClaimLegacyPoints = ({
+  oldUserData,
+  hasClaimed,
+  setHasClaimed,
+}: {
+  oldUserData: OldUserData;
+  hasClaimed: boolean;
+  setHasClaimed: Function;
+}) => {
+  const handleClaimButton = async () => {
+    console.log("Claiming legacy points...");
+
+    try {
+      // const response =  await callClaimAPI();
+      const response = {
+        ok: true,
+      } as Response;
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Claim response:", data);
+        toast.success("Legacy points claimed successfully!");
+        setHasClaimed(true);
+      } else {
+        toast.error("Error claiming legacy points.");
+      }
+    } catch (error) {
+      console.error("Error claiming legacy points:", error);
+      toast.error("Error claiming legacy points.");
+    }
+  };
+
   return (
-    <div>
-      <Typography variant={"h3"} className="font-raleway">
-        Legacy Points
+    <div className="flex flex-col justify-center items-start gap-2">
+      <Typography variant={"h3"}>Legacy Points</Typography>
+      <Typography variant={"smallTitle"} className="font-raleway font-[500]">
+        You might be eligible to claim legacy points from your previous on-chain
+        activity
       </Typography>
+      <Drawer>
+        <DrawerTrigger asChild>
+          <Button variant="outline">Check</Button>
+        </DrawerTrigger>
+        <DrawerContent className="border-none">
+          <div className="mx-auto w-full max-w-lg">
+            <DrawerHeader>
+              <DrawerTitle>Status of your legacy points</DrawerTitle>
+              <DrawerDescription>
+                Here you can claim XP accumulated prior to Etherway rebranding.
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="p-4 pb-0 flex flex-col justify-center items-start">
+              <Typography variant={"h4"}>Your Stats</Typography>
+              <Typography variant={"smallTitle"}>
+                {"> "}
+                {oldUserData.mints[0].count} mint interactions.
+              </Typography>
+              <Typography variant={"smallTitle"}>
+                {"> "}
+                {oldUserData.bridges[0].count} bridge interactions.
+              </Typography>
+              <Typography variant={"smallTitle"}>
+                {"> "}
+                {oldUserData.inviteCount} invited friends.
+              </Typography>
 
-      <Typography variant={"paragraph"} className="font-raleway font-[500]">
-        You have {oldUserData.totalPoints} legacy points.
-      </Typography>
-
-      <Typography variant={"paragraph"} className="font-raleway font-[500]">
-        You have {oldUserData.inviteCount} invites.
-      </Typography>
-
-      <Typography variant={"paragraph"} className="font-raleway font-[500]">
-        You have {oldUserData.bridges[0].count} bridges.
-      </Typography>
-
-      <Typography variant={"paragraph"} className="font-raleway font-[500]">
-        You have {oldUserData.mints[0].count} mints.
-      </Typography>
-      <Button variant={"etherway"}>Claim</Button>
+              <div className="mt-2 ">
+                {hasClaimed ? (
+                  <Typography variant={"h4"}>
+                    Looks like you've already claimed your points
+                  </Typography>
+                ) : (
+                  <Typography variant={"h3"}>
+                    Total of{" "}
+                    <span className="text-secondary">
+                      {oldUserData.totalPoints} XP
+                    </span>{" "}
+                    available to claim.
+                  </Typography>
+                )}
+              </div>
+            </div>
+            <DrawerFooter>
+              <Button
+                onClick={hasClaimed ? () => {} : handleClaimButton}
+                disabled={hasClaimed}
+              >
+                Claim
+              </Button>
+              <DrawerClose asChild>
+                <Button variant="outline">Close</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
