@@ -6,6 +6,7 @@ import {
   bridgeInteractionONFT,
 } from "../create/newBridge";
 import { gasRefuel } from "../create/newGasRefuel";
+import { claimV1Interaction } from "../create/newClaim";
 
 type handleInteractionProps = {
   ethAddress: string;
@@ -62,6 +63,14 @@ export default async function handleInteraction({
         interactionType,
         chainId,
         amount,
+      });
+    case InteractionType.V1:
+      return await claimV1Interaction({
+        ethAddress: ethAddress.toLowerCase(),
+        contractType,
+        interactionType,
+        chainId,
+        points: amount,
       });
     default:
       break;

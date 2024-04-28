@@ -51,7 +51,7 @@ model Interaction {
 }
 
 // Model for Materialized view for User Points
-model Mv_top_users {
+model UserPoints {
   id           Int       @id 
   userAddress  String
   total_points Int
