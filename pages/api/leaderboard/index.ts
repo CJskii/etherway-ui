@@ -40,9 +40,7 @@ export default async function handler(
       }
 
       const limit = req.query.limit as string;
-
       const data = await fetchViewAllUserPoints(Number(limit));
-
       return res.status(200).json(data); // 201 means successfull
     } catch (error) {
       console.error(error);

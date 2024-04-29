@@ -25,7 +25,7 @@ import { prisma } from "../../client";
 const rawMaterialisedViewCreateQuery = `CREATE MATERIALIZED VIEW UserPoints AS
 SELECT
     i."userId" AS id,
-    u."ethereumAddress" AS userAddress,
+    u."ethereumAddress" AS user_address,
     CAST(SUM(i.points) AS INTEGER) AS total_points  -- Explicitly casting to INTEGER
 FROM
     "Interaction" i
@@ -61,7 +61,7 @@ async function fetchViewAllUserPoints(limit?: number) {
 async function fetchViewUserPoints(userAddress: string) {
   try {
     const data =
-      await prisma.$queryRaw`SELECT * FROM UserPoints WHERE "userAddress" = ${userAddress};`;
+      await prisma.$queryRaw`SELECT * FROM UserPoints WHERE "user_address" = ${userAddress.toLowerCase()};`;
     console.log("Materialised View fetched for the user");
     return data;
   } catch (error) {
