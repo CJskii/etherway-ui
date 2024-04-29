@@ -1,3 +1,4 @@
+import { number } from "zod";
 import { prisma } from "../../client";
 
 // async function getTopUsersByPoints() {
@@ -24,7 +25,7 @@ import { prisma } from "../../client";
 const rawMaterialisedViewCreateQuery = `CREATE MATERIALIZED VIEW UserPoints AS
 SELECT
     i."userId" AS id,
-    u."ethereumAddress AS userAddress",
+    u."ethereumAddress" AS userAddress,
     SUM(i.points) AS total_points
 FROM
     "Interaction" i
@@ -45,9 +46,11 @@ async function createViewUserPoints() {
   }
 }
 
-async function fetchViewAllUserPoints() {
+async function fetchViewAllUserPoints(limit?: number) {
   try {
-    const data = await prisma.$queryRaw`SELECT * FROM UserPoints;`;
+    let limitParam = limit ? limit : 100;
+    const data =
+      await prisma.$queryRaw`SELECT * FROM UserPoints ORDER BY total_points DESC LIMIT ${limitParam};`;
     console.log("Materialised View fetched for all the users");
     return data;
   } catch (error) {
@@ -58,7 +61,7 @@ async function fetchViewAllUserPoints() {
 async function fetchViewUserPoints(userAddress: string) {
   try {
     const data =
-      await prisma.$queryRaw`SELECT * FROM UserPoints WHERE userAddress = ${userAddress};`;
+      await prisma.$queryRaw`SELECT * FROM UserPoints WHERE "userAddress" = ${userAddress};`;
     console.log("Materialised View fetched for the user");
     return data;
   } catch (error) {

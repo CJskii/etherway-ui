@@ -13,7 +13,7 @@ import {
 
 // POST /leaderboard -  refreshes the points , only done by Cron Job
 
-// GET /lederboard -  get all the points , only allowed for authenticated user
+// GET /lederboard?limit=100 - get all the user with points with a limit of 100 records by default , only allowed for authenticated user
 // GET /lederboard?userAddress=${0x..000} -  get the points just for this user
 
 export default async function handler(
@@ -32,20 +32,18 @@ export default async function handler(
     }
 
     try {
-      // TODO: fetch leaderboard data
-
       const userAddress = req.query.userAddress as string;
 
       if (userAddress) {
         const data = await fetchViewUserPoints(userAddress);
-        return res.status(200).json({ data });
+        return res.status(200).json(data);
       }
 
-      const leaderboad: any[] = [];
-      const data = await fetchViewAllUserPoints();
-      // TODO:  sort and only get the top 100 , Send it over
+      const limit = req.query.limit as string;
 
-      return res.status(200).json({ data }); // 201 means successfull
+      const data = await fetchViewAllUserPoints(Number(limit));
+
+      return res.status(200).json(data); // 201 means successfull
     } catch (error) {
       console.error(error);
       return res
@@ -78,6 +76,6 @@ export default async function handler(
 // "crons": [
 //   {
 //     "path": "/api/leaderboard",
-//     "schedule": "0 0 */3 ? * *"
+//     "schedule": "0 0 */4 ? * *	"
 //   }
 // ]

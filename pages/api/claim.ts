@@ -13,15 +13,15 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method == "POST") {
-    const { ethereumAddress, points } = req.body as {
-      ethereumAddress: string;
-      points: number;
-    };
+    // const { ethereumAddress, points } = req.body as {
+    //   ethereumAddress: string;
+    //   points: number;
+    // };
 
-    if (!ethereumAddress || !points) {
-      console.error("Missing parameters");
-      return res.status(400).json({ message: "Missing parameters" });
-    }
+    // if (!ethereumAddress || !points) {
+    //   console.error("Missing parameters");
+    //   return res.status(400).json({ message: "Missing parameters" });
+    // }
 
     const session = await getServerSession(req, res, getAuthOptions(req));
 
@@ -33,7 +33,20 @@ export default async function handler(
       });
     }
 
+    const ethereumAddress = session?.user?.name;
+    if (!ethereumAddress) {
+      res.status(401).send({
+        error: "User not found in session",
+      });
+      return;
+    }
+
     try {
+      // TODO : Check if the user indeed has points in the old db
+      // TODO : Calculate the points from the totalPoints here itself
+
+      const points = 0;
+
       await claimV1Interaction({
         ethAddress: ethereumAddress,
         contractType: ContractType.NO_CONTRACT,
@@ -50,21 +63,29 @@ export default async function handler(
       });
     }
   } else if (req.method == "GET") {
-    const ethereumAddress = req.query.ethereumAddress as string;
+    // const ethereumAddress = req.query.ethereumAddress as string;
 
-    if (!ethereumAddress) {
-      console.error("Missing parameters");
-      return res.status(400).json({ message: "Missing parameters" });
-    }
+    // if (!ethereumAddress) {
+    //   console.error("Missing parameters");
+    //   return res.status(400).json({ message: "Missing parameters" });
+    // }
 
     const session = await getServerSession(req, res, getAuthOptions(req));
 
     const csrfToken = await getCsrfToken({ req: { headers: req.headers } });
 
-    if (!session && !csrfToken) {
+    if (!session || !csrfToken) {
       res.status(401).send({
         error: "You must be signed in to interact with the API",
       });
+    }
+
+    const ethereumAddress = session?.user?.name;
+    if (!ethereumAddress) {
+      res.status(401).send({
+        error: "User not found in session",
+      });
+      return;
     }
 
     try {
