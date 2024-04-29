@@ -6,12 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Typography } from "@/components/ui/typography";
-import React, { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-
 import {
   Drawer,
   DrawerClose,
@@ -22,41 +16,20 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Typography } from "@/components/ui/typography";
+import React, { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import {
+  getLeaderboadData,
+  getUserPointData,
+} from "@/common/utils/api/leaderboard";
+import { claimV1Points, getClaimData } from "@/common/utils/api/claimRewards";
 
-const mockData = [
-  {
-    rank: 1,
-    walletAddress: "0xA9F65a8a1829F68607e4223F349545861216543c",
-    level: "80",
-  },
-  {
-    rank: 2,
-    walletAddress: "0xA9F65a8a1829F68607e4223F349545861216543c",
-    level: "80",
-  },
-  {
-    rank: 3,
-    walletAddress: "0xA9F65a8a1829F68607e4223F349545861216543c",
-    level: "80",
-  },
-  {
-    rank: 4,
-    walletAddress: "0xA9F65a8a1829F68607e4223F349545861216543c",
-    level: "80",
-  },
-  {
-    rank: 5,
-    walletAddress: "0xA9F65a8a1829F68607e4223F349545861216543c",
-    level: "80",
-  },
-  {
-    rank: 6,
-    walletAddress: "0xA9F65a8a1829F68607e4223F349545861216543c",
-    level: "80",
-  },
-];
+import { calculateUserLevel } from "@/common/utils/getters/level";
 
-interface OldUserData {
+export interface OldUserDataType {
   ethereumAddress: string;
   totalPoints: number;
   inviteCount: number;
@@ -82,38 +55,45 @@ interface OldUserData {
   ];
 }
 
-interface LeaderboardData {}
+interface LeaderboardData {
+  id: number;
+  user_address: string;
+  total_points: number;
+}
 
 export default function LeaderboardTable() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
+  const [userData, setUserData] = useState<LeaderboardData | null>(null);
   const account = useAccount();
-  const [oldUserData, setOldUserData] = useState<OldUserData | null>(null);
+  const [oldUserData, setOldUserData] = useState<OldUserDataType | null>(null);
   const [hasClaimed, setHasClaimed] = useState(false);
 
-  const calculateUserLevel = (totalXP: number): number => {
-    let level = 0;
-    let xpForNextLevel = 0;
-
-    while (totalXP >= xpForNextLevel) {
-      level++;
-      xpForNextLevel = Math.pow(level, 2) * 10; // XP required for next level (quadratic formula)
-    }
-
-    return level - 1;
-  };
-
   useEffect(() => {
-    // TODO:  fetch leaderboard data and set it to state
     const fetchData = async () => {
-      // const response = await callLeaderboardAPI();
-      // const data = await response.json();
-      // setLeaderboard(data.data);
-      setLeaderboard(mockData);
-      // TODO: check if the user already claimed legacy points (hasClaimed state)
+      if (!account.address) return;
+      const leaderboardData = await getLeaderboadData({ limit: 100 });
+      setLeaderboard(leaderboardData);
+
+      // TODO: Uncomment this once the personalised data view component is ready
+      // const normalizedAddress = account.address.toLowerCase();
+      // const userData = leaderboardData.find(
+      //   (user: any) => user.user_address.toLowerCase() === normalizedAddress,
+      // );
+
+      // if (userData) {
+      //   console.log("User is on the leaderboard:", userData);
+      //   setUserData(userData);
+      // } else {
+      //   const specificUserData = await getUserPointData({
+      //     userAddress: normalizedAddress,
+      //   });
+      //   console.log("Fetched specific user data:", specificUserData);
+      //   setUserData(specificUserData);
+      // }
     };
 
     fetchData();
-  }, []);
+  }, [account.address]);
 
   useEffect(() => {
     const fetchOldData = async () => {
@@ -139,12 +119,17 @@ export default function LeaderboardTable() {
         if (response.ok) {
           const data = await response.json();
           setOldUserData(data.user);
-          if (!hasClaimed)
+          const claimData = await getClaimData();
+          if (claimData) {
+            setHasClaimed(true);
+          } else {
             toast.success(
               "Looks like you might be eligible to claim legacy points!",
             );
+          }
         } else if (response.status === 404) {
-          toast.error("No data found for this address.");
+          // toast.error("No data found for this address.");
+          console.log("No data found for this address.");
         } else {
           toast.error("Error fetching old data.");
         }
@@ -194,19 +179,18 @@ export default function LeaderboardTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {mockData.map(({ rank, walletAddress, level }, idx) => (
+          {leaderboard.map(({ id, user_address, total_points }, idx) => (
             <React.Fragment key={idx}>
               <TableRow className="border-0 bg-[#b5b4b6]/30 text-base hover:bg-[#b5b4b6]/20 dark:bg-white/10 dark:text-white">
                 <TableCell className="cursor-pointer rounded-l-xl py-10">
-                  {rank}
+                  {idx + 1}
                 </TableCell>
-                <TableCell>{walletAddress}</TableCell>
+                <TableCell>{user_address}</TableCell>
                 <TableCell className=" cursor-pointer rounded-r-xl">
-                  {level}
+                  {calculateUserLevel(total_points)}
                 </TableCell>
               </TableRow>
-              {/* <div className="my-4" /> */}
-              {idx < mockData.length - 1 && (
+              {idx < leaderboard.length - 1 && (
                 <tr className="spacer" style={{ height: "10px" }}></tr>
               )}
             </React.Fragment>
@@ -222,18 +206,19 @@ const ClaimLegacyPoints = ({
   hasClaimed,
   setHasClaimed,
 }: {
-  oldUserData: OldUserData;
+  oldUserData: OldUserDataType;
   hasClaimed: boolean;
   setHasClaimed: Function;
 }) => {
   const handleClaimButton = async () => {
-    console.log("Claiming legacy points...");
-
     try {
-      // const response =  await callClaimAPI();
-      const response = {
-        ok: true,
-      } as Response;
+      const response = (await claimV1Points()) as Response;
+
+      if (response.status === 400) {
+        toast.error("You have already claimed your legacy points.");
+        setHasClaimed(true);
+        return;
+      }
 
       if (response.ok) {
         const data = await response.json();
