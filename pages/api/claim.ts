@@ -8,6 +8,8 @@ import { getCsrfToken } from "next-auth/react";
 import { claimV1Interaction } from "@/prisma/src/create/newClaim";
 import { getClaimData } from "@/prisma/src/get/claimData";
 
+const newPointMultiplier = 0.1;
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -42,19 +44,49 @@ export default async function handler(
     }
 
     try {
-      // TODO : Check if the user indeed has points in the old db
-      // TODO : Calculate the points from the totalPoints here itself
+      // Check if the user indeed has points in the old db
+      const response = await fetch(
+        "https://omnichain-minter-ppkm.vercel.app/api/userData",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ethereumAddress: ethereumAddress,
+          }),
+        },
+      );
 
-      const points = 0;
+      if (response.ok) {
+        const data = await response.json();
 
-      await claimV1Interaction({
-        ethAddress: ethereumAddress,
-        contractType: ContractType.NO_CONTRACT,
-        interactionType: InteractionType.V1,
-        points: points,
-      });
-      console.log("Claim recorded");
-      res.status(200).json({ message: "Claim recorded" });
+        // Calculate the points from the totalPoints here itself
+        const prevPoint = data.user.totalPoints;
+
+        const pointsToAward = Number(prevPoint) * newPointMultiplier;
+
+        await claimV1Interaction({
+          ethAddress: ethereumAddress,
+          contractType: ContractType.NO_CONTRACT,
+          interactionType: InteractionType.V1,
+          points: pointsToAward,
+        });
+        console.log(`Claim recorded and awarded ${pointsToAward} points`);
+        res.status(201).json({
+          message: `Claim recorded and awarded ${pointsToAward} points`,
+        });
+      } else if (response.status === 404) {
+        console.error("No data found for this address.");
+        res.status(404).json({
+          message: `No data found for this address`,
+        });
+      } else {
+        console.error("Error fetching old data");
+        res.status(500).json({
+          message: "Error fetching old data in /api/claim:",
+        });
+      }
     } catch (error) {
       console.error("Error in /api/claim:", error);
       res.status(500).json({
@@ -82,7 +114,7 @@ export default async function handler(
 
     const ethereumAddress = session?.user?.name;
     if (!ethereumAddress) {
-      res.status(401).send({
+      res.status(400).send({
         error: "User not found in session",
       });
       return;
