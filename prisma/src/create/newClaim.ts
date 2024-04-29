@@ -1,30 +1,27 @@
 import { InteractionType, ContractType } from "@prisma/client";
 import { prisma } from "../../client";
+import { getClaimData } from "../get/claimData";
 
 type ClaimV1Interaction = {
   ethAddress: string;
   contractType: ContractType;
   interactionType: InteractionType;
   chainId?: number;
-  points?: number;
+  points: number;
 };
 
 export async function claimV1Interaction({
   ethAddress,
   contractType,
   interactionType,
-  chainId,
   points,
 }: ClaimV1Interaction) {
-  if (!points) {
-    console.log("No Points founds");
-    return;
+  //TODO✅ : check if there is no claim currently present for the user
+  const claimData = await getClaimData({ ethAddress: ethAddress });
+  if (claimData) {
+    console.log("Already Claimed !!");
+    return claimData;
   }
-
-  //TODO : check if there is no claim currently present for the user
-  // const claim = await prisma.interaction.findFirst({
-  //   where: { user },
-  // });
 
   const interaction = await prisma.interaction.create({
     data: {
@@ -36,7 +33,6 @@ export async function claimV1Interaction({
           ethereumAddress: ethAddress.toLowerCase(),
         },
       },
-      chainId,
     },
   });
   return interaction;
