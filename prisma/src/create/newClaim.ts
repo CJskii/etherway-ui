@@ -20,7 +20,7 @@ export async function claimV1Interaction({
   const claimData = await getClaimData({ ethAddress: ethAddress });
   if (claimData) {
     console.log("Already Claimed !!");
-    return claimData;
+    return null;
   }
 
   const interaction = await prisma.interaction.create({

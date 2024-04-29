@@ -66,12 +66,18 @@ export default async function handler(
 
         const pointsToAward = Number(prevPoint) * newPointMultiplier;
 
-        await claimV1Interaction({
+        const claim = await claimV1Interaction({
           ethAddress: ethereumAddress,
           contractType: ContractType.NO_CONTRACT,
           interactionType: InteractionType.V1,
           points: pointsToAward,
         });
+
+        if (!claim) {
+          console.error("Already Claimed !!");
+          return res.status(400).json({ message: "Already Claimed !!" });
+        }
+
         console.log(`Claim recorded and awarded ${pointsToAward} points`);
         res.status(201).json({
           message: `Claim recorded and awarded ${pointsToAward} points`,
@@ -122,7 +128,6 @@ export default async function handler(
 
     try {
       const data = await getClaimData({ ethAddress: ethereumAddress });
-      console.log("Claim data fetched");
       return res.status(200).json(data); // 201 means Created
     } catch (error) {
       console.error("Error in /api/claim:", error);

@@ -9,7 +9,7 @@ export const getClaimData = async ({ ethAddress }: getClaimDataProps) => {
   const claimData = await prisma.interaction.findFirst({
     where: {
       user: {
-        ethereumAddress: ethAddress,
+        ethereumAddress: ethAddress.toLowerCase(),
       },
       type: InteractionType.V1,
     },
@@ -25,6 +25,5 @@ export const getClaimData = async ({ ethAddress }: getClaimDataProps) => {
       updatedAt: true,
     },
   });
-
   return claimData;
 };
