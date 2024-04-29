@@ -20,26 +20,26 @@ interface Links {
 }
 
 const links: Links[] = [
-  {
-    title: "Home",
-    icon: Home,
-    path: "/dashboard",
-  },
-  {
-    title: "Profile",
-    icon: UserCircle,
-    path: "/profile",
-  },
-  {
-    title: "Airdrop Hunter",
-    icon: Zap,
-    path: "/airdrops",
-  },
-  {
-    title: "Favourite",
-    icon: Star,
-    path: "/favourites",
-  },
+  // {
+  //   title: "Home",
+  //   icon: Home,
+  //   path: "/dashboard",
+  // },
+  // {
+  //   title: "Profile",
+  //   icon: UserCircle,
+  //   path: "/profile",
+  // },
+  // {
+  //   title: "Airdrop Hunter",
+  //   icon: Zap,
+  //   path: "/airdrops",
+  // },
+  // {
+  //   title: "Favourite",
+  //   icon: Star,
+  //   path: "/favourites",
+  // },
   {
     title: "Leaderboard",
     icon: Trophy,
