@@ -11,9 +11,13 @@ import { resendEmail } from "@/common/utils/api/email/resend";
 export default function NewsletterSection({
   title = "Sign up for our newsletter",
   description = "Stay up to date with our latest updates and news.",
+  buttonLabel = "Subscribe",
+  renderText = true,
 }: {
   title?: string;
   description?: string;
+  buttonLabel?: string;
+  renderText?: boolean;
 }) {
   const { address } = useAccount();
   const [email, setEmail] = useState("");
@@ -112,31 +116,31 @@ export default function NewsletterSection({
 
   return (
     <div className="flex flex-col items-stretch justify-between gap-4 pb-16 pt-12 md:flex-row md:items-center md:pb-0 md:pt-12">
-      <div className="space-y-1">
-        <Typography variant={"h3"} className="tracking-wide">
-          {title}
-        </Typography>
-        <Typography variant={"paragraph"} className="tracking-wide">
-          {description}
-        </Typography>
-      </div>
-
-      <div>
-        <div className="relative">
-          <Input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            placeholder="email@example.com"
-            className=" h-12 rounded-xl bg-[#E9E9E9] pr-28 text-black dark:bg-white"
-          />
-          <Button
-            className="bg-gradient absolute  right-0 top-0 h-12 rounded-xl font-normal text-black hover:opacity-90"
-            onClick={isSubscribed ? handleResendButton : handleSubscribeButton}
-          >
-            {isSubscribed ? "Resend" : "Subscribe"}
-          </Button>
+      {renderText && (
+        <div className="space-y-1">
+          <Typography variant={"h3"} className="tracking-wide">
+            {title}
+          </Typography>
+          <Typography variant={"paragraph"} className="tracking-wide">
+            {description}
+          </Typography>
         </div>
+      )}
+
+      <div className="relative">
+        <Input
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          placeholder="email@example.com"
+          className=" h-12 rounded-xl bg-[#E9E9E9] pr-28 text-black dark:bg-white"
+        />
+        <Button
+          className="bg-gradient absolute  right-0 top-0 h-12 rounded-xl font-normal text-black hover:opacity-90"
+          onClick={isSubscribed ? handleResendButton : handleSubscribeButton}
+        >
+          {isSubscribed ? "Resend" : `${buttonLabel}`}
+        </Button>
       </div>
     </div>
   );

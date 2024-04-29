@@ -19,18 +19,27 @@ export default function DashboardPage() {
     //   </div>
     // </DashboardLayout>
     <Layout>
-      <div className="flex flex-col justify-center items-center pt-8 gap-4">
-        <NewsletterSection
-          title="Sign up your email"
-          description="Be first to get updates about this product"
+      <div className="flex flex-col justify-center items-center pt-16 gap-4">
+        <Image
+          src={image}
+          alt="Under Construction"
+          className="w-full h-auto sm:w-3/4 md:w-1/2 "
         />
-        <Image src={image} alt="Under Construction" className="scale-75" />
-        <Typography variant={"h1"} className="text-center">
-          Product Under Construction
-        </Typography>
 
-        <Link href={"/"}>
-          <Button variant={"etherway"}>Go Back</Button>
+        <h1 className="text-5xl font-bold text-center text-secondary">
+          Page Under Construction
+        </h1>
+        <NewsletterSection
+          title="Join Our Early Access List"
+          description="Secure your spot for exclusive updates on our upcoming release!"
+          buttonLabel="Notify Me"
+          renderText={false}
+        />
+
+        <Link href={"/"} className="pt-8">
+          <Button variant={"etherway"} className="w-36">
+            Go Back
+          </Button>
         </Link>
       </div>
     </Layout>
