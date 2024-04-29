@@ -26,7 +26,7 @@ const rawMaterialisedViewCreateQuery = `CREATE MATERIALIZED VIEW UserPoints AS
 SELECT
     i."userId" AS id,
     u."ethereumAddress" AS userAddress,
-    SUM(i.points) AS total_points
+    CAST(SUM(i.points) AS INTEGER) AS total_points  -- Explicitly casting to INTEGER
 FROM
     "Interaction" i
 JOIN
