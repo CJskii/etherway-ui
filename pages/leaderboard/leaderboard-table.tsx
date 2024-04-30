@@ -27,8 +27,11 @@ import {
 } from "@/common/utils/api/leaderboard";
 import { claimV1Points, getClaimData } from "@/common/utils/api/claimRewards";
 import { ConnectWalletButton } from "@/components/ui/connect-button";
-
-import { calculateUserLevel } from "@/common/utils/getters/level";
+import {
+  calculateUserLevel,
+  calculateProgressToNextLevel,
+} from "@/common/utils/getters/level";
+import { Progress } from "@/components/ui/progress";
 
 export interface OldUserDataType {
   ethereumAddress: string;
@@ -68,6 +71,7 @@ export default function LeaderboardTable() {
   const account = useAccount();
   const [oldUserData, setOldUserData] = useState<OldUserDataType | null>(null);
   const [hasClaimed, setHasClaimed] = useState(false);
+  const [userProgress, setUserProgress] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,26 +79,30 @@ export default function LeaderboardTable() {
       const leaderboardData = await getLeaderboadData({ limit: 100 });
       setLeaderboard(leaderboardData);
 
-      // TODO: Uncomment this once the personalised data view component is ready
-      // const normalizedAddress = account.address.toLowerCase();
-      // const userData = leaderboardData.find(
-      //   (user: any) => user.user_address.toLowerCase() === normalizedAddress,
-      // );
+      const normalizedAddress = account.address.toLowerCase();
+      const userData = leaderboardData.find(
+        (user: any) => user.user_address.toLowerCase() === normalizedAddress,
+      );
 
-      // if (userData) {
-      //   console.log("User is on the leaderboard:", userData);
-      //   setUserData(userData);
-      // } else {
-      //   const specificUserData = await getUserPointData({
-      //     userAddress: normalizedAddress,
-      //   });
-      //   console.log("Fetched specific user data:", specificUserData);
-      //   setUserData(specificUserData);
-      // }
+      if (userData) {
+        setUserData(userData);
+      } else {
+        const specificUserData = await getUserPointData({
+          userAddress: normalizedAddress,
+        });
+        setUserData(specificUserData);
+      }
     };
 
     fetchData();
   }, [account.address]);
+
+  useEffect(() => {
+    if (userData) {
+      const progress = calculateProgressToNextLevel(userData.total_points);
+      setUserProgress(progress);
+    }
+  }, [userData]);
 
   useEffect(() => {
     const fetchOldData = async () => {
@@ -166,6 +174,15 @@ export default function LeaderboardTable() {
               Your stats on Etherway
             </Typography>
           </div>
+          <div>
+            <Progress
+              value={userProgress}
+              currentLevel={calculateUserLevel(userData?.total_points || 0)}
+              currentXP={userData?.total_points || 0}
+              className="w-[100%]"
+            />
+          </div>
+
           {oldUserData && !hasClaimed && (
             <ClaimLegacyPoints
               oldUserData={oldUserData}
