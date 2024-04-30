@@ -1,46 +1,47 @@
 "use client";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Typography } from "./ui/typography";
+import { Typography } from "../ui/typography";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 
-interface TokenBridgeModalProps {
+interface MintModalProps {
   props: {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
     isLoading: boolean;
-    modalTitle: string;
-    modalDescription: string;
-    modalButtonText: string;
     errorMessage: string;
     setErrorMessage: (value: string) => void;
-    amount: number;
+    nftId: string;
+    contractProvider: {
+      type: string;
+      contract: string;
+    };
   };
 }
 
-const TokenBridgeModal = ({ props }: TokenBridgeModalProps) => {
+const MintModal = ({ props }: MintModalProps) => {
   const {
     isOpen: open,
     setIsOpen: setOpen,
     isLoading,
-    modalTitle,
-    modalDescription,
-    modalButtonText,
     errorMessage,
     setErrorMessage,
-    amount,
+    nftId,
+    contractProvider,
   } = props;
 
-  const router = useRouter();
+  const { type } = contractProvider;
+
+  const typeCapitalized = type.charAt(0).toUpperCase() + type.slice(1);
 
   const renderModalContent = () => {
     if (isLoading) {
       return (
         <div className="flex flex-col justify-center items-center gap-6 h-full">
           <Typography variant="h4" className="text-center dark:text-black">
-            We&apos;re working hard to bridge your tokens
+            We&apos;re working hard to mint your NFT
           </Typography>
           <Typography variant="small" className="text-center dark:text-black">
             This might take a few seconds...
@@ -58,7 +59,7 @@ const TokenBridgeModal = ({ props }: TokenBridgeModalProps) => {
             variant="smallTitle"
             className="text-center dark:text-black"
           >
-            There was an error while bridging your tokens
+            There was an error while minting your NFT
           </Typography>
           <Typography variant="small" className="text-center dark:text-black">
             {errorMessage}
@@ -75,31 +76,56 @@ const TokenBridgeModal = ({ props }: TokenBridgeModalProps) => {
     } else {
       return (
         <>
-          <div className="flex flex-col items-center gap-4">
+          <svg
+            className="w-6 h-6 text-green-500 absolute top-10 left-10 z-10"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+
+          <div className="flex-grow relative w-full">
+            <Image
+              src={`https://ipfs.io/ipfs/QmWhssC8rz2ma2gLpXCKYfxpP17ouYqdjWuUzRMeKwK4Mx/Etherway_x_${typeCapitalized}.png`}
+              layout="fill"
+              objectFit="cover"
+              alt="NFT"
+              className="rounded-xl border-4 border-[#92FDBD]"
+            />
+          </div>
+
+          <div className="flex flex-col items-center gap-2">
             <Typography
               variant="smallTitle"
               className="text-center dark:text-black"
             >
-              Tokens Sent
+              NFT ID: #{nftId}
             </Typography>
             <Typography variant="small" className="text-center dark:text-black">
-              Please allow few minutes for the transaction to finalise on the
-              destination network
+              Successfully minted continue to bridge
             </Typography>
-            {/* <Typography variant="small" className="text-center dark:text-black">
-              TX ID: We can get this from the response
-            </Typography> */}
             <Button
               className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+              }}
             >
-              Close
+              Continue
             </Button>
           </div>
         </>
       );
     }
   };
+
+  const modalHeight =
+    nftId && !isLoading && errorMessage == "" ? "min-h-[600px]" : "auto";
 
   return (
     <div>
@@ -111,7 +137,7 @@ const TokenBridgeModal = ({ props }: TokenBridgeModalProps) => {
         }}
       >
         <DialogContent
-          className={`rounded-xl bg-gradient border-0 flex flex-col justify-center items-between  ${
+          className={`rounded-xl bg-gradient border-0 flex flex-col justify-center items-between ${modalHeight} ${
             errorMessage ? "border-4 border-red-500" : ""
           }`}
         >
@@ -122,4 +148,4 @@ const TokenBridgeModal = ({ props }: TokenBridgeModalProps) => {
   );
 };
 
-export default TokenBridgeModal;
+export default MintModal;

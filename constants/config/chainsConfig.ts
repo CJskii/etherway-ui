@@ -46,6 +46,7 @@ import { tenet } from "../customChains/tenet";
 import { astar } from "../customChains/astar";
 import { kava } from "../customChains/kava";
 import { pgn } from "../customChains/pgn";
+import { inEVM } from "../customChains/inEVM";
 import { Network, ExtendedNetwork } from "../../common/types/network";
 
 //
@@ -77,6 +78,10 @@ export const mainnetChains: Network[] = [
   {
     ...blast,
     iconUrl: "/chain-icons/blast.webp",
+  },
+  {
+    ...inEVM,
+    iconUrl: "/chain-icons/inEVM.svg",
   },
   {
     ...linea,
@@ -127,12 +132,12 @@ export const mainnetChains: Network[] = [
     remoteChainId: 202,
     lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
   },
-  {
-    ...polygonZkEvm,
-    iconUrl: "/chain-icons/polygon-zkevm.svg",
-    remoteChainId: 158,
-    lzEndpointAddress: "0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
-  },
+  // {
+  //   ...polygonZkEvm,
+  //   iconUrl: "/chain-icons/polygon-zkevm.svg",
+  //   remoteChainId: 158,
+  //   lzEndpointAddress: "0x9740FF91F1985D8d2B71494aE1A2f723bb3Ed9E4",
+  // },
   {
     ...bsc,
     iconUrl: "/chain-icons/bsc.svg",

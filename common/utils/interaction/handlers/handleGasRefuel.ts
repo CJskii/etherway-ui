@@ -3,6 +3,9 @@ import getProviderOrSigner from "../../getters/getProviderOrSigner";
 import { handleErrors } from "./handleErrors";
 import { GasTransferParams } from "../../../types/gas-refuel";
 import { Network } from "../../../types/network";
+import { Options } from "@layerzerolabs/lz-v2-utilities";
+import { updateInteractionData } from "../../api/interactions";
+import { ContractType, InteractionType } from "@prisma/client";
 
 export const gasTransferRequest = async ({
   fromNetwork,
@@ -34,8 +37,23 @@ export const gasTransferRequest = async ({
     const { txHash, blockNumber } = result;
     setTxHash(txHash);
     setTransactionBlockNumber(blockNumber);
+    const signer = (await getProviderOrSigner(true)) as Signer;
+    const ownerAddress = await signer.getAddress();
+
+    const { response, error: apiError } = await updateInteractionData({
+      address: ownerAddress,
+      contractType: ContractType.OFT_ERC20,
+      chainId: fromNetwork.id,
+      interactionType: InteractionType.GAS_REFUEL,
+      amount: 10,
+    });
     setGasFee("");
     setIsLoading(false);
+    return {
+      response,
+      apiError,
+      txHash,
+    };
   } catch (e) {
     console.error(e);
     handleErrors({ e, setErrorMessage });
@@ -65,45 +83,41 @@ const handleGasTransaction = async ({
     throw new Error(`No deployed contracts found for ${fromNetwork.name}`);
 
   const contract = new Contract(
-    fromNetwork.deployedContracts.layerzero.REFUEL.address,
-    fromNetwork.deployedContracts.layerzero.REFUEL.ABI,
+    fromNetwork.deployedContracts.layerzero.OFT.address,
+    fromNetwork.deployedContracts.layerzero.OFT.ABI,
     signer,
   );
 
-  const gasInWei = ethers.utils.parseUnits(value, "ether");
+  const lzOptionsGas = targetNetwork.params?.gasLimit.lzOptionsGas;
+  const paddedAddress = ethers.utils.zeroPad(refundAddress, 32);
+  const tokensToSend = ethers.utils.parseEther(value);
+  const options = Options.newOptions()
+    .addExecutorNativeDropOption(tokensToSend as any, paddedAddress as any)
+    .addExecutorLzReceiveOption(lzOptionsGas || 250000, 0)
+    .toHex()
+    .toString();
 
-  let adapterParams = ethers.utils.solidityPack(
-    ["uint16", "uint", "uint", "address"],
-    [2, 200000, gasInWei.toString(), refundAddress],
-  );
+  const sendParam = [
+    targetNetwork.params?.layerzero?.remoteChainId,
+    paddedAddress,
+    0,
+    0,
+    options,
+    "0x",
+    "0x",
+  ];
 
-  const gasPrice = await signer.getGasPrice();
   try {
-    const [_nativeFee, _zroFee, totalCost] = await contract.estimateSendFee(
-      targetNetwork.params?.layerzero?.remoteChainId,
-      refundAddress,
-      gasInWei,
-      adapterParams,
-    );
+    let nativeFee = 0;
+    [nativeFee] = await contract.quoteSend(sendParam, false);
 
-    const tx = await contract.bridgeGas(
-      targetNetwork.params?.layerzero?.remoteChainId,
-      refundAddress,
-      gasInWei,
-      adapterParams,
-      {
-        value: totalCost,
-        // gasLimit: ethers.utils.parseUnits("250000", "wei"),
-        gasPrice: gasPrice.mul(5).div(4),
-        gasLimit: fromNetwork.name == "Arbitrum One" ? 2000000 : 1500000,
-      },
-    );
-
-    const receipt = await tx.wait();
+    const tx = await contract
+      .send(sendParam, [nativeFee, 0], refundAddress, { value: nativeFee })
+      .then((tx: any) => tx.wait());
 
     return {
       txHash: tx.hash,
-      blockNumber: receipt.blockNumber,
+      blockNumber: tx.blockNumber,
     };
   } catch (error) {
     console.error(`Error in transaction: ${(error as any).message}`);

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
 import DashboardCard from "@/components/dashboard/dashboard-card";
 
-import NetworkModal from "./networkModal";
+import NetworkModal from "../networkModal";
 import { useNetworkSelection } from "@/common/hooks/useNetworkSelection";
 import { getValidToNetworks } from "@/common/utils/getters/getValidToNetworks";
 import { Network } from "@/common/types/network";
@@ -23,8 +23,8 @@ import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 import { handleBridging } from "@/common/utils/interaction/handlers/handleBridging";
 import { getUserBalance } from "@/common/utils/getters/getBalance";
 import { activeChains } from "@/constants/config/chainsConfig";
-import TokenMintModal from "./modal-mint-token";
-import TokenBridgeModal from "./modal-bridge-token";
+import TokenMintModal from "./modal-mint";
+import TokenBridgeModal from "./modal-bridge";
 import { toast } from "sonner";
 import { ContractType, InteractionType } from "@prisma/client";
 import { updateBridgeData } from "@/common/utils/api/bridge";
@@ -452,36 +452,8 @@ export default function TokenMintAndBridge({
             </Typography>
           </DashboardCard>
 
-          <TokenMintModal
-            props={{
-              isOpen: showMintModal,
-              setIsOpen: setShowMintModal,
-              isLoading: isLoading,
-              modalTitle: "Minting Tokens",
-              modalDescription: "This might take a few seconds...",
-              modalButtonText: "Mint",
-              errorMessage: errorMessage,
-              setErrorMessage: setErrorMessage,
-              amount: mintAmount,
-            }}
-          />
-
-          <TokenBridgeModal
-            props={{
-              isOpen: showBridgingModal,
-              setIsOpen: setShowBridgingModal,
-              isLoading: isLoading,
-              modalTitle: "Bridging Tokens",
-              modalDescription: "This might take a few seconds...",
-              modalButtonText: "Bridge",
-              errorMessage: errorMessage,
-              setErrorMessage: setErrorMessage,
-              amount: Number(bridgeAmount),
-            }}
-          />
-
           <div className="flex items-center md:flex-row flex-col justify-between gap-4 md:gap-6">
-            <div className="grid grid-cols-[1fr,auto,1fr] gap-2 w-full">
+            <div className="grid lg:grid-cols-[1fr,auto,1fr] gap-2 w-full">
               <NetworkModal props={fromBridgeProps} />
               <div
                 onClick={handleSwapButton}
@@ -508,36 +480,6 @@ export default function TokenMintAndBridge({
                 onChange={(e) => setMintAmount(Number(e.target.value))}
                 type="number"
               />
-              {/* {hasMinted ? (
-                <>
-                  {apiMintError ? (
-                    <Button
-                      size={"sm"}
-                      className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                      onClick={tryMintingAPICall}
-                    >
-                      Try Again
-                    </Button>
-                  ) : (
-                    <Button
-                      disabled={true}
-                      size={"sm"}
-                      className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                      onClick={handleMintButton}
-                    >
-                      Mint
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <Button
-                  size={"sm"}
-                  className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
-                  onClick={handleMintButton}
-                >
-                  Mint
-                </Button>
-              )} */}
               <Button
                 size={"sm"}
                 className="absolute right-4 top-3.5 h-8 dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-lg "
@@ -575,39 +517,39 @@ export default function TokenMintAndBridge({
               </Button>
             </div>
           </Label>
-          {/* {hasBridged ? (
-            <>
-              {apiBridgeError ? (
-                <Button
-                  className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-                  onClick={tryBridgingAPICall}
-                >
-                  Try Again
-                </Button>
-              ) : (
-                <Button
-                  disabled={true}
-                  className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-                  onClick={handleBridgeButton}
-                >
-                  Send
-                </Button>
-              )}
-            </>
-          ) : (
-            <Button
-              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-              onClick={handleBridgeButton}
-            >
-              Send
-            </Button>
-          )} */}
+          <TokenMintModal
+            props={{
+              isOpen: showMintModal,
+              setIsOpen: setShowMintModal,
+              isLoading: isLoading,
+              modalTitle: "Minting Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Mint",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: mintAmount,
+            }}
+          />
           <Button
             className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
             onClick={apiBridgeError ? tryBridgingAPICall : handleBridgeButton}
           >
             {hasBridged && apiBridgeError ? "Try again" : "Send"}
           </Button>
+
+          <TokenBridgeModal
+            props={{
+              isOpen: showBridgingModal,
+              setIsOpen: setShowBridgingModal,
+              isLoading: isLoading,
+              modalTitle: "Bridging Tokens",
+              modalDescription: "This might take a few seconds...",
+              modalButtonText: "Bridge",
+              errorMessage: errorMessage,
+              setErrorMessage: setErrorMessage,
+              amount: Number(bridgeAmount),
+            }}
+          />
         </div>
       </div>
     </div>

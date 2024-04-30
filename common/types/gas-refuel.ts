@@ -57,6 +57,8 @@ export interface IConfirm {
   setGasFee: (value: string) => void;
   handleConfirmButton: () => void;
   isLoading: boolean;
+  apiError: boolean;
+  tryAPICall: () => void;
 }
 
 export interface GasPriceProps {
@@ -64,4 +66,5 @@ export interface GasPriceProps {
   amount: string;
   currencySymbol: string;
   usdValue?: string;
+  tooltipDescription: string;
 }

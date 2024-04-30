@@ -154,6 +154,12 @@ const REMOTE_CHAIN_IDS = {
   //   hyperlane: "",
   //   polyhedra: "",
   // },
+  // Injective
+  2525: {
+    layerzero: "30234",
+    hyperlane: "2525",
+    polyhedra: "",
+  },
   // Kava
   // "2222": {
   //   layerzero: "",
