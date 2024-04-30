@@ -143,6 +143,12 @@ export default function LeaderboardTable() {
     fetchOldData();
   }, [account.address]);
 
+  const truncateAddress = (address: string) => {
+    return `${address.substring(0, 6)}...${address.substring(
+      address.length - 4,
+    )}`;
+  };
+
   return (
     <>
       {!account.isConnected ? (
@@ -189,7 +195,12 @@ export default function LeaderboardTable() {
                     <TableCell className="cursor-pointer rounded-l-xl py-10">
                       {idx + 1}
                     </TableCell>
-                    <TableCell>{user_address}</TableCell>
+                    <TableCell className="truncate md:hidden">
+                      {truncateAddress(user_address)}
+                    </TableCell>
+                    <TableCell className="truncate hidden md:table-cell">
+                      {user_address}
+                    </TableCell>
                     <TableCell className=" cursor-pointer rounded-r-xl">
                       {calculateUserLevel(total_points)}
                     </TableCell>
