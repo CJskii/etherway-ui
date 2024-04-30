@@ -26,6 +26,7 @@ import {
   getUserPointData,
 } from "@/common/utils/api/leaderboard";
 import { claimV1Points, getClaimData } from "@/common/utils/api/claimRewards";
+import { ConnectWalletButton } from "@/components/ui/connect-button";
 
 import { calculateUserLevel } from "@/common/utils/getters/level";
 
@@ -118,7 +119,6 @@ export default function LeaderboardTable() {
 
         if (response.ok) {
           const data = await response.json();
-          setOldUserData(data.user);
           const claimData = await getClaimData();
           if (claimData) {
             setHasClaimed(true);
@@ -127,6 +127,7 @@ export default function LeaderboardTable() {
               "Looks like you might be eligible to claim legacy points!",
             );
           }
+          setOldUserData(data.user);
         } else if (response.status === 404) {
           // toast.error("No data found for this address.");
           console.log("No data found for this address.");
@@ -144,59 +145,64 @@ export default function LeaderboardTable() {
 
   return (
     <>
-      <div className="space-y-1 py-6 ">
-        <Typography variant={"h2"} className=" font-raleway">
-          Leaderboard
-        </Typography>
-        <Typography
-          variant={"paragraph"}
-          className="font-raleway font-[500] tracking-wide"
-        >
-          Your stats on Etherway
-        </Typography>
-      </div>
+      {!account.isConnected ? (
+        <ConnectWallet />
+      ) : (
+        <>
+          <div className="space-y-1 py-6 ">
+            <Typography variant={"h2"} className=" font-raleway">
+              Leaderboard
+            </Typography>
+            <Typography
+              variant={"paragraph"}
+              className="font-raleway font-[500] tracking-wide"
+            >
+              Your stats on Etherway
+            </Typography>
+          </div>
+          {oldUserData && !hasClaimed && (
+            <ClaimLegacyPoints
+              oldUserData={oldUserData}
+              hasClaimed={hasClaimed}
+              setHasClaimed={setHasClaimed}
+            />
+          )}
 
-      {oldUserData && !hasClaimed && (
-        <ClaimLegacyPoints
-          oldUserData={oldUserData}
-          hasClaimed={hasClaimed}
-          setHasClaimed={setHasClaimed}
-        />
-      )}
-
-      <Table>
-        <TableHeader>
-          <TableRow className="">
-            <TableHead>
-              <Typography variant={"large"}>Rank</Typography>
-            </TableHead>
-            <TableHead>
-              <Typography variant={"large"}>Wallet Address</Typography>
-            </TableHead>
-            <TableHead>
-              <Typography variant={"large"}>Level</Typography>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {leaderboard.map(({ id, user_address, total_points }, idx) => (
-            <React.Fragment key={idx}>
-              <TableRow className="border-0 bg-[#b5b4b6]/30 text-base hover:bg-[#b5b4b6]/20 dark:bg-white/10 dark:text-white">
-                <TableCell className="cursor-pointer rounded-l-xl py-10">
-                  {idx + 1}
-                </TableCell>
-                <TableCell>{user_address}</TableCell>
-                <TableCell className=" cursor-pointer rounded-r-xl">
-                  {calculateUserLevel(total_points)}
-                </TableCell>
+          <Table>
+            <TableHeader>
+              <TableRow className="">
+                <TableHead>
+                  <Typography variant={"large"}>Rank</Typography>
+                </TableHead>
+                <TableHead>
+                  <Typography variant={"large"}>Wallet Address</Typography>
+                </TableHead>
+                <TableHead>
+                  <Typography variant={"large"}>Level</Typography>
+                </TableHead>
               </TableRow>
-              {idx < leaderboard.length - 1 && (
-                <tr className="spacer" style={{ height: "10px" }}></tr>
-              )}
-            </React.Fragment>
-          ))}
-        </TableBody>
-      </Table>
+            </TableHeader>
+            <TableBody>
+              {leaderboard.map(({ id, user_address, total_points }, idx) => (
+                <React.Fragment key={idx}>
+                  <TableRow className="border-0 bg-[#b5b4b6]/30 text-base hover:bg-[#b5b4b6]/20 dark:bg-white/10 dark:text-white">
+                    <TableCell className="cursor-pointer rounded-l-xl py-10">
+                      {idx + 1}
+                    </TableCell>
+                    <TableCell>{user_address}</TableCell>
+                    <TableCell className=" cursor-pointer rounded-r-xl">
+                      {calculateUserLevel(total_points)}
+                    </TableCell>
+                  </TableRow>
+                  {idx < leaderboard.length - 1 && (
+                    <tr className="spacer" style={{ height: "10px" }}></tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </TableBody>
+          </Table>
+        </>
+      )}
     </>
   );
 }
@@ -298,6 +304,21 @@ const ClaimLegacyPoints = ({
           </div>
         </DrawerContent>
       </Drawer>
+    </div>
+  );
+};
+
+const ConnectWallet = () => {
+  return (
+    <div className="flex flex-col justify-center items-center gap-4">
+      <Typography variant={"h3"}>User not connected</Typography>
+      <Typography
+        variant={"smallTitle"}
+        className="font-raleway font-[500] text-center"
+      >
+        Connect your wallet to view your stats on Etherway
+      </Typography>
+      <ConnectWalletButton />
     </div>
   );
 };
