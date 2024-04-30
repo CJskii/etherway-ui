@@ -70,7 +70,7 @@ export function Footer({ isDashboard }: FooterProps) {
       </div>
       {/* TODO: Add Zealy and Galxe icons + links */}
 
-      <div className="text-white dark:text-black flex flex-col justify-center items-start gap-2">
+      <div className="text-white dark:text-black flex flex-col justify-center items-start gap-2 py-4">
         <Typography variant={"h4"} className="text-white dark:text-black">
           Resources
         </Typography>
@@ -93,7 +93,7 @@ export function Footer({ isDashboard }: FooterProps) {
       </div>
 
       {!isDashboard && (
-        <div className=" grid w-full grid-cols-6 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
+        <div className="grid w-full grid-cols-6 xl:grid-cols-1 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
           <Link href={"https://discord.gg/GcS5r5NWfh"} target="_blank">
             <Button variant={"etherwaySecondary"} className="w-full">
               <DiscordIcon className="h-4 w-4 mx-2" />
