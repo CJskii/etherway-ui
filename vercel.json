@@ -19,7 +19,7 @@
   "crons": [
     {
       "path": "/api/leaderboard",
-      "schedule": "0 0 */4 ? * *"
+      "schedule": "0 */4 * * *"
     }
   ]
 }
