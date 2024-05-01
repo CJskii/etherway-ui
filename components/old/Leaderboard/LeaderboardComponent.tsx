@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { callLeaderboardAPI } from "../../../common/utils/api/leaderboard";
 import LoadingSpinner from "./Loading";
 import { useAccount } from "wagmi";
 import UserStats from "./Stats/UserStats";
@@ -46,11 +45,11 @@ const LeaderboardComponent = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [leaderboard, address]);
 
-  const fetchLeaderboard = async () => {
-    const response = await callLeaderboardAPI();
-    const data = await response.json();
-    return data.data;
-  };
+  // const fetchLeaderboard = async () => {
+  //   const response = await callLeaderboardAPI();
+  //   const data = await response.json();
+  //   return data.data;
+  // };
 
   // const fetchUserStats = async () => {
   //   if (address === undefined) return;

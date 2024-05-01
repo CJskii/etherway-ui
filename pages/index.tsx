@@ -13,10 +13,22 @@ import HeadComponent from "../common/elements/HeadComponent";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/ui/footer";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { SquidWidget } from "@0xsquid/widget";
+import { AppConfig } from "@0xsquid/widget/widget/core/types/config";
+// import SquidRouter from "@/common/utils/squid";
 
 // TODO: Review all meta tags and SEO content
 
 const Home: NextPage = () => {
+  const config = {
+    companyName: "Etherway",
+    integratorId: "etherway-2c794744-6972-4f23-bdcb-784032b1a377",
+    slippage: 1,
+    instantExec: true,
+    infiniteApproval: false,
+    apiUrl: "https://api.squidrouter.com",
+  } as AppConfig;
+
   return (
     <>
       <HeadComponent />
@@ -28,9 +40,10 @@ const Home: NextPage = () => {
             {/* <OnboardSection /> */}
             <StatsSection />
             <FeaturesSection />
-            {/* <ContactSection /> */}
+            <ContactSection />
           </Container>
         </div>
+        {/* <SquidWidget config={config} /> */}
         <Image
           src={grid}
           alt="grid"

@@ -21,6 +21,11 @@ export default async function handler(
     return res.status(400).json({ message: "Missing parameters" });
   }
 
+  if (interactionType == "V1") {
+    console.error("V1 Claim not allowed");
+    return res.status(400).json({ message: "V1 Claim not allowed" });
+  }
+
   if (interactionType == "MINT_OFT" || interactionType == "BRIDGE_OFT") {
     if (!amount) {
       console.error("Missing parameters");

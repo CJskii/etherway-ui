@@ -57,7 +57,7 @@ export const ConnectWalletButton = () => {
                 );
               }
               return (
-                <div style={{ display: "flex", gap: 12 }}>
+                <div className="flex gap-2 max-md:flex-col-reverse md:justify-center md:items-center">
                   <Button
                     className="rounded-xl"
                     variant={"outline"}

@@ -56,10 +56,44 @@ export function Footer({ isDashboard }: FooterProps) {
           latest cross-chain technology. Your gateway to simplified cross-chain
           transactions.
         </Typography>
+        <Typography
+          variant={"paragraph"}
+          className={cn(
+            isDashboard
+              ? "text-black dark:text-white"
+              : "text-white dark:text-black",
+            " font-light tracking-wide md:max-w-xl ",
+          )}
+        >
+          © {new Date().getFullYear()} Etherway. All rights reserved.
+        </Typography>
       </div>
       {/* TODO: Add Zealy and Galxe icons + links */}
+
+      <div className="text-white dark:text-black flex flex-col justify-center items-start gap-2 py-4">
+        <Typography variant={"h4"} className="text-white dark:text-black">
+          Resources
+        </Typography>
+        <Link href={"/guides/faq"}>
+          <Typography variant={"footerLink"}>FAQ</Typography>
+        </Link>
+        <Link href={"/guides/how-to-use"}>
+          <Typography variant={"footerLink"}>How to use</Typography>
+        </Link>
+        <Link href={"/chains"}>
+          <Typography variant={"footerLink"}>Supported Chains</Typography>
+        </Link>
+
+        <Link href={"https://layerzeroscan.com/"} target="_blank">
+          <Typography variant={"footerLink"}>Layerzero Explorer</Typography>
+        </Link>
+        <Link href={"https://explorer.hyperlane.xyz/"} target="_blank">
+          <Typography variant={"footerLink"}>Hyperlane Explorer</Typography>
+        </Link>
+      </div>
+
       {!isDashboard && (
-        <div className=" grid w-full grid-cols-6 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
+        <div className="grid w-full grid-cols-6 xl:grid-cols-1 gap-3 md:max-w-md [&>*]:col-span-3 md:[&>*]:col-span-2 lg:[&>*]:col-span-3 ">
           <Link href={"https://discord.gg/GcS5r5NWfh"} target="_blank">
             <Button variant={"etherwaySecondary"} className="w-full">
               <DiscordIcon className="h-4 w-4 mx-2" />
