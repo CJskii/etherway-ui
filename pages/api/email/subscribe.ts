@@ -11,8 +11,7 @@ const mailjet = new Mailjet({
   apiKey: process.env.MAILJET_API_KEY,
   apiSecret: process.env.MAILJET_SECRET_KEY,
 });
-// TODO: Ensure all emails are saved in the db with .toLowerCase()
-const listId = 10331420; // TODO: For production replace with the main list ID from Mailjet
+const listId = process.env.MAILJET_LIST_ID;
 
 function isValidEmail(email: string) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
