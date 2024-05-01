@@ -25,7 +25,7 @@ export default async function handler(
 
     const csrfToken = await getCsrfToken({ req: { headers: req.headers } });
 
-    if (!session && !csrfToken) {
+    if (!session || !csrfToken) {
       res.status(401).send({
         error: "You must be signed in to interact with the API",
       });
