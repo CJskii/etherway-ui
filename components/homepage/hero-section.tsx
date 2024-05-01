@@ -50,7 +50,7 @@ export default function HeroSection() {
               height={42}
             />
             <Image
-              alt="wormhole-logo"
+              alt="hyperlane-logo"
               src={hyperlane}
               className="mx-6"
               width={160}
