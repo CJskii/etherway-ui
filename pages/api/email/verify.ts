@@ -46,14 +46,20 @@ export default async function handler(
     });
   }
 
+  const ethereumAddress = session?.user?.name;
+  if (!ethereumAddress) {
+    res.status(401).send({
+      error: "User not found in session",
+    });
+    return;
+  }
+
   try {
     //    -> PUT /listrecipient/{listrecipient_ID} - to mark isUnsubscribed as false
     const listresult = await mailjet
-      .put("listrecipient", { version: "v3" })
+      .get("listrecipient", { version: "v3" })
       .id(listRecepientId)
-      .request({
-        IsUnsubscribed: "false",
-      });
+      .request();
 
     const listresponse = listresult.response.data as {
       Count: number;
@@ -77,6 +83,22 @@ export default async function handler(
 
     const contactdata = contactresponse.Data[0];
     const contactemail = contactdata.Email;
+    const contactname = contactdata.Name;
+
+    if (contactname != ethereumAddress) {
+      res.status(401).send({
+        error: "User not authenticated for this listRecepientId",
+      });
+      return;
+    }
+
+    //    -> PUT /listrecipient/{listrecipient_ID} - to mark isUnsubscribed as false
+    await mailjet
+      .put("listrecipient", { version: "v3" })
+      .id(listRecepientId)
+      .request({
+        IsUnsubscribed: "false",
+      });
 
     // TODO:   -> POST /send - email for welcoming the user to etherway
     const unsubscribeLink = `${process.env.VERCEL_URL}/email/unsubscribe?listRecepientId=${listRecepientId}`;

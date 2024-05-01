@@ -48,7 +48,51 @@ export default async function handler(
     });
   }
 
+  const ethereumAddress = session?.user?.name;
+  if (!ethereumAddress) {
+    res.status(401).send({
+      error: "User not found in session",
+    });
+    return;
+  }
+
   try {
+    const listresult = await mailjet
+      .get("listrecipient", { version: "v3" })
+      .id(listRecepientId)
+      .request();
+
+    const listresponse = listresult.response.data as {
+      Count: number;
+      Data: any[];
+      Total: number;
+    };
+
+    const listdata = listresponse.Data[0];
+    const contactId = listdata.ContactID;
+
+    const contactresult = await mailjet
+      .get("contact", { version: "v3" })
+      .id(contactId)
+      .request();
+
+    const contactresponse = contactresult.body as {
+      Count: number;
+      Data: any[];
+      Total: number;
+    };
+
+    const contactdata = contactresponse.Data[0];
+    const contactemail = contactdata.Email;
+    const contactname = contactdata.Name;
+
+    if (contactname != ethereumAddress) {
+      res.status(401).send({
+        error: "User not authenticated for this listRecepientId",
+      });
+      return;
+    }
+
     //    -> POST /send - email containing a dynamic link with listID
     const verificationLink = `${process.env.VERCEL_URL}/email/verify?listRecepientId=${listRecepientId}`;
 
