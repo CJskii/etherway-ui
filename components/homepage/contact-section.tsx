@@ -1,6 +1,6 @@
 import base from "@/assets/base.svg";
 import layerzero from "@/assets/layerzero-logo.svg";
-import wormhole from "@/assets/warmhole-logo.svg";
+import hyperlane from "@/assets/hyperlane-logo.svg";
 import Image from "next/image";
 import { Typography } from "../ui/typography";
 import { Button } from "../ui/button";
@@ -11,7 +11,7 @@ import Link from "next/link";
 export default function ContactSection() {
   return (
     <div>
-      <Card className="bg-gradient z-10 flex flex-col flex-wrap items-start justify-between rounded-xl rounded-b-none border-0 px-5 py-10  text-white md:flex-row md:p-12">
+      {/* <Card className="bg-gradient z-10 flex flex-col flex-wrap items-start justify-between rounded-xl rounded-b-none border-0 px-5 py-10  text-white md:flex-row md:p-12">
         <div className="z-10 max-w-md  space-y-6">
           <Typography variant={"h1"} className="font-semibold tracking-wide">
             Enterprise
@@ -44,12 +44,24 @@ export default function ContactSection() {
             <li>Lorem ipsum dolor sit amet psum </li>
           </Typography>
         </div>
-      </Card>
-      <Card className="bg-background-secondary z-10 flex flex-wrap items-center justify-center gap-5 rounded-xl rounded-t-none border-0 py-5 md:gap-16">
-        <Image src={base} alt="" className=" w-20 md:w-auto " />
-        <Image src={layerzero} alt="" className=" w-20 md:w-auto " />
-        <Image src={wormhole} alt="" className=" w-20 md:w-auto " />
-      </Card>
+      </Card> */}
+      {/* <Card className="bg-background-secondary z-10 flex flex-wrap items-center justify-center gap-5 rounded-xl rounded-t-none border-0 py-5 md:gap-16"> */}
+      {/* <Image src={base} alt="" className=" w-20 md:w-auto " /> */}
+      {/* <Image
+          src={layerzero}
+          alt=""
+          className="md:w-auto w-[160px] h-[42px]"
+          width={160}
+          height={42}
+        />
+        <Image
+          alt="hyperlane-logo"
+          src={hyperlane}
+          className="md:w-auto w-[160px] h-[42px]"
+          width={160}
+          height={42}
+        /> */}
+      {/* </Card> */}
       <NewsletterSection />
     </div>
   );

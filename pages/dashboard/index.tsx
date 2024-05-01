@@ -9,6 +9,7 @@ import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/dashboard/layout";
 import Link from "next/link";
+import NewsletterSection from "../../components/homepage/newsletter-section";
 
 export default function DashboardPage() {
   return (
@@ -18,13 +19,27 @@ export default function DashboardPage() {
     //   </div>
     // </DashboardLayout>
     <Layout>
-      <div className="flex flex-col justify-center items-center pt-8 ">
-        <Image src={image} alt="Under Construction" className="scale-75" />
-        <span className="text-secondary text-5xl font-bold pb-8">
-          Product Under Construction
-        </span>
-        <Link href={"/"}>
-          <Button variant={"etherway"}>Go Back</Button>
+      <div className="flex flex-col justify-center items-center pt-16 gap-4">
+        <Image
+          src={image}
+          alt="Under Construction"
+          className="w-full h-auto sm:w-3/4 md:w-1/2 "
+        />
+
+        <h1 className="text-5xl font-bold text-center text-secondary">
+          Page Under Construction
+        </h1>
+        <NewsletterSection
+          title="Join Our Early Access List"
+          description="Secure your spot for exclusive updates on our upcoming release!"
+          buttonLabel="Notify Me"
+          renderText={false}
+        />
+
+        <Link href={"/"} className="pt-8">
+          <Button variant={"etherway"} className="w-36">
+            Go Back
+          </Button>
         </Link>
       </div>
     </Layout>
