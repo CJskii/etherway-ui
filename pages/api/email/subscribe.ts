@@ -4,6 +4,7 @@ import { getAuthOptions } from "../auth/[...nextauth]";
 import { getCsrfToken } from "next-auth/react";
 import Mailjet from "node-mailjet";
 import { getVerifyEmailData } from "@/common/utils/getters/getEmail";
+import { isValidEmail } from "@/common/utils/validators/isValidEmail";
 
 const mailjet = new Mailjet({
   apiKey: process.env.MAILJET_API_KEY,
@@ -30,6 +31,11 @@ export default async function handler(
   if (!ethereumAddress || !email) {
     console.error("Missing parameters");
     return res.status(400).json({ message: "Missing parameters" });
+  }
+
+  if (!isValidEmail(email)) {
+    console.error("Invalid email address");
+    return res.status(400).json({ message: "Invalid email address" });
   }
 
   const session = await getServerSession(req, res, getAuthOptions(req));
