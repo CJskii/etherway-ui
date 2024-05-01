@@ -244,6 +244,8 @@ const ClaimLegacyPoints = ({
   hasClaimed: boolean;
   setHasClaimed: Function;
 }) => {
+  const legacyMultiplier = 0.1;
+
   const handleClaimButton = async () => {
     try {
       const response = (await claimV1Points()) as Response;
@@ -311,7 +313,7 @@ const ClaimLegacyPoints = ({
                   <Typography variant={"h3"}>
                     Total of{" "}
                     <span className="text-secondary">
-                      {oldUserData.totalPoints} XP
+                      {oldUserData.totalPoints * legacyMultiplier} XP
                     </span>{" "}
                     available to claim.
                   </Typography>
