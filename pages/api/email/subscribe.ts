@@ -90,7 +90,7 @@ export default async function handler(
     const listRecepientId = listdata.ID;
 
     //    -> POST /send - email containing a dynamic link with listID
-    const verificationLink = `${process.env.VERCEL_URL}/email/verify?listRecepientId=${listRecepientId}`;
+    const verificationLink = `${process.env.NEXTAUTH_URL}/email/verify?listRecepientId=${listRecepientId}`;
 
     const verifyEmailData = getVerifyEmailData({
       email,

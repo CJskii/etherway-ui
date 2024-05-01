@@ -94,7 +94,7 @@ export default async function handler(
       });
 
     // TODO:   -> POST /send - email for welcoming the user to etherway
-    const unsubscribeLink = `${process.env.VERCEL_URL}/email/unsubscribe?listRecepientId=${listRecepientId}`;
+    const unsubscribeLink = `${process.env.NEXTAUTH_URL}/email/unsubscribe?listRecepientId=${listRecepientId}`;
 
     const welcomeEmailData = getWelcomeEmailData({
       email: contactemail,
