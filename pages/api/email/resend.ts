@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "../auth/[...nextauth]";
-import { InteractionType } from "@prisma/client";
 import { getCsrfToken } from "next-auth/react";
 import Mailjet from "node-mailjet";
 import { getVerifyEmailData } from "@/common/utils/getters/getEmail";
@@ -10,12 +9,6 @@ const mailjet = new Mailjet({
   apiKey: process.env.MAILJET_API_KEY,
   apiSecret: process.env.MAILJET_SECRET_KEY,
 });
-const listId = process.env.MAILJET_LIST_ID;
-
-function isValidEmail(email: string) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
 
 export default async function handler(
   req: NextApiRequest,

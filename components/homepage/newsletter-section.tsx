@@ -63,7 +63,7 @@ export default function NewsletterSection({
 
     const { response, error } = await subscribeEmail({
       address: address,
-      email,
+      email: email.toLowerCase(),
     });
 
     if (response?.ok) {
@@ -83,6 +83,11 @@ export default function NewsletterSection({
   };
 
   const handleResendButton = async () => {
+    if (!email || !isValidEmail(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
     if (!address) {
       toast.error("Please connect your wallet to proceed.");
       return;
@@ -100,7 +105,7 @@ export default function NewsletterSection({
 
     const { response, error } = await resendEmail({
       listRecepientId: recipentId,
-      email,
+      email: email.toLowerCase(),
     });
 
     if (response?.ok) {
