@@ -12,4 +12,4 @@
    -> POST /send - email for welcoming the user to etherway
 
 4. Unsubscribe to etherway
-   -> PUT /listrecipient/{listrecipient_ID} - to mark isUnsubscribed as true
+   -> PUT /listrecipient/{listrecipient_ID} - to mark isUnsubscribed as true /
