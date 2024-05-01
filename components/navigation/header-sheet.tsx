@@ -3,7 +3,7 @@ import logoBlack from "@/assets/logo-black.svg";
 import logoWhite from "@/assets/logo-white.svg";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-import { NavLinks } from "./navbar";
+import { MobileNavLinks, NaviLinks } from "./navbar";
 import { Button } from "../ui/button";
 import { ThemeToggler } from "../ui/toggle-theme";
 import Link from "next/link";
@@ -36,14 +36,15 @@ export function HeaderSheet() {
             className="hidden w-40 dark:block"
           />
         </div>
-        <div className="flex flex-col items-stretch gap-4">
-          <NavLinks />
+        <div className="flex flex-col items-stretch gap-2">
+          <ConnectWalletButton />
+          <MobileNavLinks />
+          {/* <NaviLinks /> */}
           {/* <Link href={"/contact-us"}>
             <Button className="bg-gradient rounded-xl font-normal w-full  text-white hover:opacity-90">
               Contact Us
             </Button>
           </Link> */}
-          <ConnectWalletButton />
         </div>
         <div className=" absolute bottom-4 left-4">
           <ThemeToggler />
