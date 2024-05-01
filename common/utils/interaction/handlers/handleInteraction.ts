@@ -2,7 +2,6 @@ import { updateMintData } from "../../api/mintAPI";
 import { updateBridgeData } from "../../api/bridge";
 import { createUser } from "../../api/createUser";
 import { checkIfReferredUser } from "../../validators/checkIfReferredUser";
-import { callClaimRewards } from "../../api/claimRewards";
 
 const handleApiResponse = async (response: any, operation: string) => {
   if (response.status === 200) {

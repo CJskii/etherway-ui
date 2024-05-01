@@ -15,5 +15,11 @@
     "pages/api/*.ts": {
       "maxDuration": 15
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/leaderboard",
+      "schedule": "0 */4 * * *"
+    }
+  ]
 }
