@@ -20,6 +20,7 @@ import HowItWorks from "./how-it-works";
 import { toast } from "sonner";
 import { ContractType, InteractionType } from "@prisma/client";
 import { updateInteractionData } from "@/src/utils/api/interactions";
+import { handleAPIError } from "@/src/utils/api/handleError";
 
 const Gas = ({
   contractProvider,
@@ -121,37 +122,7 @@ const Gas = ({
     }
 
     if (data?.response) {
-      handleAPIError(data.response);
-    }
-  };
-  const handleAPIError = (response: Response) => {
-    // TODO: Display the Toast Error
-
-    if (response?.status == 200) {
-      console.log("Interaction successfully recorded");
-      toast.success("Interaction successfully recorded");
-      setApiError(false);
-    } else if (response?.status == 405) {
-      console.log("405: Method Not allowed");
-      toast.error("405: Method Not allowed");
-      setApiError(true);
-    } else if (response?.status == 400) {
-      // let _error = await response.json();
-      console.error("400: Missing parameters");
-      toast.error("400: Missing parameters");
-      setApiError(true);
-    } else if (response?.status == 401) {
-      console.error("You must be signed in to interact with the API");
-      toast.error("401: You must be signed in to interact with the API");
-      setApiError(true);
-    } else if (response?.status == 500) {
-      console.error("Internal Server Error");
-      toast.error("500: Internal Server Error");
-      setApiError(true);
-    } else {
-      console.error("Error occured during APICall");
-      toast.error("Error occured during APICall");
-      setApiError(true);
+      handleAPIError({ response: data.response, toast, setApiError });
     }
   };
 
@@ -171,7 +142,6 @@ const Gas = ({
           amount: 10,
         });
 
-        // TODO: Display the Toast Error
         if (_apiError) {
           // @ts-ignore
           setApiError(true);
@@ -179,7 +149,7 @@ const Gas = ({
         }
 
         if (response) {
-          handleAPIError(response);
+          handleAPIError({ response, toast, setApiError });
         }
       } else {
         console.log("No Account found !!");

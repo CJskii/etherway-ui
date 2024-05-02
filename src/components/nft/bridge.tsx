@@ -16,6 +16,7 @@ import { ContractType } from "@prisma/client";
 import { updateBridgeData } from "@/src/utils/api/bridge";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
+import { handleAPIError } from "@/src/utils/api/handleError";
 
 interface NFTBridgeProps {
   params: {
@@ -101,7 +102,6 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           address: account.address ? account.address : "",
         });
 
-        // TODO: Might want to return the execution if we have an API error\
         if (data?.APIerror) {
           // @ts-ignore
           setApiError(true);
@@ -109,7 +109,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         }
 
         if (data?.response) {
-          handleAPIError(data.response);
+          handleAPIError({ response: data.response, toast, setApiError });
         }
 
         const txHash = data?.tx ? data.tx.hash : "";
@@ -155,7 +155,6 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           chainId: fromNetwork.id,
         });
 
-        // TODO: Display the Toast Error
         if (_apiError) {
           // @ts-ignore
           setApiError(true);
@@ -163,46 +162,13 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
         }
 
         if (response) {
-          handleAPIError(response);
+          handleAPIError({ response, toast, setApiError });
         }
       } else {
         console.log("No Account found !!");
       }
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const handleAPIError = (response: Response) => {
-    // TODO: Display the Toast Error
-
-    if (response?.status == 200) {
-      console.log("API Call on update on db Completed");
-      toast.success("Interaction successfully recorded");
-      setApiError(false);
-    } else if (response?.status == 405) {
-      console.log("405: Method Not allowed");
-      setApiError(true);
-      toast.error("405: Method Not allowed");
-    } else if (response?.status == 400) {
-      // let _error = await response.json();
-      setApiError(true);
-
-      console.error("400: Missing parameters");
-      toast.error("400: Missing parameters");
-    } else if (response?.status == 401) {
-      console.error("You must be signed in to interact with the API");
-      setApiError(true);
-
-      toast.error("401: You must be signed in to interact with the API");
-    } else if (response?.status == 500) {
-      console.error("Internal Server Error");
-      setApiError(true);
-      toast.error("500: Internal Server Error");
-    } else {
-      console.error("Error occured during APICall");
-      setApiError(true);
-      toast.error("Error occured during APICall");
     }
   };
 

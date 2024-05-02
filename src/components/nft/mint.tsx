@@ -19,6 +19,8 @@ import { ContractType } from "@prisma/client";
 import MintModal from "./modal-mint";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
+import { handleAPIError } from "@/src/utils/api/handleError";
+
 interface NFTMintProps {
   params: {
     contractProvider: { type: string; contract: string };
@@ -42,8 +44,6 @@ export default function NFTMint({ params }: NFTMintProps) {
   const [apiError, setApiError] = useState<boolean>(false);
   const [isInvited, setIsInvited] = useState(false);
   const [referredBy, setReferredBy] = useState("");
-
-  // TODO: Refactor this to display minting modal with txHash and the NFT metadata OR error message
   const router = useRouter();
 
   const {
@@ -77,7 +77,6 @@ export default function NFTMint({ params }: NFTMintProps) {
           userAddress: account.address,
         });
 
-        // TODO: Might want to return the execution if we have an API error
         if (data?.apiError) {
           // @ts-ignore
           setApiError(true);
@@ -85,7 +84,7 @@ export default function NFTMint({ params }: NFTMintProps) {
         }
 
         if (data?.response) {
-          handleAPIError(data.response);
+          handleAPIError({ response: data.response, toast, setApiError });
           if (data?.response.status != 200) {
             setApiError(true);
           }
@@ -141,7 +140,6 @@ export default function NFTMint({ params }: NFTMintProps) {
           chainId: mintNetwork.id,
         });
 
-        // TODO: Display the Toast Error
         // @ts-ignore
         if (_apiError) {
           // @ts-ignore
@@ -150,38 +148,13 @@ export default function NFTMint({ params }: NFTMintProps) {
         }
 
         if (response) {
-          handleAPIError(response);
+          handleAPIError({ response, toast, setApiError });
         }
       } else {
         console.log("No Account found !!");
       }
     } catch (error) {
       console.error(error);
-    }
-  };
-
-  const handleAPIError = (response: Response) => {
-    // TODO: Display the Toast Error
-
-    if (response?.status == 200) {
-      console.log("API Call on update on db Completed");
-      toast.success("Interaction successfully recorded");
-    } else if (response?.status == 405) {
-      console.log("405: Method Not allowed");
-      toast.error("405: Method Not allowed");
-    } else if (response?.status == 400) {
-      // let _error = await response.json();
-      console.error("400: Missing parameters");
-      toast.error("400: Missing parameters");
-    } else if (response?.status == 401) {
-      console.error("You must be signed in to interact with the API");
-      toast.error("401: You must be signed in to interact with the API");
-    } else if (response?.status == 500) {
-      console.error("Internal Server Error");
-      toast.error("500: Internal Server Error");
-    } else {
-      console.error("Error occured during APICall");
-      toast.error("Error occured during APICall");
     }
   };
 

@@ -16,6 +16,7 @@ import { getUserBalance } from "@/src/utils/helpers/getBalance";
 import { toast } from "sonner";
 import { ContractType, InteractionType } from "@prisma/client";
 import { updateInteractionData } from "@/src/utils/api/interactions";
+import { handleAPIError } from "@/src/utils/api/handleError";
 
 import DashboardCard from "@/src/components/dashboard/dashboard-card";
 import NetworkModal from "../networkModal";
@@ -140,7 +141,6 @@ export default function TokenMintAndBridge({
           mintQuantity: mintAmount,
         });
 
-        // TODO: Might want to return the execution if we have an API error
         if (data?.apiError) {
           // @ts-ignore
           setApiMintError(true);
@@ -148,7 +148,11 @@ export default function TokenMintAndBridge({
         }
 
         if (data?.response) {
-          handleAPIError(data.response);
+          handleAPIError({
+            response: data.response,
+            toast,
+            setApiError: setApiMintError,
+          });
           if (data?.response.status != 200) {
             setApiMintError(true);
           }
@@ -219,7 +223,7 @@ export default function TokenMintAndBridge({
         }
 
         if (response) {
-          handleAPIError(response);
+          handleAPIError({ response, toast, setApiError: setApiBridgeError });
           if (response.status != 200) {
             setApiBridgeError(true);
           }
@@ -240,31 +244,6 @@ export default function TokenMintAndBridge({
       } finally {
         setIsLoading(false);
       }
-    }
-  };
-
-  const handleAPIError = (response: Response) => {
-    // TODO: Display the Toast Error
-
-    if (response?.status == 200) {
-      console.log("API Call on update on db Completed");
-      toast.success("Interaction successfully recorded");
-    } else if (response?.status == 405) {
-      console.log("405: Method Not allowed");
-      toast.error("405: Method Not allowed");
-    } else if (response?.status == 400) {
-      // let _error = await response.json();
-      console.error("400: Missing parameters");
-      toast.error("400: Missing parameters");
-    } else if (response?.status == 401) {
-      console.error("You must be signed in to interact with the API");
-      toast.error("401: You must be signed in to interact with the API");
-    } else if (response?.status == 500) {
-      console.error("Internal Server Error");
-      toast.error("500: Internal Server Error");
-    } else {
-      console.error("Error occured during APICall");
-      toast.error("Error occured during APICall");
     }
   };
 
@@ -304,7 +283,6 @@ export default function TokenMintAndBridge({
           amount: Number(bridgeAmount),
         });
 
-        // TODO: Display the Toast Error
         // @ts-ignore
         if (_apiError) {
           // @ts-ignore
@@ -313,7 +291,7 @@ export default function TokenMintAndBridge({
         }
 
         if (response) {
-          handleAPIError(response);
+          handleAPIError({ response, toast, setApiError: setApiMintError });
         }
       } else {
         console.log("No Account found !!");
@@ -359,7 +337,6 @@ export default function TokenMintAndBridge({
           amount: Number(bridgeAmount),
         });
 
-        // TODO: Display the Toast Error
         if (apiError) {
           // @ts-ignore
           setApiError(apiError);
@@ -367,7 +344,7 @@ export default function TokenMintAndBridge({
         }
 
         if (response) {
-          handleAPIError(response);
+          handleAPIError({ response, toast, setApiError: setApiBridgeError });
         }
       } else {
         console.log("No Account found !!");
