@@ -68,7 +68,6 @@ export function Footer({ isDashboard }: FooterProps) {
           © {new Date().getFullYear()} Etherway. All rights reserved.
         </Typography>
       </div>
-      {/* TODO: Add Zealy and Galxe icons + links */}
 
       <div className="text-white dark:text-black flex flex-col justify-center items-start gap-2 py-4">
         <Typography variant={"h4"} className="text-white dark:text-black">
@@ -100,28 +99,17 @@ export function Footer({ isDashboard }: FooterProps) {
               Discord
             </Button>
           </Link>
-
           <Link href={"https://twitter.com/etherway_io"} target="_blank">
             <Button variant={"etherwaySecondary"} className="w-full">
               <XIcon className="h-4 w-4 mx-2" /> Twitter
             </Button>
           </Link>
-          {/* <Button variant={"etherwaySecondary"}>
-            <Instagram className="h-4 w-4 mx-2" />
-            Instagram
-          </Button> */}
           <Link href={"https://t.me/+IFXADMbhrSAyNTE0"} target="_blank">
             <Button variant={"etherwaySecondary"} className="w-full">
               <TelegramIcon className="h-4 w-4 mx-2" />
               Telegram
             </Button>
           </Link>
-
-          {/* TODO: Add Galxe, Zealy  */}
-          {/* <Button variant={"etherwaySecondary"} className="">
-            <GitBookIcon className="h-4 w-4 mx-2" />
-            GitBook
-          </Button> */}
         </div>
       )}
       {isDashboard && (
@@ -138,22 +126,12 @@ export function Footer({ isDashboard }: FooterProps) {
               <XIcon className="h-4 w-4 mx-2" /> Twitter
             </Button>
           </Link>
-          {/* <Button variant={"etherwaySecondary"}>
-            <Instagram className="h-4 w-4 mx-2" />
-            Instagram
-          </Button> */}
           <Link href={"https://t.me/+IFXADMbhrSAyNTE0"} target="_blank">
             <Button variant={"etherwaySecondary"} className="w-full">
               <TelegramIcon className="h-4 w-4 mx-2" />
               Telegram
             </Button>
           </Link>
-
-          {/* TODO: Add Galxe, Zealy  */}
-          {/* <Button variant={"etherwaySecondary"} className="">
-            <GitBookIcon className="h-4 w-4 mx-2" />
-            GitBook
-          </Button> */}
         </div>
       )}
     </div>

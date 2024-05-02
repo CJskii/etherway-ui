@@ -84,7 +84,7 @@ export default async function handler(
       Total: number;
     };
 
-    // TODO: handle the case when user email is already in the list
+    // TODO: handle the case when user email is already in the list - return to the frontend and put on the toast???
 
     const listdata = listresponse.Data[0];
     const listRecepientId = listdata.ID;

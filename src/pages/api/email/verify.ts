@@ -93,7 +93,6 @@ export default async function handler(
         IsUnsubscribed: "false",
       });
 
-    // TODO:   -> POST /send - email for welcoming the user to etherway
     const unsubscribeLink = `${process.env.NEXTAUTH_URL}/email/unsubscribe?listRecepientId=${listRecepientId}`;
 
     const welcomeEmailData = getWelcomeEmailData({

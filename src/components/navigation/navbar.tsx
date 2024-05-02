@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ThemeToggler } from "../ui/toggle-theme";
 import { Button } from "../ui/button";
 import { HeaderSheet } from "./header-sheet";
-import { ConnectWalletButton } from "../ui/connect-button";
+import { ConnectWalletButton } from "@/src/components/ui/connect-button";
 import {
   NavigationMenu,
   NavigationMenuContent,
