@@ -1,6 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../prisma/client";
-import handleInteraction from "@/prisma/src/handlers/interaction";
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "./auth/[...nextauth]";
 import { ContractType, InteractionType } from "@prisma/client";
@@ -15,16 +13,6 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method == "POST") {
-    // const { ethereumAddress, points } = req.body as {
-    //   ethereumAddress: string;
-    //   points: number;
-    // };
-
-    // if (!ethereumAddress || !points) {
-    //   console.error("Missing parameters");
-    //   return res.status(400).json({ message: "Missing parameters" });
-    // }
-
     const session = await getServerSession(req, res, getAuthOptions(req));
 
     const csrfToken = await getCsrfToken({ req: { headers: req.headers } });
@@ -101,13 +89,6 @@ export default async function handler(
       });
     }
   } else if (req.method == "GET") {
-    // const ethereumAddress = req.query.ethereumAddress as string;
-
-    // if (!ethereumAddress) {
-    //   console.error("Missing parameters");
-    //   return res.status(400).json({ message: "Missing parameters" });
-    // }
-
     const session = await getServerSession(req, res, getAuthOptions(req));
 
     const csrfToken = await getCsrfToken({ req: { headers: req.headers } });

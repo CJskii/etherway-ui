@@ -59,21 +59,9 @@ export default async function handler(
         .status(401)
         .json({ message: "Not Authenticated to perform call" });
     }
-
-    //TODO: perform the refresh on the leaderboard
     await refershViewTopUsers();
-    // TODO: Might want to track the last update call
-
     res.status(200).json({ message: "Leaderboard score refreshed" });
   } else {
     return res.status(405).send({ error: "Method Not Allowed" });
   }
 }
-
-// TODO : Add CRON_SECRET to the env
-// "crons": [
-//   {
-//     "path": "/api/leaderboard",
-//     "schedule": "0 0 */4 ? * *	"
-//   }
-// ]

@@ -9,7 +9,7 @@ import OnboardSection from "@/src/components/homepage/onboard-section";
 import StatsSection from "@/src/components/homepage/stats-section";
 import { Header } from "@/src/components/navigation/navbar";
 import Image from "next/image";
-import HeadComponent from "../components/HeadComponent";
+import HeadComponent from "../components/head-component";
 import { Container } from "@/src/components/ui/Container";
 import { Footer } from "@/src/components/ui/footer";
 

@@ -1,8 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../prisma/client";
-import handleUser from "@/prisma/src/handlers/user";
-import { getServerSession } from "next-auth";
-import { getAuthOptions } from "./auth/[...nextauth]";
 import { getUser } from "@/prisma/src/get/userData";
 
 export default async function handler(
@@ -30,7 +26,6 @@ export default async function handler(
     const user = await getUser({
       ethAddress: ethereumAddress,
     });
-    // console.log(`New user created`);
     return res.status(201).json({ user }); // 201 means Created
   } catch (error) {
     console.error(error);

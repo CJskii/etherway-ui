@@ -1,4 +1,4 @@
-import HeadComponent from "@/src/components/HeadComponent";
+import HeadComponent from "@/src/components/head-component";
 import Gas from "@/src/components/gas/gas-refuel";
 import { Layout } from "@/src/components/dashboard/layout";
 

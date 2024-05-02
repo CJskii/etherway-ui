@@ -7,8 +7,6 @@ export const useNetworkSelection = (
   contractProviders: { type: string; contract: string },
   filterFn: (network: Network) => boolean = () => true,
 ) => {
-  // const { chain } = useNetwork();
-
   const [selectedNetwork, setSelectedNetwork] = useState(activeChains[0]);
   const [searchTerm, setSearchTerm] = useState("");
   const { type, contract } = contractProviders;

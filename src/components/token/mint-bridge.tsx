@@ -4,32 +4,23 @@ import { Button } from "@/src/components/ui/button";
 import { Label } from "@/src/components/ui/label";
 import { Input } from "@/src/components/ui/input";
 import { ArrowLeftRight, ArrowUpDown } from "lucide-react";
-import DashboardCard from "@/src/components/dashboard/dashboard-card";
-
-import NetworkModal from "../networkModal";
 import { useNetworkSelection } from "@/src/hooks/useNetworkSelection";
 import { getValidToNetworks } from "@/src/utils/helpers/getValidToNetworks";
 import { Network } from "@/src/types/network";
-
-import {
-  useAccount,
-  usePublicClient,
-  useSwitchChain,
-  useWalletClient,
-} from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { handleMinting } from "@/src/utils/contracts/handlers/handleMinting";
 import { handleErrors } from "@/src/utils/contracts/handlers/handleErrors";
 import { handleBridging } from "@/src/utils/contracts/handlers/handleBridging";
 import { getUserBalance } from "@/src/utils/helpers/getBalance";
-import { activeChains } from "@/src/constants/config/chainsConfig";
-import TokenMintModal from "./modal-mint";
-import TokenBridgeModal from "./modal-bridge";
 import { toast } from "sonner";
 import { ContractType, InteractionType } from "@prisma/client";
-import { updateBridgeData } from "@/src/utils/api/bridge";
-import { updateMintData } from "@/src/utils/api/mintAPI";
 import { updateInteractionData } from "@/src/utils/api/interactions";
+
+import DashboardCard from "@/src/components/dashboard/dashboard-card";
+import NetworkModal from "../networkModal";
+import TokenMintModal from "./modal-mint";
+import TokenBridgeModal from "./modal-bridge";
 
 interface TokenMintAndBridgeProps {
   params: {
@@ -48,7 +39,7 @@ export default function TokenMintAndBridge({
   const { contractProvider, headerDescription, stepDescription } = params;
   const { type, contract } = contractProvider;
   const { openConnectModal } = useConnectModal();
-  const { chains, switchChain } = useSwitchChain();
+  const { switchChain } = useSwitchChain();
   const account = useAccount();
   const userBalanceRef = useRef<HTMLInputElement>(null);
 

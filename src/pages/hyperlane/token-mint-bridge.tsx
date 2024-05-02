@@ -1,6 +1,6 @@
 import TokenMintAndBridge from "@/src/components/token/mint-bridge";
 import { Layout } from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/HeadComponent";
+import HeadComponent from "@/src/components/head-component";
 
 const HyperlaneTokenMintBridge = () => {
   const params = {

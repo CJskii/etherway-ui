@@ -1,5 +1,5 @@
 import { prisma } from "../../client";
-import { getNewInviteCode } from "../get/newInviteCode";
+import { getNewInviteCode } from "../../../src/utils/helpers/getNewInviteCode";
 
 interface createUserProps {
   ethAddress: string;

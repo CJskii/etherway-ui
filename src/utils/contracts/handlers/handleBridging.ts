@@ -1,7 +1,6 @@
 import { ethers, Signer, Contract } from "ethers";
 import getProviderOrSigner from "../../helpers/getProviderOrSigner";
 import { Network } from "../../../types/network";
-import handleInteraction from "./handleInteraction";
 import { Options } from "@layerzerolabs/lz-v2-utilities";
 import { updateBridgeData } from "../../api/bridge";
 import { ContractType, InteractionType } from "@prisma/client";

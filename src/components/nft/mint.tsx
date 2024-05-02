@@ -94,8 +94,6 @@ export default function NFTMint({ params }: NFTMintProps) {
         if (data?.result) {
           const { mintedID, txHash } = data.result;
 
-          // check the api Response and the Error and accordingly display it to the user
-
           setTxHash(txHash);
           setMintedNFT(mintedID.toString());
           setMinting(false);

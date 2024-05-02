@@ -28,7 +28,6 @@ const Preview = ({
             onChange={(e) => setInputAmount(e.target.value)}
             type="number"
             value={inputAmount}
-            // ref={userBalanceRef}
           />
           <Button
             size={"sm"}
@@ -51,10 +50,8 @@ const Preview = ({
         <Button
           className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
           disabled={inputAmount === ""}
-          // onClick={apiBridgeError ? tryBridgingAPICall : handleBridgeButton}
           onClick={handlePreviewClick}
         >
-          {/* {hasBridged && apiBridgeError ? "Try again" : "Send"} */}
           {"Confirm"}
         </Button>
       </div>

@@ -1,5 +1,4 @@
-import dynamic from "next/dynamic";
-import HeadComponent from "../../components/HeadComponent";
+import HeadComponent from "../../components/head-component";
 import { Layout } from "@/src/components/dashboard/layout";
 import { Typography } from "@/src/components/ui/typography";
 import QnA from "@/src/components/guides/question-answer";

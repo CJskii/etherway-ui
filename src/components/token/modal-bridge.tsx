@@ -2,7 +2,6 @@
 
 import { Dialog, DialogContent } from "@/src/components/ui/dialog";
 import { Typography } from "../ui/typography";
-import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 

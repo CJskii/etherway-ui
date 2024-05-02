@@ -1,6 +1,6 @@
 import NFTMint from "@/src/components/nft/mint";
 import { Layout } from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/HeadComponent";
+import HeadComponent from "@/src/components/head-component";
 
 const ONFTMint = () => {
   const params = {

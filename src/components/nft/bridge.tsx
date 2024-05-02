@@ -28,7 +28,7 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
   const { contractProvider, stepDescription } = params;
   const { type, contract } = contractProvider;
   const { openConnectModal } = useConnectModal();
-  const { chains, switchChain } = useSwitchChain();
+  const { switchChain } = useSwitchChain();
   const router = useRouter();
 
   useEffect(() => {
@@ -112,11 +112,8 @@ export default function NFTBridge({ params }: NFTBridgeProps) {
           handleAPIError(data.response);
         }
 
-        // data -> { tx, response , APIError , BridgeError }
-
         const txHash = data?.tx ? data.tx.hash : "";
 
-        // setNftId("");
         setIsLoading(false);
         setTxHash(txHash);
       } catch (e) {

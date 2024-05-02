@@ -1,7 +1,7 @@
 // subscribe.js
 import { useState } from "react";
 import Layout from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/HeadComponent";
+import HeadComponent from "@/src/components/head-component";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { subscribeEmail } from "@/src/utils/api/email/subscribe";

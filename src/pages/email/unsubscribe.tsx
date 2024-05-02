@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Layout } from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/HeadComponent";
+import HeadComponent from "@/src/components/head-component";
 import { unsubscribeEmail } from "@/src/utils/api/email/unsubscribe";
 import { Typography } from "@/src/components/ui/typography";
 import { toast } from "sonner";

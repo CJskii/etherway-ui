@@ -1,7 +1,7 @@
 import { activeChains } from "../constants/config/chainsConfig";
 import Image, { StaticImageData } from "next/image";
 import { useAccount } from "wagmi";
-import HeadComponent from "../components/HeadComponent";
+import HeadComponent from "../components/head-component";
 import { Layout } from "@/src/components/dashboard/layout";
 import { Typography } from "@/src/components/ui/typography";
 import ellipseCurved from "@/assets/ellipse-curved.svg";

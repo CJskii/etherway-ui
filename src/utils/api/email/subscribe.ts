@@ -1,5 +1,3 @@
-import { ContractType } from "@prisma/client";
-
 export async function subscribeEmail({
   address,
   email,
@@ -9,9 +7,6 @@ export async function subscribeEmail({
 }) {
   let response;
   let error;
-  console.log("Subscribing email", address, email);
-  // TODO - Resend the email verification link handler
-  // parse the response to get the listRecepientId in the body
   try {
     response = await fetch("/api/email/subscribe", {
       method: "POST",

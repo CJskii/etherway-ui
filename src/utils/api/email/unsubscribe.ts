@@ -1,5 +1,3 @@
-import { ContractType } from "@prisma/client";
-
 export async function unsubscribeEmail({
   listRecepientId,
 }: {

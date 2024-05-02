@@ -3,16 +3,12 @@ import logoBlack from "@/assets/logo-black.svg";
 import logoWhite from "@/assets/logo-white.svg";
 import { Sheet, SheetContent, SheetTrigger } from "@/src/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
-import { MobileNavLinks, NaviLinks } from "./navbar";
-import { Button } from "../ui/button";
+import { MobileNavLinks } from "./navbar";
 import { ThemeToggler } from "../ui/toggle-theme";
-import Link from "next/link";
 import { useState } from "react";
 import { ConnectWalletButton } from "../ui/connect-button";
 
 export function HeaderSheet() {
-  // TODO: fix navbar on mobile
-
   const [isNavbarOpen, setIsNavbarOpen] = useState(false);
 
   return (
@@ -39,7 +35,6 @@ export function HeaderSheet() {
         <div className="flex flex-col items-stretch gap-2">
           <ConnectWalletButton />
           <MobileNavLinks />
-          {/* <NaviLinks /> */}
           {/* <Link href={"/contact-us"}>
             <Button className="bg-gradient rounded-xl font-normal w-full  text-white hover:opacity-90">
               Contact Us
