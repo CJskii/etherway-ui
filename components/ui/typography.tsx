@@ -21,6 +21,7 @@ const typographyVariants = cva("", {
       small: "text-sm font-medium leading-none dark:text-white",
       extraSmall: "text-xs font-normal text-muted-foreground dark:text-white",
       muted: "text-[#00000066] dark:text-white/40",
+      heroTiles: "text-md text-white/80",
     },
   },
   defaultVariants: {
@@ -48,6 +49,7 @@ const variantElementMap: Record<
   small: "small",
   extraSmall: "small",
   muted: "p",
+  heroTiles: "span",
 };
 
 export interface TypographyProps
@@ -67,13 +69,13 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
       <Comp
         className={cn(
           typographyVariants({ variant, className }),
-          "font-raleway"
+          "font-raleway",
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 
 Typography.displayName = "Typography";

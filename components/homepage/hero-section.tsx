@@ -42,7 +42,7 @@ const products = [
 
 export default function HeroSection() {
   return (
-    <div className="flex min-h-screen flex-col justify-start pt-20 md:justify-between md:pt-40">
+    <div className="flex min-h-screen flex-col justify-start pt-20 md:justify-between md:pt-28">
       <Image
         src={ellipse1}
         alt="ellipse1"
@@ -54,8 +54,8 @@ export default function HeroSection() {
         className="absolute left-0 z-0 -mt-28 hidden w-52 md:block"
       />
 
-      <div>
-        <div className="z-10 space-y-6 p-6 pb-6 md:p-16">
+      <div className="lg:flex">
+        <div className="z-10 space-y-6 p-6 pb-6 md:p-16 lg:w-7/12">
           <Typography className="max-w-xs text-4xl font-extrabold leading-snug tracking-wide md:max-w-3xl md:text-7xl md:leading-none">
             Uniting <span className="text-secondary">Blockchain</span>{" "}
             Ecosystems on One Platform
@@ -73,7 +73,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 grid-rows-2 gap-4 p-4">
+        <div className="grid grid-cols-2 grid-rows-2 md:px-24 md:pb-12 lg:p-4 gap-4 p-4 w-full xl:w-2/6">
           {/* {products.map((product) => (
             <ProductCard
               title={product.title}
@@ -90,14 +90,13 @@ export default function HeroSection() {
               <Image
                 src={hyperlaneGroup}
                 alt="Background Image"
-                layout="fill"
-                objectFit="cover"
                 className="pointer-events-none select-none"
+                fill={true}
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 text-center bg-gradient-to-t from-black/60 to-transparent">
-                <p className="text-base text-white font-raleway">
-                  Mint NFTs on Ethereum
-                </p>
+                <Typography variant={"heroTiles"} className="md:text-xl">
+                  Cross-Chain NFT Minting
+                </Typography>
               </div>
             </div>
           </Link>
@@ -106,14 +105,13 @@ export default function HeroSection() {
               <Image
                 src={layerzeroGroup}
                 alt="Background Image"
-                layout="fill"
-                objectFit="cover"
                 className="pointer-events-none select-none"
+                fill={true}
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 text-center bg-gradient-to-t from-black/60 to-transparent">
-                <p className="text-base text-white font-raleway">
-                  Mint NFTs on Solana
-                </p>
+                <Typography variant={"heroTiles"} className="md:text-xl">
+                  Cross-Chain NFT Minting
+                </Typography>
               </div>
             </div>
           </Link>
@@ -123,14 +121,13 @@ export default function HeroSection() {
               <Image
                 src={bridgeGroup}
                 alt="Background Image"
-                layout="fill"
-                objectFit="cover"
                 className="pointer-events-none select-none"
+                fill={true}
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 text-center bg-gradient-to-t from-black/60 to-transparent">
-                <p className="text-base text-white font-raleway">
-                  Cross-chain bridge
-                </p>
+                <Typography variant={"heroTiles"} className="md:text-xl">
+                  EVM Cross-Chain Bridge
+                </Typography>
               </div>
             </div>
           </Link>
@@ -139,14 +136,13 @@ export default function HeroSection() {
               <Image
                 src={refuelGroup}
                 alt="Background Image"
-                layout="fill"
-                objectFit="cover"
                 className="pointer-events-none select-none"
+                fill={true}
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 text-center bg-gradient-to-t from-black/60 to-transparent">
-                <p className="text-base text-white font-raleway">
-                  Refuel your gas on Ethereum
-                </p>
+                <Typography variant={"heroTiles"} className="md:text-xl">
+                  Native Token Dropoff
+                </Typography>
               </div>
             </div>
           </Link>
