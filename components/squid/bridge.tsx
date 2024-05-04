@@ -15,6 +15,7 @@ import { Typography } from "../ui/typography";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import SquidNetworkModal from "./network-modal";
+import SquidTokenModal from "./token-modal";
 import { Network } from "@/common/types/network";
 import {
   ChainData,
@@ -45,11 +46,19 @@ export interface NetworkModalProps {
 }
 
 export const SquidBridge = () => {
+  // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
+
+  // IF YES THEN WE SHOULD HAVE SELECTIONS HANDLERS HERE AND PASS THEM DOWN TO MODALS
+  // IF NO THEN WE SHOULD HAVE SELECTIONS HANDLERS IN MODALS AND PASS THEM BACK UP TO THIS COMPONENT
+
+  // THEN ON BRIDGE BUTTON CLICK WE CAN GET THE SELECTED TOKENS AND NETWORKS FROM MODALS AND CALL THE BRIDGE FUNCTION
+
   const [tokens, setTokens] = useState<TokenData[]>();
   const [networks, setNetworks] = useState<ChainData[]>();
   const [fromNetworksProps, setFromNetworksProps] =
     useState<NetworkModalProps>();
   const [toNetworkProps, setToNetworkProps] = useState<NetworkModalProps>();
+  const [userBalance, setUserBalance] = useState<string>("0");
 
   const { address } = useAccount();
   const [route, setRoute] = useState<RouteData | undefined>();
@@ -60,6 +69,14 @@ export const SquidBridge = () => {
 
   const handlePreviewButton = () => {
     console.log("Preview button clicked");
+  };
+
+  const handleSelectToken = (token: TokenData) => {
+    console.log(token);
+  };
+
+  const handleSelectNetwork = (network: ChainData) => {
+    console.log(network);
   };
 
   // const routeParams: RouteRequest = {
@@ -196,6 +213,54 @@ export const SquidBridge = () => {
     commandHeading: "Select a network",
   };
 
+  const fromTokenProps = {
+    filteredTokens: [
+      {
+        chainId: "43114",
+        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
+        name: "Wrapped AVAX",
+        symbol: "WAVAX",
+        decimals: 18,
+        logoURI: "https://cryptologos.cc/logos/avalanche-avax-logo.png",
+        coingeckoId: "avalanche-2",
+      },
+      {
+        chainId: "43114",
+        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
+        name: "Wrapped ETH",
+        symbol: "WETH",
+        decimals: 18,
+        logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+        coingeckoId: "ethereum",
+      },
+    ],
+    dialogTitle: "Select a token to bridge from",
+  };
+
+  const toTokenProps = {
+    filteredTokens: [
+      {
+        chainId: "137",
+        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
+        name: "Wrapped AVAX",
+        symbol: "WAVAX",
+        decimals: 18,
+        logoURI: "https://cryptologos.cc/logos/avalanche-avax-logo.png",
+        coingeckoId: "avalanche-2",
+      },
+      {
+        chainId: "137",
+        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
+        name: "Wrapped ETH",
+        symbol: "WETH",
+        decimals: 18,
+        logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+        coingeckoId: "ethereum",
+      },
+    ],
+    dialogTitle: "Select a token to bridge to",
+  };
+
   useEffect(() => {
     async function fetchData() {
       const _tokens = await getSquidTokens();
@@ -291,6 +356,10 @@ export const SquidBridge = () => {
                 Bridge From
               </Typography>
             </Label>
+            <Typography variant={"small"} className="dark:text-black">
+              Your balance: {userBalance}
+            </Typography>
+            <SquidTokenModal props={fromTokenProps} />
             {fromNetworksProps && (
               <SquidNetworkModal props={fromNetworksProps} />
             )}
@@ -302,6 +371,7 @@ export const SquidBridge = () => {
                 Bridge To
               </Typography>
             </Label>
+            <SquidTokenModal props={toTokenProps} />
             {toNetworkProps && <SquidNetworkModal props={toNetworkProps} />}
           </div>
 
