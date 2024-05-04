@@ -8,7 +8,7 @@ import {
   getSquidRoute,
   getSquidTokens,
 } from "@/common/utils/squid/squidRouter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getProviderOrSigner from "@/common/utils/getters/getProviderOrSigner";
 import { Signer } from "ethers";
 import { Typography } from "../ui/typography";
@@ -16,21 +16,43 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import SquidNetworkModal from "./network-modal";
 import { Network } from "@/common/types/network";
+import {
+  ChainData,
+  ChainName,
+  GetRoute,
+  RouteData,
+  TokenData,
+} from "@0xsquid/sdk";
 
-interface NetworkModalProps {
-  props: {
-    selectedNetwork: Network;
-    onNetworkSelect: (network: Network) => void;
-    filteredChains: Network[];
-    dialogTitle: string;
-    dialogDescription: string;
-    commandHeading: string;
-  };
+// interface NetworkModalProps {
+//   props: {
+//     selectedNetwork: Network;
+//     onNetworkSelect: (network: Network) => void;
+//     filteredChains: Network[];
+//     dialogTitle: string;
+//     dialogDescription: string;
+//     commandHeading: string;
+//   };
+// }
+
+export interface NetworkModalProps {
+  selectedNetwork: ChainData;
+  onNetworkSelect: (network: ChainData) => void;
+  filteredChains: ChainData[];
+  dialogTitle: string;
+  dialogDescription: string;
+  commandHeading: string;
 }
 
 export const SquidBridge = () => {
+  const [tokens, setTokens] = useState<TokenData[]>();
+  const [networks, setNetworks] = useState<ChainData[]>();
+  const [fromNetworksProps, setFromNetworksProps] =
+    useState<NetworkModalProps>();
+  const [toNetworkProps, setToNetworkProps] = useState<NetworkModalProps>();
+
   const { address } = useAccount();
-  const [route, setRoute] = useState<RouteType | undefined>();
+  const [route, setRoute] = useState<RouteData | undefined>();
 
   const handleBridgeButton = () => {
     console.log("Bridge button clicked");
@@ -40,17 +62,28 @@ export const SquidBridge = () => {
     console.log("Preview button clicked");
   };
 
-  const routeParams: RouteRequest = {
+  // const routeParams: RouteRequest = {
+  //   fromChain: "43114", // Avalanche
+  //   fromAmount: "10000000000000000", // 0.1 AVAX
+  //   fromToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  //   toChain: "137", // Polygon
+  //   toToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  //   fromAddress: address,
+  //   toAddress: address,
+  //   slippageConfig: {
+  //     autoMode: 1,
+  //   },
+  // };
+
+  const routeParams: GetRoute = {
     fromChain: "43114", // Avalanche
     fromAmount: "10000000000000000", // 0.1 AVAX
     fromToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
     toChain: "137", // Polygon
     toToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    fromAddress: address,
-    toAddress: address,
-    slippageConfig: {
-      autoMode: 1,
-    },
+    fromAddress: address ? address : `0x`,
+    toAddress: address ? address : `0x`,
+    slippage: 1,
   };
 
   const TestingButtons = () => {
@@ -163,6 +196,72 @@ export const SquidBridge = () => {
     commandHeading: "Select a network",
   };
 
+  useEffect(() => {
+    async function fetchData() {
+      const _tokens = await getSquidTokens();
+      setTokens(_tokens);
+      console.log(_tokens);
+      const _chains = await getSquidChains();
+      console.log(_chains);
+      setNetworks(_chains);
+
+      const _fromNetworkProps: NetworkModalProps = {
+        selectedNetwork: _chains.filter(
+          (chain) => chain.chainName == ChainName.ARBITRUM,
+        )[0],
+        onNetworkSelect: setNewFromNetwork,
+        filteredChains: _chains,
+        dialogTitle: "Select a network to bridge from",
+        dialogDescription: "Select a network to bridge from",
+        commandHeading: "Select a network",
+      };
+
+      setFromNetworksProps(_fromNetworkProps);
+
+      const _toNetworkProps: NetworkModalProps = {
+        selectedNetwork: _chains.filter(
+          (chain) => chain.chainName == ChainName.BASE,
+        )[0],
+        onNetworkSelect: setNewToNetwork,
+        filteredChains: _chains,
+        dialogTitle: "Select a network to bridge to",
+        dialogDescription: "Select a network to bridge to",
+        commandHeading: "Select a network",
+      };
+
+      setToNetworkProps(_toNetworkProps);
+    }
+
+    if (!tokens || !networks) {
+      fetchData();
+    }
+  }, []);
+
+  const setNewFromNetwork = (network: ChainData) => {
+    console.log(networks);
+    const newFromNetworkProps = {
+      selectedNetwork: network,
+      onNetworkSelect: setNewFromNetwork,
+      filteredChains: networks,
+      dialogTitle: "Select a network to bridge from",
+      dialogDescription: "Select a network to bridge from",
+      commandHeading: "Select a network",
+    };
+    setFromNetworksProps(newFromNetworkProps);
+  };
+
+  const setNewToNetwork = (network: ChainData) => {
+    const newToNetworkProps = {
+      selectedNetwork: network,
+      onNetworkSelect: setNewToNetwork,
+      filteredChains: networks,
+      dialogTitle: "Select a network to bridge to",
+      dialogDescription: "Select a network to bridge to",
+      commandHeading: "Select a network",
+    };
+    setFromNetworksProps(newToNetworkProps);
+  };
+
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
       <TestingButtons />
@@ -192,8 +291,9 @@ export const SquidBridge = () => {
                 Bridge From
               </Typography>
             </Label>
-
-            <SquidNetworkModal props={fromBridgeProps} />
+            {fromNetworksProps && (
+              <SquidNetworkModal props={fromNetworksProps} />
+            )}
           </div>
 
           <div className="flex flex-col">
@@ -202,7 +302,7 @@ export const SquidBridge = () => {
                 Bridge To
               </Typography>
             </Label>
-            <SquidNetworkModal props={toBridgeProps} />
+            {toNetworkProps && <SquidNetworkModal props={toNetworkProps} />}
           </div>
 
           <Label className=" space-y-2">

@@ -22,19 +22,21 @@ import { CardContent } from "../ui/card";
 
 import { Network } from "@/common/types/network";
 import Image from "next/image";
+import { NetworkModalProps } from "./bridge";
+import { ChainData } from "@0xsquid/sdk";
 
-interface NetworkModalProps {
-  props: {
-    selectedNetwork: any; // TODO: Update this type to SQUID
-    onNetworkSelect: (network: Network) => void;
-    filteredChains: any[]; // TODO: Update this type to SQUID
-    dialogTitle: string;
-    dialogDescription: string;
-    commandHeading: string;
-  };
-}
+// interface NetworkModalProps {
+//   props: {
+//     selectedNetwork: any; // TODO: Update this type to SQUID
+//     onNetworkSelect: (network: Network) => void;
+//     filteredChains: any[]; // TODO: Update this type to SQUID
+//     dialogTitle: string;
+//     dialogDescription: string;
+//     commandHeading: string;
+//   };
+// }
 
-const SquidNetworkModal = ({ props }: NetworkModalProps) => {
+const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
   const {
     selectedNetwork,
     onNetworkSelect,
@@ -44,8 +46,9 @@ const SquidNetworkModal = ({ props }: NetworkModalProps) => {
     commandHeading,
   } = props;
 
-  const handleSelection = (network: Network) => {
+  const handleSelection = (network: ChainData) => {
     onNetworkSelect(network);
+    // selectedNetwork = network
   };
 
   return (
@@ -54,17 +57,17 @@ const SquidNetworkModal = ({ props }: NetworkModalProps) => {
         <CardContent className="grid gap-4 px-0 pb-0 min-w-full">
           <div className="flex items-center space-x-4 bg-white/30 rounded-md border border-black p-4 overflow-hidden">
             <Image
-              src={selectedNetwork.iconUrl as string}
+              src={selectedNetwork.chainIconURI as string}
               width={40}
               height={40}
-              alt={selectedNetwork.name}
+              alt={selectedNetwork.chainName}
             />
             <div className="flex-1 space-y-1 text-start">
               <Typography
                 variant={"smallTitle"}
                 className="dark:text-black font-semibold truncate"
               >
-                {selectedNetwork.name}
+                {selectedNetwork.chainName}
               </Typography>
               <p className="text-sm text-muted-foreground dark:text-black">
                 {selectedNetwork.nativeCurrency.symbol}
@@ -90,12 +93,12 @@ const SquidNetworkModal = ({ props }: NetworkModalProps) => {
               >
                 {filteredChains.map((network) => (
                   <CommandItem
-                    key={network.name}
+                    key={network.chainName}
                     onSelect={() => handleSelection(network)}
                     className="flex items-center p-4 mb-1 rounded-md bg-white/30 cursor-pointer justify-start  gap-2 hover:opacity-80"
                   >
                     <Image
-                      src={network.iconUrl as string}
+                      src={network.chainIconURI as string}
                       width={30}
                       height={30}
                       alt="network icon"
@@ -106,7 +109,7 @@ const SquidNetworkModal = ({ props }: NetworkModalProps) => {
                         variant={"smallTitle"}
                         className="dark:text-black"
                       >
-                        {network.name}
+                        {network.chainName}
                       </Typography>
                       <Typography
                         variant={"extraSmall"}

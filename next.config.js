@@ -31,7 +31,18 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["ipfs.io"],
+    // domains: [
+    //   "ipfs.io",
+    //   "s2.coinmarketcap.com",
+    //   "raw.githubusercontent.com",
+    //   "celoscan.io",
+    // ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
   },
   transpilePackages: ["@0xsquid/widget"],
 };

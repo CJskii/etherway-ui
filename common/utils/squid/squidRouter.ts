@@ -1,4 +1,4 @@
-import { Squid } from "@0xsquid/sdk";
+import { GetRoute, RouteData, Squid } from "@0xsquid/sdk";
 import {
   Estimate,
   RouteRequest,
@@ -11,7 +11,7 @@ const userAddress = "0x62C43323447899acb61C18181e34168903E033Bf";
 const integratorId = "etherway-2c794744-6972-4f23-bdcb-784032b1a377";
 
 const squid = new Squid({
-  baseUrl: "https://v2.api.squidrouter.com",
+  baseUrl: "https://api.squidrouter.com",
   integratorId: integratorId,
 });
 
@@ -21,9 +21,26 @@ export type RouteType = {
   params: RouteRequest;
 };
 
+// export async function getSquidRoute(
+//   routeParams: RouteRequest,
+// ): Promise<RouteType | undefined> {
+//   try {
+//     await squid.init();
+
+//     const { route, requestId, integratorId } =
+//       await squid.getRoute(routeParams);
+
+//     console.log(route, requestId);
+//     return route;
+//   } catch (error) {
+//     console.log(error);
+//     return;
+//   }
+// }
+
 export async function getSquidRoute(
-  routeParams: RouteRequest,
-): Promise<RouteType | undefined> {
+  routeParams: GetRoute,
+): Promise<RouteData | undefined> {
   try {
     await squid.init();
 
@@ -38,7 +55,7 @@ export async function getSquidRoute(
   }
 }
 
-export async function executeSquidRoute(route: RouteType, signer: Signer) {
+export async function executeSquidRoute(route: RouteData, signer: Signer) {
   try {
     await squid.init();
 
