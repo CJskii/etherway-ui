@@ -218,6 +218,7 @@ export const SquidBridge = () => {
     }
   }, [inAmount]);
 
+  // might want to fetch the latest route every 20 seconds to refresh the price
   const fetchRoute = async (routeParams: GetRoute) => {
     try {
       const _route = await getSquidRoute(routeParams);
