@@ -59,6 +59,7 @@ export const SquidBridge = () => {
     useState<NetworkModalProps>();
   const [toNetworkProps, setToNetworkProps] = useState<NetworkModalProps>();
   const [userBalance, setUserBalance] = useState<string>("0");
+  const [amount, setAmount] = useState<string>("0");
 
   const { address } = useAccount();
   const [route, setRoute] = useState<RouteData | undefined>();
@@ -307,7 +308,7 @@ export const SquidBridge = () => {
     const newFromNetworkProps = {
       selectedNetwork: network,
       onNetworkSelect: setNewFromNetwork,
-      filteredChains: networks,
+      filteredChains: networks || [],
       dialogTitle: "Select a network to bridge from",
       dialogDescription: "Select a network to bridge from",
       commandHeading: "Select a network",
@@ -319,7 +320,7 @@ export const SquidBridge = () => {
     const newToNetworkProps = {
       selectedNetwork: network,
       onNetworkSelect: setNewToNetwork,
-      filteredChains: networks,
+      filteredChains: networks || [],
       dialogTitle: "Select a network to bridge to",
       dialogDescription: "Select a network to bridge to",
       commandHeading: "Select a network",
@@ -335,7 +336,6 @@ export const SquidBridge = () => {
           <Typography variant={"h3"} className=" dark:text-black text-center">
             Squid Bridge
           </Typography>
-
           {/* <BridgeModal
             props={{
               isOpen: showBridgingModal,
@@ -349,7 +349,6 @@ export const SquidBridge = () => {
               loadingHeader: "We're working hard to bridge your NFT",
             }}
           /> */}
-
           <div className="flex flex-col">
             <Label className=" space-y-2">
               <Typography variant={"large"} className="dark:text-black">
@@ -364,7 +363,6 @@ export const SquidBridge = () => {
               <SquidNetworkModal props={fromNetworksProps} />
             )}
           </div>
-
           <div className="flex flex-col">
             <Label className=" space-y-2 w-full ">
               <Typography variant={"large"} className="dark:text-black">
@@ -374,15 +372,33 @@ export const SquidBridge = () => {
             <SquidTokenModal props={toTokenProps} />
             {toNetworkProps && <SquidNetworkModal props={toNetworkProps} />}
           </div>
-
           <Label className=" space-y-2">
             <Typography variant={"large"} className="dark:text-black">
-              Some label
+              Amount of tokens
             </Typography>
+            <Input
+              placeholder="Enter amount"
+              className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
           </Label>
-          <Button className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl">
-            Bridge
-          </Button>
+          {/* // TODO: Render either preview or bridge button based on the state of the route */}
+          {route ? (
+            <Button
+              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handleBridgeButton}
+            >
+              Bridge
+            </Button>
+          ) : (
+            <Button
+              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handlePreviewButton}
+            >
+              Preview
+            </Button>
+          )}
         </div>
       </div>
     </div>
