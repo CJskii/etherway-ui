@@ -16,7 +16,6 @@ export async function claimV1Interaction({
   interactionType,
   points,
 }: ClaimV1Interaction) {
-  //TODO✅ : check if there is no claim currently present for the user
   const claimData = await getClaimData({ ethAddress: ethAddress });
   if (claimData) {
     console.log("Already Claimed !!");
