@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useAccount } from "wagmi";
+import { useAccount, useToken } from "wagmi";
 import { RouteRequest } from "@0xsquid/squid-types";
 import {
   RouteType,
@@ -14,8 +14,8 @@ import { Signer } from "ethers";
 import { Typography } from "../ui/typography";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import SquidNetworkModal from "./network-modal";
-import SquidTokenModal from "./token-modal";
+import SquidNetworkModal, { NetworkModalProps } from "./network-modal";
+import SquidTokenModal, { TokenModalProps } from "./token-modal";
 import { Network } from "@/common/types/network";
 import {
   ChainData,
@@ -24,26 +24,8 @@ import {
   RouteData,
   TokenData,
 } from "@0xsquid/sdk";
-
-// interface NetworkModalProps {
-//   props: {
-//     selectedNetwork: Network;
-//     onNetworkSelect: (network: Network) => void;
-//     filteredChains: Network[];
-//     dialogTitle: string;
-//     dialogDescription: string;
-//     commandHeading: string;
-//   };
-// }
-
-export interface NetworkModalProps {
-  selectedNetwork: ChainData;
-  onNetworkSelect: (network: ChainData) => void;
-  filteredChains: ChainData[];
-  dialogTitle: string;
-  dialogDescription: string;
-  commandHeading: string;
-}
+import { useChainSelection } from "@/common/hooks/useChainSelection";
+import { useTokenSelection } from "@/common/hooks/useTokenSelection";
 
 export const SquidBridge = () => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -55,9 +37,7 @@ export const SquidBridge = () => {
 
   const [tokens, setTokens] = useState<TokenData[]>();
   const [networks, setNetworks] = useState<ChainData[]>();
-  const [fromNetworksProps, setFromNetworksProps] =
-    useState<NetworkModalProps>();
-  const [toNetworkProps, setToNetworkProps] = useState<NetworkModalProps>();
+
   const [userBalance, setUserBalance] = useState<string>("0");
 
   const { address } = useAccount();
@@ -78,6 +58,51 @@ export const SquidBridge = () => {
   const handleSelectNetwork = (network: ChainData) => {
     console.log(network);
   };
+
+  // TODO: Work on the searchFunctionality for the networks
+  const {
+    selectedchain: fromChain,
+    chains: fromChains,
+    onChainSelect: setFromNetwork,
+    // searchTerm,
+    // onSearchChange,
+    // onClose,
+  } = useChainSelection(ChainName.ARBITRUM);
+
+  const {
+    selectedchain: toChain,
+    chains: toChains,
+    onChainSelect: setToNetwork,
+    // searchTerm,
+    // onSearchChange,
+    // onClose,
+  } = useChainSelection("blast");
+
+  const {
+    selectedtoken: fromToken,
+    tokens: fromTokens,
+    onTokenSelect: setFromToken,
+    // searchTerm,
+    // onSearchChange,
+    // onClose,
+  } = useTokenSelection(
+    fromChain,
+    42161,
+    "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+  );
+
+  const {
+    selectedtoken: toToken,
+    tokens: toTokens,
+    onTokenSelect: setToToken,
+    // searchTerm,
+    // onSearchChange,
+    // onClose,
+  } = useTokenSelection(
+    toChain,
+    81457,
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+  );
 
   // const routeParams: RouteRequest = {
   //   fromChain: "43114", // Avalanche
@@ -143,188 +168,36 @@ export const SquidBridge = () => {
     );
   };
 
-  const fromBridgeProps = {
-    selectedNetwork: {
-      name: "Avalanche",
-
-      nativeCurrency: {
-        name: "AVAX",
-        symbol: "AVAX",
-      },
-    },
-    onNetworkSelect: (network: Network) => {
-      console.log(network);
-    },
-    filteredChains: [
-      {
-        name: "Avalanche",
-
-        nativeCurrency: {
-          name: "AVAX",
-          symbol: "AVAX",
-        },
-      },
-      {
-        name: "Ethereum",
-
-        nativeCurrency: {
-          name: "ETH",
-          symbol: "ETH",
-        },
-      },
-    ],
+  const fromChainProps: NetworkModalProps = {
+    selectedNetwork: fromChain,
+    onNetworkSelect: setFromNetwork,
+    filteredChains: fromChains,
     dialogTitle: "Select a network to bridge from",
     dialogDescription: "Select a network to bridge from",
     commandHeading: "Select a network",
   };
 
-  const toBridgeProps = {
-    selectedNetwork: {
-      name: "Polygon",
-
-      nativeCurrency: {
-        name: "MATIC",
-        symbol: "MATIC",
-      },
-    },
-    onNetworkSelect: (network: Network) => {
-      console.log(network);
-    },
-    filteredChains: [
-      {
-        name: "Polygon",
-
-        nativeCurrency: {
-          name: "MATIC",
-          symbol: "MATIC",
-        },
-      },
-      {
-        name: "Ethereum",
-
-        nativeCurrency: {
-          name: "ETH",
-          symbol: "ETH",
-        },
-      },
-    ],
+  const toChainProps: NetworkModalProps = {
+    selectedNetwork: toChain,
+    onNetworkSelect: setToNetwork,
+    filteredChains: toChains,
     dialogTitle: "Select a network to bridge to",
     dialogDescription: "Select a network to bridge to",
     commandHeading: "Select a network",
   };
 
-  const fromTokenProps = {
-    filteredTokens: [
-      {
-        chainId: "43114",
-        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
-        name: "Wrapped AVAX",
-        symbol: "WAVAX",
-        decimals: 18,
-        logoURI: "https://cryptologos.cc/logos/avalanche-avax-logo.png",
-        coingeckoId: "avalanche-2",
-      },
-      {
-        chainId: "43114",
-        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
-        name: "Wrapped ETH",
-        symbol: "WETH",
-        decimals: 18,
-        logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-        coingeckoId: "ethereum",
-      },
-    ],
+  const fromTokenProps: TokenModalProps = {
+    selectedToken: fromToken,
+    onTokenSelect: setFromToken,
+    filteredTokens: fromTokens,
     dialogTitle: "Select a token to bridge from",
   };
 
-  const toTokenProps = {
-    filteredTokens: [
-      {
-        chainId: "137",
-        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
-        name: "Wrapped AVAX",
-        symbol: "WAVAX",
-        decimals: 18,
-        logoURI: "https://cryptologos.cc/logos/avalanche-avax-logo.png",
-        coingeckoId: "avalanche-2",
-      },
-      {
-        chainId: "137",
-        address: "0x1ce0c2827e2ef14d5c4f29a091d735a204794041",
-        name: "Wrapped ETH",
-        symbol: "WETH",
-        decimals: 18,
-        logoURI: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-        coingeckoId: "ethereum",
-      },
-    ],
+  const toTokenProps: TokenModalProps = {
+    selectedToken: toToken,
+    onTokenSelect: setToToken,
+    filteredTokens: toTokens,
     dialogTitle: "Select a token to bridge to",
-  };
-
-  useEffect(() => {
-    async function fetchData() {
-      const _tokens = await getSquidTokens();
-      setTokens(_tokens);
-      console.log(_tokens);
-      const _chains = await getSquidChains();
-      console.log(_chains);
-      setNetworks(_chains);
-
-      const _fromNetworkProps: NetworkModalProps = {
-        selectedNetwork: _chains.filter(
-          (chain) => chain.chainName == ChainName.ARBITRUM,
-        )[0],
-        onNetworkSelect: setNewFromNetwork,
-        filteredChains: _chains,
-        dialogTitle: "Select a network to bridge from",
-        dialogDescription: "Select a network to bridge from",
-        commandHeading: "Select a network",
-      };
-
-      setFromNetworksProps(_fromNetworkProps);
-
-      const _toNetworkProps: NetworkModalProps = {
-        selectedNetwork: _chains.filter(
-          (chain) => chain.chainName == ChainName.BASE,
-        )[0],
-        onNetworkSelect: setNewToNetwork,
-        filteredChains: _chains,
-        dialogTitle: "Select a network to bridge to",
-        dialogDescription: "Select a network to bridge to",
-        commandHeading: "Select a network",
-      };
-
-      setToNetworkProps(_toNetworkProps);
-    }
-
-    if (!tokens || !networks) {
-      fetchData();
-    }
-  }, []);
-
-  const setNewFromNetwork = (network: ChainData) => {
-    console.log(networks);
-    const newFromNetworkProps = {
-      selectedNetwork: network,
-      onNetworkSelect: setNewFromNetwork,
-      filteredChains: networks,
-      dialogTitle: "Select a network to bridge from",
-      dialogDescription: "Select a network to bridge from",
-      commandHeading: "Select a network",
-    };
-    setFromNetworksProps(newFromNetworkProps);
-  };
-
-  const setNewToNetwork = (network: ChainData) => {
-    const newToNetworkProps = {
-      selectedNetwork: network,
-      onNetworkSelect: setNewToNetwork,
-      filteredChains: networks,
-      dialogTitle: "Select a network to bridge to",
-      dialogDescription: "Select a network to bridge to",
-      commandHeading: "Select a network",
-    };
-    setFromNetworksProps(newToNetworkProps);
   };
 
   return (
@@ -360,9 +233,7 @@ export const SquidBridge = () => {
               Your balance: {userBalance}
             </Typography>
             <SquidTokenModal props={fromTokenProps} />
-            {fromNetworksProps && (
-              <SquidNetworkModal props={fromNetworksProps} />
-            )}
+            <SquidNetworkModal props={fromChainProps} />
           </div>
 
           <div className="flex flex-col">
@@ -372,7 +243,7 @@ export const SquidBridge = () => {
               </Typography>
             </Label>
             <SquidTokenModal props={toTokenProps} />
-            {toNetworkProps && <SquidNetworkModal props={toNetworkProps} />}
+            <SquidNetworkModal props={toChainProps} />
           </div>
 
           <Label className=" space-y-2">
