@@ -36,19 +36,20 @@ const productLinks = [
       {
         href: "/layerzero/onft-mint",
         label: "Mint ONFT",
-        description: "Create your own ONFTs for use across multiple chains.",
+        description:
+          "Start minting ONFTs with seamless LayerZero interoperability.",
       },
       {
         href: "/layerzero/onft-bridge",
         label: "Bridge ONFT",
         description:
-          "Seamlessly transfer your ONFTs between supported networks.",
+          "Bridge your ONFTs across multiple blockchain networks effortlessly.",
       },
       {
         href: "/layerzero/oft-mint-bridge",
         label: "Mint & Bridge OFT",
         description:
-          "Mint new OFTs and bridge them for cross-chain functionality.",
+          "Mint OFTs and enable cross-chain transfers with one seamless solution.",
       },
     ],
   },
@@ -59,19 +60,19 @@ const productLinks = [
         href: "/hyperlane/nft-mint",
         label: "Mint hNFT",
         description:
-          "Mint Hyperlane NFTs to explore cross-chain asset capabilities.",
+          "Mint hNFTs for multi-chain functionality using Hyperlane.",
       },
       {
         href: "/hyperlane/nft-bridge",
         label: "Bridge hNFT",
         description:
-          "Connect and transfer your hNFTs between supported networks.",
+          "Transfer hNFTs across networks with Hyperlane’s advanced bridging.",
       },
       {
         href: "/hyperlane/token-mint-bridge",
         label: "Mint & Bridge ERC20",
         description:
-          "Mint ERC20 tokens and bridge them to other chains with ease.",
+          "Efficiently mint and bridge ERC20 tokens using Hyperlane technology.",
       },
     ],
   },
