@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { useAccount, useToken } from "wagmi";
-import { RouteRequest } from "@0xsquid/squid-types";
+import { useAccount, useBalance } from "wagmi";
+
 import {
   RouteType,
   executeSquidRoute,
   getSquidChains,
   getSquidRoute,
   getSquidTokens,
+  getTxStatus,
+  integratorId,
 } from "@/common/utils/squid/squidRouter";
 import { useEffect, useState } from "react";
 import getProviderOrSigner from "@/common/utils/getters/getProviderOrSigner";
@@ -16,7 +18,8 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import SquidNetworkModal, { NetworkModalProps } from "./network-modal";
 import SquidTokenModal, { TokenModalProps } from "./token-modal";
-import { Network } from "@/common/types/network";
+import ethers from "ethers";
+
 import {
   ChainData,
   ChainName,
@@ -26,6 +29,7 @@ import {
 } from "@0xsquid/sdk";
 import { useChainSelection } from "@/common/hooks/useChainSelection";
 import { useTokenSelection } from "@/common/hooks/useTokenSelection";
+import { formatUnits, parseUnits } from "viem";
 
 export const SquidBridge = () => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -34,14 +38,12 @@ export const SquidBridge = () => {
   // IF NO THEN WE SHOULD HAVE SELECTIONS HANDLERS IN MODALS AND PASS THEM BACK UP TO THIS COMPONENT
 
   // THEN ON BRIDGE BUTTON CLICK WE CAN GET THE SELECTED TOKENS AND NETWORKS FROM MODALS AND CALL THE BRIDGE FUNCTION
-
-  const [tokens, setTokens] = useState<TokenData[]>();
-  const [networks, setNetworks] = useState<ChainData[]>();
-
-  const [userBalance, setUserBalance] = useState<string>("0");
-
   const { address } = useAccount();
   const [route, setRoute] = useState<RouteData | undefined>();
+  const [requestId, setRequestId] = useState<string | undefined>();
+  const [inAmount, setInAmount] = useState<number>();
+  const [outAmount, setOutAmount] = useState<number>();
+  const [txHash, setTxHash] = useState<string>();
 
   const handleBridgeButton = () => {
     console.log("Bridge button clicked");
@@ -104,18 +106,12 @@ export const SquidBridge = () => {
     "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
   );
 
-  // const routeParams: RouteRequest = {
-  //   fromChain: "43114", // Avalanche
-  //   fromAmount: "10000000000000000", // 0.1 AVAX
-  //   fromToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-  //   toChain: "137", // Polygon
-  //   toToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-  //   fromAddress: address,
-  //   toAddress: address,
-  //   slippageConfig: {
-  //     autoMode: 1,
-  //   },
-  // };
+  // reconfigure the chainId
+  const result = useBalance({
+    address: fromToken
+      ? (fromToken.address as `0x${string}`)
+      : "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+  });
 
   const routeParams: GetRoute = {
     fromChain: "43114", // Avalanche
@@ -136,7 +132,8 @@ export const SquidBridge = () => {
           onClick={async () => {
             const _route = await getSquidRoute(routeParams);
             if (_route) {
-              setRoute(_route);
+              setRoute(_route.route);
+              setRequestId(_route.requestId);
             }
           }}
         >
@@ -200,6 +197,92 @@ export const SquidBridge = () => {
     dialogTitle: "Select a token to bridge to",
   };
 
+  useEffect(() => {
+    if (inAmount != undefined) {
+      if (fromChain && toChain && fromToken && toToken) {
+        const routeParams: GetRoute = {
+          fromChain: fromChain.chainId, // Avalanche
+          fromAmount: parseUnits(
+            inAmount.toString(),
+            fromToken.decimals,
+          ).toString(), // 0.1 AVAX
+          fromToken: fromToken.address,
+          toChain: toChain.chainId, // Polygon
+          toToken: toToken.address,
+          fromAddress: address ? address : `0x`,
+          toAddress: address ? address : `0x`,
+          slippage: 1,
+        };
+        fetchRoute(routeParams);
+      }
+    }
+  }, [inAmount]);
+
+  const fetchRoute = async (routeParams: GetRoute) => {
+    try {
+      const _route = await getSquidRoute(routeParams);
+      console.log(_route);
+      if (_route) {
+        setRoute(_route.route);
+        setRequestId(_route.requestId);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBridge = async () => {
+    try {
+      if (!route) {
+        return;
+      }
+
+      const signer = await getProviderOrSigner(true);
+
+      const txReciept = await executeSquidRoute(route, signer as Signer);
+      console.log(txReciept);
+      setTxHash(txReciept?.transactionHash);
+
+      console.log(`Bridging complete with tx ${txReciept?.transactionHash}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // TODO: call getStatus repeatedly after the tx is Sent to show the current status of tx
+  const getStatus = async () => {
+    try {
+      if (
+        !txHash ||
+        !requestId ||
+        fromChain?.chainId == undefined ||
+        toChain?.chainId == undefined
+      ) {
+        return;
+      }
+      const getStatusParams = {
+        transactionId: txHash,
+        requestId: requestId,
+        integratorId: integratorId,
+        fromChainId: fromChain.chainId.toString(),
+        toChainId: toChain.chainId.toString(),
+      };
+
+      const status = await getTxStatus(getStatusParams);
+      console.log(status);
+
+      // {
+      //   (SUCCESS = "success"),
+      //     (NEEDS_GAS = "needs_gas"),
+      //     (ONGOING = "ongoing"),
+      //     (PARTIAL_SUCCESS = "partial_success"),
+      //     (NOT_FOUND = "not_found");
+      // }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
       <TestingButtons />
@@ -230,10 +313,17 @@ export const SquidBridge = () => {
               </Typography>
             </Label>
             <Typography variant={"small"} className="dark:text-black">
-              Your balance: {userBalance}
+              Your balance:{" "}
+              {result.data
+                ? formatUnits(result.data?.value, result.data?.decimals)
+                : "0"}
             </Typography>
             <SquidTokenModal props={fromTokenProps} />
             <SquidNetworkModal props={fromChainProps} />
+            <Input
+              type="number"
+              onChange={(e) => setInAmount(Number(e.target.value))}
+            />
           </div>
 
           <div className="flex flex-col">
@@ -244,6 +334,17 @@ export const SquidBridge = () => {
             </Label>
             <SquidTokenModal props={toTokenProps} />
             <SquidNetworkModal props={toChainProps} />
+            <Input
+              value={
+                route && toToken
+                  ? formatUnits(
+                      BigInt(route?.estimate.toAmount),
+                      toToken?.decimals,
+                    )
+                  : 0
+              }
+              disabled={true}
+            />
           </div>
 
           <Label className=" space-y-2">
