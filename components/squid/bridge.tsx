@@ -292,7 +292,6 @@ export const SquidBridge = () => {
           <Typography variant={"h3"} className=" dark:text-black text-center">
             Squid Bridge
           </Typography>
-
           {/* <BridgeModal
             props={{
               isOpen: showBridgingModal,
@@ -306,7 +305,6 @@ export const SquidBridge = () => {
               loadingHeader: "We're working hard to bridge your NFT",
             }}
           /> */}
-
           <div className="flex flex-col">
             <Label className=" space-y-2">
               <Typography variant={"large"} className="dark:text-black">
@@ -326,7 +324,6 @@ export const SquidBridge = () => {
               onChange={(e) => setInAmount(Number(e.target.value))}
             />
           </div>
-
           <div className="flex flex-col">
             <Label className=" space-y-2 w-full ">
               <Typography variant={"large"} className="dark:text-black">
@@ -347,15 +344,33 @@ export const SquidBridge = () => {
               disabled={true}
             />
           </div>
-
-          <Label className=" space-y-2">
+          {/* <Label className=" space-y-2">
             <Typography variant={"large"} className="dark:text-black">
-              Some label
+              Amount of tokens
             </Typography>
-          </Label>
-          <Button className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl">
-            Bridge
-          </Button>
+            <Input
+              placeholder="Enter amount"
+              className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </Label> */}
+          {/* // TODO: Render either preview or bridge button based on the state of the route */}
+          {route ? (
+            <Button
+              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handleBridgeButton}
+            >
+              Bridge
+            </Button>
+          ) : (
+            <Button
+              className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+              onClick={handlePreviewButton}
+            >
+              Preview
+            </Button>
+          )}
         </div>
       </div>
     </div>
