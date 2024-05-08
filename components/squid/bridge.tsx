@@ -316,8 +316,8 @@ export const SquidBridge = () => {
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
       {/* <TestingButtons /> */}
-      <div className="bg-gradient my-auto md:rounded-xl md:w-7/12 lg:w-5/12 w-full items-start rounded-2xl">
-        <div className="py-8 px-4 md:p-14 md:px-16 flex flex-col gap-6">
+      <div className="bg-gradient my-auto md:rounded-xl md:w-9/12 lg:w-7/12 xl:w-6/12 2xl:w-5/12 w-full items-start rounded-2xl">
+        <div className="py-8 px-4 md:p-8 flex flex-col gap-6">
           <Typography variant={"h3"} className=" dark:text-black text-center">
             Squid Bridge
           </Typography>
