@@ -12,6 +12,7 @@ import hyperlaneGroup from "@/assets/homepage-background/hyperlane-group.svg";
 import layerzeroGroup from "@/assets/homepage-background/layerzero-group.svg";
 import bridgeGroup from "@/assets/homepage-background/bridge-group.svg";
 import refuelGroup from "@/assets/homepage-background/refuel-group.svg";
+import { ChevronRight } from "lucide-react";
 
 const products = [
   {
@@ -62,12 +63,9 @@ export default function HeroSection() {
           </Typography>
           <div className="flex items-center gap-3">
             {/* <Button variant={"etherway"}>Launch Airdrop</Button> */}
-            <Link href={"/layerzero/onft-mint"}>
-              <Button variant={"etherway"}>LayerZero</Button>
-            </Link>
-            <Link href={"/hyperlane/nft-mint"}>
-              <Button variant={"ghost"} className="md:w-32">
-                Hyperlane <ChevronRightIcon />
+            <Link href={"/guides/getting-started"}>
+              <Button variant={"etherway"}>
+                Get started <ChevronRight />
               </Button>
             </Link>
           </div>
