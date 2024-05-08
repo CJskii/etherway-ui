@@ -32,6 +32,14 @@ import { useTokenSelection } from "@/common/hooks/useTokenSelection";
 import { formatUnits, parseUnits } from "viem";
 import { Separator } from "@radix-ui/react-separator";
 import { Network } from "../../common/types/network";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionTrigger,
+  AccordionItem,
+} from "@radix-ui/react-accordion";
+import { ChevronDown } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 export const SquidBridge = () => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -47,6 +55,7 @@ export const SquidBridge = () => {
   const [outAmount, setOutAmount] = useState<number>();
   const [txHash, setTxHash] = useState<string>();
   const [userBalance, setUserBalance] = useState<number>(0);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const handleBridgeButton = () => {
     console.log("Bridge button clicked");
@@ -306,9 +315,9 @@ export const SquidBridge = () => {
 
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
-      <TestingButtons />
-      <div className="bg-gradient my-auto md:rounded-xl md:w-7/12 lg:w-5/12 w-full items-start">
-        <div className="p-8 md:p-14 md:px-16 flex flex-col gap-6">
+      {/* <TestingButtons /> */}
+      <div className="bg-gradient my-auto md:rounded-xl md:w-7/12 lg:w-5/12 w-full items-start rounded-2xl">
+        <div className="py-8 px-4 md:p-14 md:px-16 flex flex-col gap-6">
           <Typography variant={"h3"} className=" dark:text-black text-center">
             Squid Bridge
           </Typography>
@@ -318,8 +327,8 @@ export const SquidBridge = () => {
                 From
               </Typography>
             </Label>
-            <div className="flex flex-col bg-white rounded-lg p-6">
-              <div className="flex justify-between items-center">
+            <div className="flex flex-col bg-white rounded-lg p-2">
+              {/* <div className="flex justify-between items-center">
                 <SquidNetworkModal props={fromChainProps} />
                 <div className="flex justify-center items-center gap-4">
                   <Typography variant="h4" className="dark:text-black">
@@ -329,23 +338,42 @@ export const SquidBridge = () => {
                     Max
                   </Button>
                 </div>
+              </div> */}
+              <div className="flex justify-between items-center">
+                <SquidNetworkModal props={fromChainProps} />
+                <div className="flex items-center justify-center gap-2">
+                  <Typography
+                    variant="small"
+                    className="dark:text-black font-semibold"
+                  >
+                    {userBalance} {fromToken?.symbol}
+                  </Typography>
+                  <Button
+                    variant={"etherway"}
+                    onClick={handleMaxButton}
+                    className="text-xs h-6 rounded-md px-2 text-white"
+                  >
+                    MAX
+                  </Button>
+                </div>
               </div>
               <Separator
                 orientation="horizontal"
                 className="my-2 border-[1px]  dark:border-black/20 rounded-lg w-full place-self-center"
               />
               <div className="flex justify-between items-center">
-                {/* // Token Selection */}
                 <SquidTokenModal props={fromTokenProps} />
                 <div className="flex flex-col items-end justify-center">
-                  {/* // Amount Input */}
                   <Input
                     type="number"
-                    className="text-right text-xl py-2 border-0 px-0 rounded-xl dark:bg-white dark:text-black dark:focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 "
+                    className="text-right text-xs h-6 border-0 w-28 px-2 rounded-xl dark:bg-white dark:text-black dark:focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 "
                     placeholder="Enter amount"
+                    onChange={(e) => setInAmount(Number(e.target.value))}
                   />
-                  {/* USD Value of the amount */}
-                  <Typography variant="muted" className="dark:text-black px-4">
+                  <Typography
+                    variant="muted"
+                    className="dark:text-black py-0 px-2 text-sm"
+                  >
                     $
                     {result.data
                       ? formatToFixed2({
@@ -365,9 +393,19 @@ export const SquidBridge = () => {
                 To
               </Typography>
             </Label>
-            <div className="flex flex-col bg-white rounded-lg p-6">
+            <div className="flex flex-col bg-white rounded-lg p-2">
+              {/* <div className="flex justify-between items-center">
+                <SquidNetworkModal props={fromChainProps} />
+                <div className="flex justify-center items-center gap-4">
+                  <Typography variant="h4" className="dark:text-black">
+                    {userBalance} {fromToken?.symbol}
+                  </Typography>
+                  <Button variant={"etherway"} onClick={handleMaxButton}>
+                    Max
+                  </Button>
+                </div>
+              </div> */}
               <div className="flex justify-between items-center">
-                {/* // Network Selection */}
                 <SquidNetworkModal props={toChainProps} />
               </div>
               <Separator
@@ -375,16 +413,19 @@ export const SquidBridge = () => {
                 className="my-2 border-[1px]  dark:border-black/20 rounded-lg w-full place-self-center"
               />
               <div className="flex justify-between items-center">
-                {/* // Token Selection */}
                 <SquidTokenModal props={toTokenProps} />
                 <div className="flex flex-col items-end justify-center">
-                  {/* // Amount Input */}
-                  <Typography variant="h4" className="dark:text-black px-4">
-                    {/* // TODO: Calculate the amount based on the route and input, set is as a state and display it here */}
+                  <Typography
+                    variant="small"
+                    className="dark:text-black font-semibold px-2"
+                  >
+                    {/* // TODO: Read expected received amount from the state */}
                     {outAmount} {toToken?.symbol}
                   </Typography>
-                  {/* USD Value of the amount */}
-                  <Typography variant="muted" className="dark:text-black px-4">
+                  <Typography
+                    variant="muted"
+                    className="dark:text-black py-0 px-2 text-sm"
+                  >
                     $
                     {result.data
                       ? formatToFixed2({
@@ -397,6 +438,61 @@ export const SquidBridge = () => {
               </div>
             </div>
           </div>
+          <div className="flex flex-col justify-center items-start gap-2">
+            <CheckBox isChecked={isChecked} setIsChecked={setIsChecked} />
+            {isChecked && (
+              <Input
+                type="text"
+                placeholder="Enter address"
+                className="p-2 text-sm rounded-xl dark:bg-white dark:text-black "
+              />
+            )}
+          </div>
+
+          <div>
+            <Typography variant={"muted"} className="dark:text-black text-xs">
+              Estimated Fee: 0.0001 AVAX
+            </Typography>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="flex justify-between items-center w-full py-2">
+                  <Typography
+                    variant={"small"}
+                    className="dark:text-black flex justify-between items-center w-full"
+                  >
+                    More details <ChevronDown />
+                  </Typography>
+                </AccordionTrigger>
+                <AccordionContent className="flex flex-col gap-1">
+                  <Typography
+                    variant={"muted"}
+                    className="dark:text-black text-xs"
+                  >
+                    Slippage: 1%
+                  </Typography>
+                  <Typography
+                    variant={"muted"}
+                    className="dark:text-black text-xs"
+                  >
+                    Expected received amount: 0.0001 ETH
+                  </Typography>
+                  <Typography
+                    variant={"muted"}
+                    className="dark:text-black text-xs"
+                  >
+                    Network fee: 0.0001 AVAX
+                  </Typography>
+                  <Typography
+                    variant={"muted"}
+                    className="dark:text-black text-xs"
+                  >
+                    Gas fee: 0.0001 AVAX
+                  </Typography>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
           {/* // TODO: Render either preview or bridge button based on the state of the route */}
           {route ? (
             <Button
@@ -418,3 +514,20 @@ export const SquidBridge = () => {
     </div>
   );
 };
+
+export function CheckBox({
+  isChecked,
+  setIsChecked,
+}: {
+  isChecked: boolean;
+  setIsChecked: (value: boolean) => void;
+}) {
+  return (
+    <div className="flex items-center space-x-2">
+      <Label htmlFor="another-address" className="text-sm dark:text-black">
+        Send to another address
+      </Label>
+      <Switch id="another-address" onClick={() => setIsChecked(!isChecked)} />
+    </div>
+  );
+}

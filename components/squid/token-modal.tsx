@@ -45,25 +45,20 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
       <DialogTrigger>
         {selectedToken && (
           <CardContent className="grid gap-4 px-0 pb-0 min-w-full">
-            <div className="flex items-center space-x-4 bg-primary rounded-md border border-black p-4 overflow-hidden">
-              <div className="flex items-center gap-4">
-                <Image
-                  src={selectedToken.logoURI as string}
-                  width={24}
-                  height={24}
-                  alt="network icon"
-                  className="rounded-full"
-                />
-                <div className="flex flex-col text-lg">
-                  <Typography
-                    variant={"smallTitle"}
-                    className="dark:text-black font-semibold"
-                  >
-                    {selectedToken.name}
-                  </Typography>
-                </div>
-                <ChevronDown size={24} className="text-black" />
+            <div className="flex items-center justify-center space-x-2 bg-primary rounded-md border border-black p-2 overflow-hidden">
+              <Image
+                src={selectedToken.logoURI as string}
+                width={18}
+                height={18}
+                alt="network icon"
+                className="rounded-full"
+              />
+              <div className="flex flex-col text-lg">
+                <Typography className="dark:text-black font-semibold truncate text-xs">
+                  {selectedToken.name}
+                </Typography>
               </div>
+              <ChevronDown size={12} className="text-black" />
             </div>
           </CardContent>
         )}

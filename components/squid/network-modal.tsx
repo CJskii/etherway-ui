@@ -51,27 +51,28 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
     onNetworkSelect(network);
   };
 
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
     <Dialog>
       <DialogTrigger>
         {selectedNetwork && (
           <CardContent className="grid gap-4 px-0 pb-0 min-w-full flex-1 w-50">
-            <div className="flex items-center space-x-4 bg-primary rounded-md border border-black p-4 overflow-hidden">
+            <div className="flex items-center justify-center space-x-2 bg-primary rounded-md border border-black p-2 overflow-hidden">
               <Image
                 src={selectedNetwork.chainIconURI as string}
-                width={24}
-                height={24}
+                width={18}
+                height={18}
                 alt={selectedNetwork.chainName}
               />
               <div className="flex-1 space-y-1 text-start">
-                <Typography
-                  variant={"smallTitle"}
-                  className="dark:text-black font-semibold truncate"
-                >
-                  {selectedNetwork.chainName}
+                <Typography className="dark:text-black font-semibold truncate text-xs">
+                  {capitalizeFirstLetter(selectedNetwork.chainName)}
                 </Typography>
               </div>
-              <ChevronDown size={24} className="text-black" />
+              <ChevronDown size={12} className="text-black" />
             </div>
           </CardContent>
         )}
