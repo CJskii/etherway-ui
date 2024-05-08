@@ -30,6 +30,8 @@ import {
 import { useChainSelection } from "@/common/hooks/useChainSelection";
 import { useTokenSelection } from "@/common/hooks/useTokenSelection";
 import { formatUnits, parseUnits } from "viem";
+import { Separator } from "@radix-ui/react-separator";
+import { Network } from "../../common/types/network";
 
 export const SquidBridge = () => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -44,6 +46,7 @@ export const SquidBridge = () => {
   const [inAmount, setInAmount] = useState<number>();
   const [outAmount, setOutAmount] = useState<number>();
   const [txHash, setTxHash] = useState<string>();
+  const [userBalance, setUserBalance] = useState<number>(0);
 
   const handleBridgeButton = () => {
     console.log("Bridge button clicked");
@@ -59,6 +62,10 @@ export const SquidBridge = () => {
 
   const handleSelectNetwork = (network: ChainData) => {
     console.log(network);
+  };
+
+  const handleMaxButton = () => {
+    console.log("Max button clicked");
   };
 
   // TODO: Work on the searchFunctionality for the networks
@@ -284,6 +291,19 @@ export const SquidBridge = () => {
     }
   };
 
+  const formatToFixed2 = ({
+    value,
+    decimals,
+  }: {
+    value: bigint;
+    decimals: number;
+  }) => {
+    // Convert the units first
+    const formattedValue = formatUnits(value, decimals);
+    // Parse to float and fix to 2 decimal places
+    return parseFloat(formattedValue).toFixed(2);
+  };
+
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
       <TestingButtons />
@@ -292,69 +312,91 @@ export const SquidBridge = () => {
           <Typography variant={"h3"} className=" dark:text-black text-center">
             Squid Bridge
           </Typography>
-          {/* <BridgeModal
-            props={{
-              isOpen: showBridgingModal,
-              setIsOpen: setShowBridgingModal,
-              isLoading: isLoading,
-              errorMessage: errorMessage,
-              setErrorMessage: setErrorMessage,
-              nftId: nftId,
-              errorHeader: "There was an error while bridging your NFT",
-              successHeader: "NFT Sent",
-              loadingHeader: "We're working hard to bridge your NFT",
-            }}
-          /> */}
           <div className="flex flex-col">
             <Label className=" space-y-2">
               <Typography variant={"large"} className="dark:text-black">
-                Bridge From
+                From
               </Typography>
             </Label>
-            <Typography variant={"small"} className="dark:text-black">
-              Your balance:{" "}
-              {result.data
-                ? formatUnits(result.data?.value, result.data?.decimals)
-                : "0"}
-            </Typography>
-            <SquidTokenModal props={fromTokenProps} />
-            <SquidNetworkModal props={fromChainProps} />
-            <Input
-              type="number"
-              onChange={(e) => setInAmount(Number(e.target.value))}
-            />
+            <div className="flex flex-col bg-white rounded-lg p-6">
+              <div className="flex justify-between items-center">
+                <SquidNetworkModal props={fromChainProps} />
+                <div className="flex justify-center items-center gap-4">
+                  <Typography variant="h4" className="dark:text-black">
+                    {userBalance} {fromToken?.symbol}
+                  </Typography>
+                  <Button variant={"etherway"} onClick={handleMaxButton}>
+                    Max
+                  </Button>
+                </div>
+              </div>
+              <Separator
+                orientation="horizontal"
+                className="my-2 border-[1px]  dark:border-black/20 rounded-lg w-full place-self-center"
+              />
+              <div className="flex justify-between items-center">
+                {/* // Token Selection */}
+                <SquidTokenModal props={fromTokenProps} />
+                <div className="flex flex-col items-end justify-center">
+                  {/* // Amount Input */}
+                  <Input
+                    type="number"
+                    className="text-right text-xl py-2 border-0 px-0 rounded-xl dark:bg-white dark:text-black dark:focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 "
+                    placeholder="Enter amount"
+                  />
+                  {/* USD Value of the amount */}
+                  <Typography variant="muted" className="dark:text-black px-4">
+                    $
+                    {result.data
+                      ? formatToFixed2({
+                          value: result.data.value,
+                          decimals: result.data.decimals,
+                        })
+                      : "0.00"}
+                  </Typography>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div className="flex flex-col">
             <Label className=" space-y-2 w-full ">
               <Typography variant={"large"} className="dark:text-black">
-                Bridge To
+                To
               </Typography>
             </Label>
-            <SquidTokenModal props={toTokenProps} />
-            <SquidNetworkModal props={toChainProps} />
-            <Input
-              value={
-                route && toToken
-                  ? formatUnits(
-                      BigInt(route?.estimate.toAmount),
-                      toToken?.decimals,
-                    )
-                  : 0
-              }
-              disabled={true}
-            />
+            <div className="flex flex-col bg-white rounded-lg p-6">
+              <div className="flex justify-between items-center">
+                {/* // Network Selection */}
+                <SquidNetworkModal props={toChainProps} />
+              </div>
+              <Separator
+                orientation="horizontal"
+                className="my-2 border-[1px]  dark:border-black/20 rounded-lg w-full place-self-center"
+              />
+              <div className="flex justify-between items-center">
+                {/* // Token Selection */}
+                <SquidTokenModal props={toTokenProps} />
+                <div className="flex flex-col items-end justify-center">
+                  {/* // Amount Input */}
+                  <Typography variant="h4" className="dark:text-black px-4">
+                    {/* // TODO: Calculate the amount based on the route and input, set is as a state and display it here */}
+                    {outAmount} {toToken?.symbol}
+                  </Typography>
+                  {/* USD Value of the amount */}
+                  <Typography variant="muted" className="dark:text-black px-4">
+                    $
+                    {result.data
+                      ? formatToFixed2({
+                          value: result.data.value,
+                          decimals: result.data.decimals,
+                        })
+                      : "0.00"}
+                  </Typography>
+                </div>
+              </div>
+            </div>
           </div>
-          {/* <Label className=" space-y-2">
-            <Typography variant={"large"} className="dark:text-black">
-              Amount of tokens
-            </Typography>
-            <Input
-              placeholder="Enter amount"
-              className="p-6 py-7 rounded-xl dark:bg-white dark:text-black"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </Label> */}
           {/* // TODO: Render either preview or bridge button based on the state of the route */}
           {route ? (
             <Button

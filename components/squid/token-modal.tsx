@@ -21,6 +21,7 @@ import { Typography } from "../ui/typography";
 import { CardContent } from "../ui/card";
 import Image from "next/image";
 import { TokenData } from "@0xsquid/sdk";
+import { ChevronDown } from "lucide-react";
 
 export interface TokenModalProps {
   selectedToken: TokenData | undefined;
@@ -44,23 +45,24 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
       <DialogTrigger>
         {selectedToken && (
           <CardContent className="grid gap-4 px-0 pb-0 min-w-full">
-            <div className="flex items-center space-x-4 bg-white/30 rounded-md border border-black p-4 overflow-hidden">
+            <div className="flex items-center space-x-4 bg-primary rounded-md border border-black p-4 overflow-hidden">
               <div className="flex items-center gap-4">
                 <Image
                   src={selectedToken.logoURI as string}
-                  width={30}
-                  height={30}
+                  width={24}
+                  height={24}
                   alt="network icon"
                   className="rounded-full"
                 />
                 <div className="flex flex-col text-lg">
                   <Typography
                     variant={"smallTitle"}
-                    className="dark:text-black"
+                    className="dark:text-black font-semibold"
                   >
                     {selectedToken.name}
                   </Typography>
                 </div>
+                <ChevronDown size={24} className="text-black" />
               </div>
             </div>
           </CardContent>

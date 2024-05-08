@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/command";
 import { Typography } from "../ui/typography";
 import { CardContent } from "../ui/card";
+import { ChevronDown } from "lucide-react";
 
 import { Network } from "@/common/types/network";
 import Image from "next/image";
@@ -54,12 +55,12 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
     <Dialog>
       <DialogTrigger>
         {selectedNetwork && (
-          <CardContent className="grid gap-4 px-0 pb-0 min-w-full">
-            <div className="flex items-center space-x-4 bg-white/30 rounded-md border border-black p-4 overflow-hidden">
+          <CardContent className="grid gap-4 px-0 pb-0 min-w-full flex-1 w-50">
+            <div className="flex items-center space-x-4 bg-primary rounded-md border border-black p-4 overflow-hidden">
               <Image
                 src={selectedNetwork.chainIconURI as string}
-                width={40}
-                height={40}
+                width={24}
+                height={24}
                 alt={selectedNetwork.chainName}
               />
               <div className="flex-1 space-y-1 text-start">
@@ -69,10 +70,8 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
                 >
                   {selectedNetwork.chainName}
                 </Typography>
-                <p className="text-sm text-muted-foreground dark:text-black">
-                  {selectedNetwork.nativeCurrency.symbol}
-                </p>
               </div>
+              <ChevronDown size={24} className="text-black" />
             </div>
           </CardContent>
         )}
