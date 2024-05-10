@@ -236,7 +236,7 @@ const GettingStarted = () => {
       <section className="py-10 bg-base-200 sm:py-16 lg:py-24">
         <div className="max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto text-center">
-            <Typography variant="h1" className="mt-4 text-gray-300">
+            <Typography variant="h1" className="mt-4">
               Getting Started
             </Typography>
             <Typography variant={"paragraph"} className="mt-4">
@@ -257,7 +257,7 @@ const GettingStarted = () => {
                   <Link
                     href={link.url}
                     key={index}
-                    className="flex flex-col dark:bg-gray-900/30 dark:hover:bg-gray-900/60 justify-center items-start py-2 border-[1px] hover:border-white/60 border-white/30 rounded-xl my-4"
+                    className="flex flex-col dark:bg-[#121419] bg-slate-100 justify-center items-start py-2 border-[1px] dark:hover:border-white/60 hover:border-black/70 dark:border-white/30 border-black/30 rounded-xl my-4"
                   >
                     <CardContent className="grid p-4">
                       {/* <div className="flex justify-start items-center">
