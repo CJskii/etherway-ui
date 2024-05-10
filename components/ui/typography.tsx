@@ -22,7 +22,7 @@ const typographyVariants = cva("", {
       small: "text-sm font-medium leading-none dark:text-white",
       extraSmall: "text-xs font-normal text-muted-foreground dark:text-white",
       muted: "text-[#00000066] dark:text-white/40",
-      heroTiles: "text-md text-white/80",
+      heroTiles: "text-md text-white/80 font-semibold",
     },
   },
   defaultVariants: {
