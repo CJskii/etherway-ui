@@ -55,20 +55,25 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   return (
     <Dialog>
       <DialogTrigger>
         {selectedNetwork && (
-          <CardContent className="grid gap-4 px-0 pb-0 min-w-full flex-1 w-50">
-            <div className="flex items-center justify-center space-x-2 bg-primary rounded-md border border-black p-2 overflow-hidden">
+          <CardContent className="grid gap-4 px-0 pb-0 lg:w-36 w-32 flex-1">
+            <div className="flex items-center justify-center space-x-2 bg-primary rounded-md p-2 overflow-hidden">
               <Image
                 src={selectedNetwork.chainIconURI as string}
                 width={18}
                 height={18}
                 alt={selectedNetwork.chainName}
+                className="rounded-full"
               />
-              <div className="flex-1 space-y-1 text-start">
-                <Typography className="dark:text-black font-semibold truncate text-xs">
+              <div className="flex-1 min-w-0 space-y-1 text-start">
+                <Typography className="dark:text-black text-left font-semibold truncate lg:text-sm text-xs overflow-hidden text-overflow-ellipsis white-space-nowrap">
                   {capitalizeFirstLetter(selectedNetwork.chainName)}
                 </Typography>
               </div>
@@ -111,11 +116,11 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
                           variant={"smallTitle"}
                           className="dark:text-black"
                         >
-                          {network.chainName}
+                          {capitalizeFirstLetter(network.chainName)}
                         </Typography>
                         <Typography
-                          variant={"extraSmall"}
-                          className="dark:text-black text-muted-foreground"
+                          variant={"muted"}
+                          className="dark:text-black/50 text-black/50 text-xs"
                         >
                           {network.nativeCurrency.symbol}
                         </Typography>

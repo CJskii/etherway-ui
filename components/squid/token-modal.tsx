@@ -40,12 +40,16 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
     onTokenSelect(token);
   };
 
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
   return (
     <Dialog>
       <DialogTrigger>
         {selectedToken && (
-          <CardContent className="grid gap-4 px-0 pb-0 min-w-full">
-            <div className="flex items-center justify-center space-x-2 bg-primary rounded-md border border-black p-2 overflow-hidden">
+          <CardContent className="grid gap-4 px-0 pb-0 lg:w-36 w-32">
+            <div className="flex items-center justify-center space-x-2 bg-primary rounded-md  p-2 overflow-hidden">
               <Image
                 src={selectedToken.logoURI as string}
                 width={18}
@@ -53,8 +57,8 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
                 alt="network icon"
                 className="rounded-full"
               />
-              <div className="flex flex-col text-lg">
-                <Typography className="dark:text-black font-semibold truncate text-xs">
+              <div className="flex-1 min-w-0">
+                <Typography className="dark:text-black text-left font-semibold truncate lg:text-sm text-xs overflow-hidden text-overflow-ellipsis white-space-nowrap">
                   {selectedToken.name}
                 </Typography>
               </div>
@@ -69,21 +73,20 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
           {/* <DialogDescription>{dialogDescription}</DialogDescription> */}
         </DialogHeader>
         <Command>
-          <div></div>
           <CommandInput placeholder="Search for a network..." />
           <DialogClose>
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup
                 // heading={commandHeading}
-                className="text-white text-left mt-4"
+                className="text-white text-left mt-4 "
               >
                 {filteredTokens &&
                   filteredTokens.map((token, index) => (
                     <CommandItem
                       key={index}
                       onSelect={() => handleSelection(token)}
-                      className="flex items-center p-4 mb-1 rounded-md bg-white/30 cursor-pointer justify-start  gap-2 hover:opacity-80"
+                      className="flex items-center p-4 mb-1 rounded-md bg-white/30 cursor-pointer justify-start overflow-hidden gap-2 hover:opacity-80"
                     >
                       <Image
                         src={token.logoURI as string}
@@ -100,8 +103,15 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
                           {token.name}
                         </Typography>
                         <Typography
-                          variant={"smallTitle"}
-                          className="dark:text-black"
+                          variant={"muted"}
+                          className="dark:text-black/50 text-black/50 text-xs truncate md:hidden"
+                        >
+                          {formatAddress(token.address)}
+                        </Typography>
+                        <Typography
+                          variant={"muted"}
+                          className="dark:text-black/50 text-black/50 text-xs 
+                           hidden md:block"
                         >
                           {token.address}
                         </Typography>

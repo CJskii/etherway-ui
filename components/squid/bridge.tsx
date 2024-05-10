@@ -307,9 +307,7 @@ export const SquidBridge = () => {
     value: bigint;
     decimals: number;
   }) => {
-    // Convert the units first
     const formattedValue = formatUnits(value, decimals);
-    // Parse to float and fix to 2 decimal places
     return parseFloat(formattedValue).toFixed(2);
   };
 
@@ -327,7 +325,7 @@ export const SquidBridge = () => {
                 From
               </Typography>
             </Label>
-            <div className="flex flex-col bg-white rounded-lg p-2">
+            <div className="flex flex-col bg-white rounded-lg p-2 md:p-4">
               {/* <div className="flex justify-between items-center">
                 <SquidNetworkModal props={fromChainProps} />
                 <div className="flex justify-center items-center gap-4">
@@ -393,7 +391,7 @@ export const SquidBridge = () => {
                 To
               </Typography>
             </Label>
-            <div className="flex flex-col bg-white rounded-lg p-2">
+            <div className="flex flex-col bg-white rounded-lg p-2 md:p-4">
               {/* <div className="flex justify-between items-center">
                 <SquidNetworkModal props={fromChainProps} />
                 <div className="flex justify-center items-center gap-4">
