@@ -40,6 +40,7 @@ import {
 } from "@radix-ui/react-accordion";
 import { ChevronDown } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Skeleton } from "../ui/skeleton";
 
 export const SquidBridge = () => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -56,6 +57,8 @@ export const SquidBridge = () => {
   const [txHash, setTxHash] = useState<string>();
   const [userBalance, setUserBalance] = useState<number>(0);
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [toAddress, setToAddress] = useState<string>();
 
   const handleBridgeButton = () => {
     console.log("Bridge button clicked");
@@ -71,10 +74,6 @@ export const SquidBridge = () => {
 
   const handleSelectNetwork = (network: ChainData) => {
     console.log(network);
-  };
-
-  const handleMaxButton = () => {
-    console.log("Max button clicked");
   };
 
   // TODO: Work on the searchFunctionality for the networks
@@ -128,6 +127,14 @@ export const SquidBridge = () => {
       ? (fromToken.address as `0x${string}`)
       : "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
   });
+
+  const handleMaxButton = () => {
+    if (!result.data?.value) {
+      return;
+    }
+    setInAmount(Number(formatUnits(result.data?.value, result.data?.decimals)));
+    console.log("Max button clicked");
+  };
 
   const routeParams: GetRoute = {
     fromChain: "43114", // Avalanche
@@ -226,7 +233,7 @@ export const SquidBridge = () => {
           toChain: toChain.chainId, // Polygon
           toToken: toToken.address,
           fromAddress: address ? address : `0x`,
-          toAddress: address ? address : `0x`,
+          toAddress: toAddress ? toAddress : address ? address : `0x`,
           slippage: 1,
         };
         fetchRoute(routeParams);
@@ -237,12 +244,14 @@ export const SquidBridge = () => {
   // might want to fetch the latest route every 20 seconds to refresh the price
   const fetchRoute = async (routeParams: GetRoute) => {
     try {
+      setIsLoading(true);
       const _route = await getSquidRoute(routeParams);
       console.log(_route);
       if (_route) {
         setRoute(_route.route);
         setRequestId(_route.requestId);
       }
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -344,7 +353,13 @@ export const SquidBridge = () => {
                     variant="small"
                     className="dark:text-black font-semibold"
                   >
-                    {userBalance} {fromToken?.symbol}
+                    {result.data
+                      ? formatToFixed2({
+                          value: result.data.value,
+                          decimals: result.data.decimals,
+                        })
+                      : "0.00"}{" "}
+                    {fromToken?.symbol}
                   </Typography>
                   <Button
                     variant={"etherway"}
@@ -368,18 +383,16 @@ export const SquidBridge = () => {
                     placeholder="Enter amount"
                     onChange={(e) => setInAmount(Number(e.target.value))}
                   />
-                  <Typography
-                    variant="muted"
-                    className="dark:text-black py-0 px-2 text-sm"
-                  >
-                    $
-                    {result.data
-                      ? formatToFixed2({
-                          value: result.data.value,
-                          decimals: result.data.decimals,
-                        })
-                      : "0.00"}
-                  </Typography>
+                  {isLoading ? (
+                    <Skeleton className="h-5 w-10 rounded-xl" />
+                  ) : (
+                    <Typography
+                      variant="muted"
+                      className="dark:text-black py-0 px-2 text-sm"
+                    >
+                      ${route?.estimate.fromAmountUSD}
+                    </Typography>
+                  )}
                 </div>
               </div>
             </div>
@@ -412,27 +425,35 @@ export const SquidBridge = () => {
               />
               <div className="flex justify-between items-center">
                 <SquidTokenModal props={toTokenProps} />
-                <div className="flex flex-col items-end justify-center">
-                  <Typography
-                    variant="small"
-                    className="dark:text-black font-semibold px-2"
-                  >
-                    {/* // TODO: Read expected received amount from the state */}
-                    {outAmount} {toToken?.symbol}
-                  </Typography>
-                  <Typography
-                    variant="muted"
-                    className="dark:text-black py-0 px-2 text-sm"
-                  >
-                    $
-                    {result.data
-                      ? formatToFixed2({
-                          value: result.data.value,
-                          decimals: result.data.decimals,
-                        })
-                      : "0.00"}
-                  </Typography>
-                </div>
+                {isLoading ? (
+                  <div className="flex flex-col items-end justify-center">
+                    <Skeleton className="h-5 w-10 rounded-xl" />
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-end justify-center">
+                    <Typography
+                      variant="smallTitle"
+                      className="dark:text-black font-semibold px-2"
+                    >
+                      {/* // TODO: Read expected received amount from the state */}
+                      {route?.estimate && toToken
+                        ? Number(
+                            formatUnits(
+                              BigInt(route.estimate.toAmount),
+                              toToken?.decimals,
+                            ),
+                          ).toFixed(4)
+                        : ""}
+                      {toToken?.symbol}
+                    </Typography>
+                    <Typography
+                      variant="muted"
+                      className="dark:text-black py-0 px-2 text-sm"
+                    >
+                      ${route?.estimate.toAmountUSD}
+                    </Typography>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -442,6 +463,7 @@ export const SquidBridge = () => {
               <Input
                 type="text"
                 placeholder="Enter address"
+                onChange={(e) => setToAddress(e.target.value)}
                 className="p-2 text-sm rounded-xl dark:bg-white dark:text-black "
               />
             )}
@@ -449,7 +471,14 @@ export const SquidBridge = () => {
 
           <div>
             <Typography variant={"muted"} className="dark:text-black text-xs">
-              Estimated Fee: 0.0001 AVAX
+              Estimated Fee:{" "}
+              {route?.estimate &&
+                formatUnits(
+                  BigInt(route?.estimate.gasCosts[0].amount),
+                  route?.estimate.gasCosts[0].token.decimals,
+                )}{" "}
+              {route?.estimate && route?.estimate.gasCosts[0].token.symbol} ~ $
+              {route?.estimate && route?.estimate.gasCosts[0].amountUSD}
             </Typography>
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
@@ -472,20 +501,28 @@ export const SquidBridge = () => {
                     variant={"muted"}
                     className="dark:text-black text-xs"
                   >
-                    Expected received amount: 0.0001 ETH
+                    Minmum received amount:{" "}
+                    {route?.estimate && toToken
+                      ? Number(
+                          formatUnits(
+                            BigInt(route.estimate.toAmountMin),
+                            toToken?.decimals,
+                          ),
+                        ).toFixed(4)
+                      : ""}
+                    {toToken?.symbol}
                   </Typography>
-                  <Typography
-                    variant={"muted"}
-                    className="dark:text-black text-xs"
-                  >
-                    Network fee: 0.0001 AVAX
-                  </Typography>
-                  <Typography
-                    variant={"muted"}
-                    className="dark:text-black text-xs"
-                  >
-                    Gas fee: 0.0001 AVAX
-                  </Typography>
+                  {route?.estimate.gasCosts &&
+                    route?.estimate.feeCosts.map((feeCost) => {
+                      return (
+                        <Typography
+                          variant={"muted"}
+                          className="dark:text-black text-xs"
+                        >
+                          {feeCost.name} : ${feeCost.amountUSD}
+                        </Typography>
+                      );
+                    })}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
