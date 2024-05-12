@@ -11,7 +11,8 @@ const typographyVariants = cva("", {
       h3: "scroll-m-20 text-2xl font-semibold tracking-tight dark:text-white",
       h4: "scroll-m-20 text-xl font-semibold tracking-tight dark:text-white",
       paragraph: "leading-7 [&:not(:first-child)]:mt-6 dark:text-white",
-      blockquote: "mt-6 border-l-2 pl-6 italic dark:text-white",
+      blockquote:
+        "mt-6 border-l-2 pl-6 italic dark:text-white border-secondary",
       list: "my-6 ml-6 list-disc [&>li]:mt-2 dark:text-white",
       inlineCode:
         "relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold dark:text-white",
@@ -21,6 +22,7 @@ const typographyVariants = cva("", {
       small: "text-sm font-medium leading-none dark:text-white",
       extraSmall: "text-xs font-normal text-muted-foreground dark:text-white",
       muted: "text-[#00000066] dark:text-white/40",
+      heroTiles: "text-md text-white/80 font-semibold",
       navbarTitle: "text-lg text-[#FF8F8F] font-semibold",
       navbarMuted: "text-sm text-[#FF8F8F] dark:text-white/40 text-black/40",
       footerLink:
@@ -52,6 +54,7 @@ const variantElementMap: Record<
   small: "small",
   extraSmall: "small",
   muted: "p",
+  heroTiles: "span",
   navbarTitle: "span",
   navbarMuted: "p",
   footerLink: "small",
