@@ -1,12 +1,12 @@
-import HeadComponent from "@/common/elements/HeadComponent";
-import { Layout } from "@/components/dashboard/layout";
-import { Typography } from "@/components/ui/typography";
+import HeadComponent from "@/src/components/head-component";
+import { Layout } from "@/src/components/dashboard/layout";
+import { Typography } from "@/src/components/ui/typography";
 import Link from "next/link";
 
 import { BellRing, Check } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/src/lib/utils";
+import { Button } from "@/src/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/src/components/ui/card";
 
 const cardsData = [
   {

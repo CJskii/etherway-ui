@@ -22,14 +22,11 @@ const typographyVariants = cva("", {
       small: "text-sm font-medium leading-none dark:text-white",
       extraSmall: "text-xs font-normal text-muted-foreground dark:text-white",
       muted: "text-[#00000066] dark:text-white/40",
-<<<<<<< HEAD:components/ui/typography.tsx
       heroTiles: "text-md text-white/80 font-semibold",
-=======
       navbarTitle: "text-lg text-[#FF8F8F] font-semibold",
       navbarMuted: "text-sm text-[#FF8F8F] dark:text-white/40 text-black/40",
       footerLink:
         "text-base font-normal dark:text-black hover:text-white/80 dark:hover:text-black/80 hover:underline",
->>>>>>> staging:src/components/ui/typography.tsx
     },
   },
   defaultVariants: {
@@ -57,13 +54,10 @@ const variantElementMap: Record<
   small: "small",
   extraSmall: "small",
   muted: "p",
-<<<<<<< HEAD:components/ui/typography.tsx
   heroTiles: "span",
-=======
   navbarTitle: "span",
   navbarMuted: "p",
   footerLink: "small",
->>>>>>> staging:src/components/ui/typography.tsx
 };
 
 export interface TypographyProps
