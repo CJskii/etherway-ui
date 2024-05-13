@@ -31,21 +31,14 @@ import { useChainSelection } from "@/common/hooks/useChainSelection";
 import { useTokenSelection } from "@/common/hooks/useTokenSelection";
 import { formatUnits, parseUnits } from "viem";
 import { Separator } from "@radix-ui/react-separator";
-import { Network } from "../../common/types/network";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionTrigger,
-  AccordionItem,
-} from "@radix-ui/react-accordion";
-import { ChevronDown } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "../ui/skeleton";
 import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import Loader from "@/components/ui/loader";
 import { toast } from "sonner";
 import StatusModal from "./status-modal";
+import { FeeDetails } from "./fee-display";
+import { CheckBoxComponent } from "./check-box";
 
 export const SquidBridge = () => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -65,6 +58,8 @@ export const SquidBridge = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [toAddress, setToAddress] = useState<string>();
   const [isFetchingRoute, setIsFetchingRoute] = useState<boolean>(false);
+  const [isExecutingTransaction, setIsExecutingTransaction] =
+    useState<boolean>(false); // might not need this state, but could be useful to show different stuff depending if we're fetching routes or executing tx
   const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -141,40 +136,22 @@ export const SquidBridge = () => {
     }
   };
 
-  const handleSelectToken = (token: TokenData) => {
-    console.log(token);
-  };
-
-  const handleSelectNetwork = (network: ChainData) => {
-    console.log(network);
-  };
-
-  // TODO: Work on the searchFunctionality for the networks
   const {
     selectedchain: fromChain,
     chains: fromChains,
     onChainSelect: setFromNetwork,
-    // searchTerm,
-    // onSearchChange,
-    // onClose,
   } = useChainSelection(ChainName.ARBITRUM);
 
   const {
     selectedchain: toChain,
     chains: toChains,
     onChainSelect: setToNetwork,
-    // searchTerm,
-    // onSearchChange,
-    // onClose,
   } = useChainSelection("blast");
 
   const {
     selectedtoken: fromToken,
     tokens: fromTokens,
     onTokenSelect: setFromToken,
-    // searchTerm,
-    // onSearchChange,
-    // onClose,
   } = useTokenSelection(
     fromChain,
     42161,
@@ -185,9 +162,6 @@ export const SquidBridge = () => {
     selectedtoken: toToken,
     tokens: toTokens,
     onTokenSelect: setToToken,
-    // searchTerm,
-    // onSearchChange,
-    // onClose,
   } = useTokenSelection(
     toChain,
     81457,
@@ -211,59 +185,6 @@ export const SquidBridge = () => {
       return;
     }
     setInAmount(Number(formatUnits(result.data?.value, result.data?.decimals)));
-    console.log("Max button clicked");
-  };
-
-  const routeParams: GetRoute = {
-    fromChain: "43114", // Avalanche
-    fromAmount: "10000000000000000", // 0.1 AVAX
-    fromToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    toChain: "137", // Polygon
-    toToken: "0xEEeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    fromAddress: address ? address : `0x`,
-    toAddress: address ? address : `0x`,
-    slippage: 1,
-  };
-
-  const TestingButtons = () => {
-    return (
-      <div className="flex gap-4">
-        <Button
-          variant={"etherway"}
-          onClick={async () => {
-            const _route = await getSquidRoute(routeParams);
-            if (_route) {
-              setRoute(_route.route);
-              setRequestId(_route.requestId);
-            }
-          }}
-        >
-          Get Squid Route
-        </Button>
-        <Button
-          variant={"etherway"}
-          onClick={async () => {
-            if (route) {
-              const signer = (await getProviderOrSigner(true)) as Signer;
-              const _route = await executeSquidRoute(route, signer);
-            }
-          }}
-        >
-          Execute
-        </Button>
-        <br />
-
-        <Button
-          variant={"etherway"}
-          onClick={async () => {
-            console.log(await getSquidTokens());
-            console.log(await getSquidChains());
-          }}
-        >
-          Get
-        </Button>
-      </div>
-    );
   };
 
   const fromChainProps: NetworkModalProps = {
@@ -297,27 +218,6 @@ export const SquidBridge = () => {
     filteredTokens: toTokens,
     dialogTitle: "Select a token to bridge to",
   };
-
-  // useEffect(() => {
-  //   if (inAmount != undefined) {
-  //     if (fromChain && toChain && fromToken && toToken) {
-  //       const routeParams: GetRoute = {
-  //         fromChain: fromChain.chainId, // Avalanche
-  //         fromAmount: parseUnits(
-  //           inAmount.toString(),
-  //           fromToken.decimals,
-  //         ).toString(), // 0.1 AVAX
-  //         fromToken: fromToken.address,
-  //         toChain: toChain.chainId, // Polygon
-  //         toToken: toToken.address,
-  //         fromAddress: address ? address : `0x`,
-  //         toAddress: toAddress ? toAddress : address ? address : `0x`,
-  //         slippage: 1,
-  //       };
-  //       fetchRoute(routeParams);
-  //     }
-  //   }
-  // }, [inAmount]);
 
   // might want to fetch the latest route every 20 seconds to refresh the price
   const fetchRoute = async (routeParams: GetRoute) => {
@@ -377,6 +277,8 @@ export const SquidBridge = () => {
     return parseFloat(formattedValue).toFixed(2);
   };
 
+  // UNCOMMENT TO TEST STATUS MODAL
+
   // useEffect(() => {
   //   setShowStatusModal(true);
   //   setIsLoading(true);
@@ -384,7 +286,6 @@ export const SquidBridge = () => {
 
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
-      {/* <TestingButtons /> */}
       <StatusModal
         props={{
           isOpen: showStatusModal,
@@ -520,93 +421,18 @@ export const SquidBridge = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col justify-center items-start gap-2">
-            <CheckBox isChecked={isChecked} setIsChecked={setIsChecked} />
-            {isChecked && (
-              <Input
-                type="text"
-                placeholder="Enter address"
-                onChange={(e) => setToAddress(e.target.value)}
-                className="p-2 text-sm rounded-xl dark:bg-white dark:text-black "
-              />
-            )}
-          </div>
 
-          <div>
-            {isFetchingRoute ? (
-              <Skeleton className="h-4 w-full rounded-xl" />
-            ) : route?.estimate ? (
-              <Typography
-                variant={"muted"}
-                className="dark:text-black text-xs truncate"
-              >
-                Estimated Fee:{" "}
-                {formatUnits(
-                  BigInt(route.estimate.gasCosts[0].amount),
-                  route.estimate.gasCosts[0].token.decimals,
-                )}{" "}
-                {route.estimate.gasCosts[0].token.symbol} ~ $
-                {route.estimate.gasCosts[0].amountUSD}
-              </Typography>
-            ) : (
-              <div className="invisible">
-                <Typography
-                  variant={"muted"}
-                  className="dark:text-black text-xs truncate"
-                >
-                  Estimated Fee: 0 ~ $0
-                </Typography>
-              </div>
-            )}
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="flex justify-between items-center w-full py-2">
-                  <Typography
-                    variant={"small"}
-                    className="dark:text-black flex justify-between items-center w-full"
-                  >
-                    More details <ChevronDown />
-                  </Typography>
-                </AccordionTrigger>
-                <AccordionContent className="flex flex-col gap-1">
-                  <Typography
-                    variant={"muted"}
-                    className="dark:text-black text-xs"
-                  >
-                    Slippage: 1%
-                  </Typography>
-                  <Typography
-                    variant={"muted"}
-                    className="dark:text-black text-xs"
-                  >
-                    Minmum received amount:{" "}
-                    {route?.estimate && toToken
-                      ? Number(
-                          formatUnits(
-                            BigInt(route.estimate.toAmountMin),
-                            toToken?.decimals,
-                          ),
-                        ).toFixed(4)
-                      : ""}
-                    {toToken?.symbol}
-                  </Typography>
-                  {route?.estimate.gasCosts &&
-                    route?.estimate.feeCosts.map((feeCost, index) => {
-                      return (
-                        <Typography
-                          variant={"muted"}
-                          className="dark:text-black text-xs"
-                          key={index}
-                        >
-                          {feeCost.name} : $
-                          {Number(feeCost.amountUSD).toFixed(2)}
-                        </Typography>
-                      );
-                    })}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
+          {/* SEND TO ANOTHER ADDRESS */}
+          <CheckBoxComponent {...{ isChecked, setIsChecked, setToAddress }} />
+
+          {/* FEE DETAILS */}
+          <FeeDetails
+            props={{
+              route: route,
+              isFetchingRoute: isFetchingRoute,
+              toToken: toToken,
+            }}
+          />
 
           {route ? (
             <Button
@@ -632,20 +458,3 @@ export const SquidBridge = () => {
     </div>
   );
 };
-
-export function CheckBox({
-  isChecked,
-  setIsChecked,
-}: {
-  isChecked: boolean;
-  setIsChecked: (value: boolean) => void;
-}) {
-  return (
-    <div className="flex items-center space-x-2">
-      <Label htmlFor="another-address" className="text-sm dark:text-black">
-        Send to another address
-      </Label>
-      <Switch id="another-address" onClick={() => setIsChecked(!isChecked)} />
-    </div>
-  );
-}
