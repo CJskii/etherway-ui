@@ -19,7 +19,7 @@ interface StatusModalProps {
     modalTitle: string;
     modalDescription: string;
     modalButtonText: string;
-    errorMessage: string;
+    errorMessage: string | undefined;
     setErrorMessage: (value: string) => void;
     fromNetwork: ChainData;
     toNetwork: ChainData;

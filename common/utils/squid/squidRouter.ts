@@ -89,6 +89,7 @@ export async function getTxStatus(txData: txDataType) {
 
     // Display the route status
     console.log(`Route status: ${status.squidTransactionStatus}`);
+    return status;
   } catch (error) {
     console.log(error);
     return;

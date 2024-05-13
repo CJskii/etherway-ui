@@ -41,12 +41,6 @@ import { FeeDetails } from "./fee-display";
 import { CheckBoxComponent } from "./check-box";
 
 export const SquidBridge = () => {
-  // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
-
-  // IF YES THEN WE SHOULD HAVE SELECTIONS HANDLERS HERE AND PASS THEM DOWN TO MODALS
-  // IF NO THEN WE SHOULD HAVE SELECTIONS HANDLERS IN MODALS AND PASS THEM BACK UP TO THIS COMPONENT
-
-  // THEN ON BRIDGE BUTTON CLICK WE CAN GET THE SELECTED TOKENS AND NETWORKS FROM MODALS AND CALL THE BRIDGE FUNCTION
   const { address } = useAccount();
   const [route, setRoute] = useState<RouteData | undefined>();
   const [requestId, setRequestId] = useState<string | undefined>();
@@ -61,7 +55,9 @@ export const SquidBridge = () => {
   const [isExecutingTransaction, setIsExecutingTransaction] =
     useState<boolean>(false); // might not need this state, but could be useful to show different stuff depending if we're fetching routes or executing tx
   const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [axelarURL, setAxelarURL] = useState<string>();
+  let intervalId: any = 0;
 
   const account = useAccount();
   const { switchChain } = useSwitchChain();
@@ -79,8 +75,10 @@ export const SquidBridge = () => {
       const txReciept = await executeSquidRoute(route, signer as Signer);
       console.log(txReciept);
       setTxHash(txReciept?.transactionHash);
-
-      console.log(`Bridging complete with tx ${txReciept?.transactionHash}`);
+      if (txReciept?.transactionHash) {
+        handleStartPoll(txReciept?.transactionHash);
+      }
+      console.log(`Bridging started with tx ${txReciept?.transactionHash}`);
     } catch (error) {
       console.log(error);
     }
@@ -134,6 +132,20 @@ export const SquidBridge = () => {
     } finally {
       setIsFetchingRoute(false);
     }
+  };
+
+  const handleStopPoll = () => {
+    console.log(intervalId);
+    if (intervalId) {
+      clearInterval(intervalId);
+      console.log("Stop polling");
+    }
+  };
+
+  const handleStartPoll = (txHash: string) => {
+    const interval = setInterval(() => getStatus(txHash), 5000); // Poll every 5 sec
+    console.log(interval);
+    intervalId = interval;
   };
 
   const {
@@ -233,7 +245,7 @@ export const SquidBridge = () => {
   };
 
   // TODO: call getStatus repeatedly after the tx is Sent to show the current status of tx
-  const getStatus = async () => {
+  const getStatus = async (txHash: string) => {
     try {
       if (
         !txHash ||
@@ -253,14 +265,41 @@ export const SquidBridge = () => {
 
       const status = await getTxStatus(getStatusParams);
       console.log(status);
+      if (!axelarURL) {
+        setAxelarURL(status?.axelarTransactionUrl);
+      }
 
-      // {
-      //   (SUCCESS = "success"),
-      //     (NEEDS_GAS = "needs_gas"),
-      //     (ONGOING = "ongoing"),
-      //     (PARTIAL_SUCCESS = "partial_success"),
-      //     (NOT_FOUND = "not_found");
-      // }
+      if (status?.squidTransactionStatus == "success") {
+        // Stop the polling in case of success
+        handleStopPoll();
+        setIsLoading(false);
+        setShowStatusModal(true);
+        setErrorMessage("");
+        console.log("Transaction is successful");
+      } else if (status?.squidTransactionStatus == "needs_gas") {
+        // Stop the polling
+        handleStopPoll();
+        setIsLoading(false);
+        setShowStatusModal(true);
+        // TODO: User needs to go axelar and add more gas
+        setErrorMessage("Transaction needs more gas");
+        console.log("Transaction needs more gas");
+      } else if (
+        status?.squidTransactionStatus == "ongoing" ||
+        status?.squidTransactionStatus == "partial_success"
+      ) {
+        setIsLoading(true);
+        setShowStatusModal(true);
+        setErrorMessage("");
+        console.log("Transaction is ongoing");
+      } else if (status?.squidTransactionStatus == "not_found") {
+        // Stop the polling
+        handleStopPoll();
+        setIsLoading(false);
+        setShowStatusModal(true);
+        setErrorMessage("Transaction not found");
+        console.log("Transaction not found");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -281,8 +320,35 @@ export const SquidBridge = () => {
 
   // useEffect(() => {
   //   setShowStatusModal(true);
-  //   setIsLoading(true);
+  //   // setIsLoading(true);
   // }, []);
+
+  // It should wait until the user has selected all the inputs
+  // useEffect(() => {
+  //   const delay = setTimeout(() => {
+  //     if (inAmount != undefined) {
+  //       if (fromChain && toChain && fromToken && toToken) {
+  //         const routeParams: GetRoute = {
+  //           fromChain: fromChain.chainId, // Avalanche
+  //           fromAmount: parseUnits(
+  //             inAmount.toString(),
+  //             fromToken.decimals,
+  //           ).toString(), // 0.1 AVAX
+  //           fromToken: fromToken.address,
+  //           toChain: toChain.chainId, // Polygon
+  //           toToken: toToken.address,
+  //           fromAddress: address ? address : `0x`,
+  //           toAddress: toAddress ? toAddress : address ? address : `0x`,
+  //           slippage: 1,
+  //         };
+  //         fetchRoute(routeParams);
+  //       }
+  //     }
+  //   }, 2000); // 3000 milliseconds delay (adjust as needed)
+
+  //   // Clear the timeout if the amount changes before the delay
+  //   return () => clearTimeout(delay);
+  // }, [inAmount]);
 
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
