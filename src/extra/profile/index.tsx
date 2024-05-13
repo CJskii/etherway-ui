@@ -1,13 +1,14 @@
 import DashboardCard from "@/components/dashboard/dashboard-card";
 import Image from "next/image";
-import pfp from "@/assets/dashboard/pfp.svg";
+import pfp from "@/../assets/dashboard/pfp.svg";
 import { Typography } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import { EyeOff, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/dashboard/layout";
-import profile from "@/assets/dashboard/profile.svg";
-import profileDark from "@/assets/dashboard/profile-dark.svg";
+import profile from "@/../assets/dashboard/profile.svg";
+import profileDark from "@/../assets/dashboard/profile-dark.svg";
+
 import { useAccount } from "wagmi";
 
 export default function ProfilePage() {

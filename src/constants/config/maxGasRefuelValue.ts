@@ -1,4 +1,4 @@
-import layerzero from "@/assets/dashboard/layerzero.svg";
+import layerzero from "@/../assets/dashboard/layerzero.svg";
 declare type MaxRefuelMap = {
   [chainId: string]: {
     layerzero: number;

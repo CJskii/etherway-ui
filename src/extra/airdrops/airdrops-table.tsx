@@ -7,9 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import milkyWay from "@/assets/dashboard/milkyway.svg";
-import network1 from "@/assets/dashboard/eth.svg";
-import network2 from "@/assets/dashboard/network2.svg";
+import milkyWay from "@/../assets/dashboard/milkyway.svg";
+import network1 from "@/../assets/dashboard/eth.svg";
+import network2 from "@/../assets/dashboard/network2.svg";
 import { Search, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,5 +1,5 @@
 import { Typography } from "@/components/ui/typography";
-import milkyway from "@/assets/dashboard/milkyway2.svg";
+import milkyway from "@/../assets/dashboard/milkyway2.svg";
 import Image from "next/image";
 import {
   BarChart,

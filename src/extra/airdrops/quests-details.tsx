@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import banner from "@/assets/dashboard/banner.svg";
+import banner from "@/../assets/dashboard/banner.svg";
 import React from "react";
 import Image from "next/image";
 import DashboardCard from "@/components/dashboard/dashboard-card";

@@ -1,7 +1,7 @@
-import layerzero from "@/assets/layerzero-logo.svg";
-import wormhole from "@/assets/warmhole-logo.svg";
-import layerzeroDark from "@/assets/homepage-background/layerzerk-dark.svg";
-import wormholeDark from "@/assets/homepage-background/wormhole-dark.png";
+import layerzero from "@/../assets/layerzero-logo.svg";
+import wormhole from "@/../assets/warmhole-logo.svg";
+import layerzeroDark from "@/../assets/homepage-background/layerzerk-dark.svg";
+import wormholeDark from "@/../assets/homepage-background/wormhole-dark.png";
 import { Typography } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";

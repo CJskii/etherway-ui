@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import blog from "@/assets/blog.svg";
+import blog from "@/../assets/blog.svg";
 
 interface BlogCardProps {
   title: string;

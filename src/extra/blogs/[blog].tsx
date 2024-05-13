@@ -5,7 +5,7 @@ import { Typography } from "@/components/ui/typography";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import blog from "@/assets/blog.svg";
+import blog from "@/../assets/blog.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Blog() {

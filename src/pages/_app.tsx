@@ -26,7 +26,7 @@ import {
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 
-import { AuthContextProvider } from "@/src/context/authContext";
+import { AuthContextProvider } from "@/context/authContext";
 
 const queryClient = new QueryClient();
 

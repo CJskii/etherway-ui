@@ -1,5 +1,5 @@
-import featured from "@/assets/homepage-background/featured.svg";
-import logoLight from "@/assets/light-logo.svg";
+import featured from "@/../assets/homepage-background/featured.svg";
+import logoLight from "@/../assets/light-logo.svg";
 import { Typography } from "@/components/ui/typography";
 import { SparkleIcon } from "lucide-react";
 import Image from "next/image";
