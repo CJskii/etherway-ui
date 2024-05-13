@@ -9,6 +9,8 @@ type handleUserProps = {
   includeReferrals?: boolean;
   includeInteractions?: boolean;
   includeRewards?: boolean;
+  includeProjects?: boolean;
+  includeTasks?: boolean;
 };
 
 export default async function handleUser({
@@ -18,6 +20,8 @@ export default async function handleUser({
   includeReferrals = false,
   includeInteractions = false,
   includeRewards = false,
+  includeProjects = false,
+  includeTasks = false,
 }: handleUserProps) {
   // check if user exists
   const userExists = await getUser({
@@ -26,6 +30,8 @@ export default async function handleUser({
     includeReferrals,
     includeInteractions,
     includeRewards,
+    includeProjects,
+    includeTasks,
   });
 
   if (userExists) {

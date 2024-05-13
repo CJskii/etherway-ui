@@ -7,6 +7,7 @@ type NewTaskProps = {
   difficulty: DifficultyType;
   about: string;
   instructions: string;
+  steps: { name: string; description: string }[];
 };
 
 export default async function newTask({
@@ -15,6 +16,7 @@ export default async function newTask({
   difficulty,
   about,
   instructions,
+  steps,
 }: NewTaskProps) {
   return await prisma.task.create({
     data: {
@@ -23,6 +25,12 @@ export default async function newTask({
       about,
       instructions,
       projectId,
+      steps: {
+        create: steps.map((step) => ({
+          name: step.name,
+          description: step.description,
+        })),
+      },
     },
   });
 }
