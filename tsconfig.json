@@ -16,15 +16,17 @@
     "incremental": true,
     "types": ["babel__core", "jest", "node", "react", "react-dom"],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
+    ".eslintrc.cjs",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "global.d.ts",
-    "jest.config.js"
+    "**/*.cjs",
+    "**/*.js",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -31,7 +31,7 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["ipfs.io"],
+    domains: ["ipfs.io", "firebasestorage.googleapis.com", "pbs.twimg.com"],
   },
   transpilePackages: ["@0xsquid/widget"],
 };
