@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
-import featured from "@/assets/homepage-background/featured.svg";
-import logoLight from "@/assets/light-logo.svg";
-import { Typography } from "@/src/components/ui/typography";
+import featured from "@/../assets/homepage-background/featured.svg";
+import logoLight from "@/../assets/light-logo.svg";
+import { Typography } from "@/components/ui/typography";
 import { SparkleIcon } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Label } from "../ui/label";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount, useSwitchChain } from "wagmi";
-import { useNetworkSelection } from "@/src/hooks/useNetworkSelection";
+import { useNetworkSelection } from "@/hooks/useNetworkSelection";
 import NetworkModal from "../networkModal";
-import { checkIfReferredUser } from "@/src/utils/helpers/validators/checkIfReferredUser";
-import { handleMinting } from "@/src/utils/contracts/handlers/handleMinting";
-import { ExtendedNetwork } from "@/src/types/network";
-import { handleErrors } from "@/src/utils/contracts/handlers/handleErrors";
-import { updateMintData } from "@/src/utils/api/mintAPI";
+import { checkIfReferredUser } from "@/utils/helpers/validators/checkIfReferredUser";
+import { handleMinting } from "@/utils/contracts/handlers/handleMinting";
+import { ExtendedNetwork } from "@/types/network";
+import { handleErrors } from "@/utils/contracts/handlers/handleErrors";
+import { updateMintData } from "@/utils/api/mintAPI";
 import { ContractType } from "@prisma/client";
 import MintModal from "./modal-mint";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
-import { handleAPIError } from "@/src/utils/api/handleError";
+import { handleAPIError } from "@/utils/api/handleError";
 
 interface NFTMintProps {
   params: {

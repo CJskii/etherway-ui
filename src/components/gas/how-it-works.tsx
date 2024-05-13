@@ -4,9 +4,9 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTrigger,
-} from "@/src/components/ui/dialog";
-import DashboardCard from "@/src/components/dashboard/dashboard-card";
-import { Typography } from "@/src/components/ui/typography";
+} from "@/components/ui/dialog";
+import DashboardCard from "@/components/dashboard/dashboard-card";
+import { Typography } from "@/components/ui/typography";
 
 const HowItWorks = () => {
   const steps = [

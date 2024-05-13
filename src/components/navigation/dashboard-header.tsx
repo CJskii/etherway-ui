@@ -1,9 +1,9 @@
 import Image from "next/image";
-import logoBlack from "@/assets/logo-black.svg";
-import logoWhite from "@/assets/logo-white.svg";
-import logo from "@/assets/logo-symbol.svg";
+import logoBlack from "@/../assets/logo-black.svg";
+import logoWhite from "@/../assets/logo-white.svg";
+import logo from "@/../assets/logo-symbol.svg";
 import Link from "next/link";
-import { cn } from "@/src/lib/utils";
+import { cn } from "@/lib/utils";
 import { ThemeToggler } from "../ui/toggle-theme";
 import { ConnectWalletButton } from "../ui/connect-button";
 import { DashboardSheet } from "./dashboard-sheet";

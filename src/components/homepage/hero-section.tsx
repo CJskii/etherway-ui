@@ -1,17 +1,17 @@
-import ellipse1 from "@/assets/ellipse1.svg";
-import ellipse2 from "@/assets/ellipse2.svg";
-import layerzero from "@/assets/layerzero-logo.svg";
-import hyperlane from "@/assets/hyperlane-logo.svg";
+import ellipse1 from "@/../assets/ellipse1.svg";
+import ellipse2 from "@/../assets/ellipse2.svg";
+import layerzero from "@/../assets/layerzero-logo.svg";
+import hyperlane from "@/../assets/hyperlane-logo.svg";
 import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";
 import { Typography } from "../ui/typography";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import hyperlaneGroup from "@/assets/homepage-background/hyperlane-group.svg";
-import layerzeroGroup from "@/assets/homepage-background/layerzero-group.svg";
-import bridgeGroup from "@/assets/homepage-background/bridge-group.svg";
-import refuelGroup from "@/assets/homepage-background/refuel-group.svg";
+import hyperlaneGroup from "@/../assets/homepage-background/hyperlane-group.svg";
+import layerzeroGroup from "@/../assets/homepage-background/layerzero-group.svg";
+import bridgeGroup from "@/../assets/homepage-background/bridge-group.svg";
+import refuelGroup from "@/../assets/homepage-background/refuel-group.svg";
 import { ChevronRight } from "lucide-react";
 
 const products = [

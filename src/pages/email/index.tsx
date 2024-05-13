@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Layout from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/head-component";
-import { Button } from "@/src/components/ui/button";
-import { Input } from "@/src/components/ui/input";
-import { subscribeEmail } from "@/src/utils/api/email/subscribe";
-import { unsubscribeEmail } from "@/src/utils/api/email/unsubscribe";
-import { verifySubscription } from "@/src/utils/api/email/verify";
+import Layout from "@/components/dashboard/layout";
+import HeadComponent from "@/components/head-component";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { subscribeEmail } from "@/utils/api/email/subscribe";
+import { unsubscribeEmail } from "@/utils/api/email/unsubscribe";
+import { verifySubscription } from "@/utils/api/email/verify";
 import { useAccount } from "wagmi";
 
 const Email = () => {

@@ -3,13 +3,13 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/src/components/ui/accordion";
-import banner from "@/assets/dashboard/banner.svg";
+} from "@/components/ui/accordion";
+import banner from "@/../assets/dashboard/banner.svg";
 import React from "react";
 import Image from "next/image";
-import DashboardCard from "@/src/components/dashboard/dashboard-card";
-import { Button } from "@/src/components/ui/button";
-import { Typography } from "@/src/components/ui/typography";
+import DashboardCard from "@/components/dashboard/dashboard-card";
+import { Button } from "@/components/ui/button";
+import { Typography } from "@/components/ui/typography";
 
 const quests = [
   {

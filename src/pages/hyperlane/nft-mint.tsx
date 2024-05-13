@@ -1,6 +1,6 @@
-import NFTMint from "@/src/components/nft/mint";
-import { Layout } from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/head-component";
+import NFTMint from "@/components/nft/mint";
+import { Layout } from "@/components/dashboard/layout";
+import HeadComponent from "@/components/head-component";
 
 const HyperlaneNFTMint = () => {
   const params = {

@@ -1,14 +1,14 @@
 import React from "react";
 import { DashboardContainer } from "../ui/Container";
 import { Footer } from "../ui/footer";
-import { Header } from "@/src/components/navigation/navbar";
-import gridMobile from "@/assets/homepage-background/bg-grid-mobile.svg";
-import grid from "@/assets/homepage-background/bg-grid.svg";
+import { Header } from "@/components/navigation/navbar";
+import gridMobile from "@/../assets/homepage-background/bg-grid-mobile.svg";
+import grid from "@/../assets/homepage-background/bg-grid.svg";
 import Image from "next/image";
-import ellipse1 from "@/assets/ellipse1.svg";
-import ellipse2 from "@/assets/ellipse2.svg";
+import ellipse1 from "@/../assets/ellipse1.svg";
+import ellipse2 from "@/../assets/ellipse2.svg";
 import { ButtonProps } from "../ui/button";
-import { cn } from "@/src/lib/utils";
+import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({
   children,

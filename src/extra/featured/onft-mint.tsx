@@ -1,6 +1,6 @@
-import featured from "@/assets/homepage-background/featured.svg";
-import logoLight from "@/assets/light-logo.svg";
-import { Typography } from "@/src/components/ui/typography";
+import featured from "@/../assets/homepage-background/featured.svg";
+import logoLight from "@/../assets/light-logo.svg";
+import { Typography } from "@/components/ui/typography";
 import { SparkleIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
@@ -10,9 +10,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/components/ui/select";
-import { Button } from "@/src/components/ui/button";
-import { Layout } from "@/src/components/dashboard/layout";
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/dashboard/layout";
 
 export default function Featured() {
   return (

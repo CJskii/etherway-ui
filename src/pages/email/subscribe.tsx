@@ -1,10 +1,10 @@
 // subscribe.js
 import { useState } from "react";
-import Layout from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/head-component";
-import { Button } from "@/src/components/ui/button";
-import { Input } from "@/src/components/ui/input";
-import { subscribeEmail } from "@/src/utils/api/email/subscribe";
+import Layout from "@/components/dashboard/layout";
+import HeadComponent from "@/components/head-component";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { subscribeEmail } from "@/utils/api/email/subscribe";
 import { useAccount } from "wagmi";
 
 const Subscribe = () => {

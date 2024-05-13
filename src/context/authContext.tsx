@@ -2,9 +2,9 @@ import React, { ReactNode, createContext } from "react";
 import { useContext, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { adminPaths, admins, privatePaths } from "../constants/privatePaths";
-import { UserData, getUserData } from "@/src/utils/api/user";
+import { UserData, getUserData } from "@/utils/api/user";
 import { useAccount, useConfig } from "wagmi";
-import { getUserStakingStats } from "@/src/utils/contracts/handlers/handleStaking";
+import { getUserStakingStats } from "@/utils/contracts/handlers/handleStaking";
 import { useSession } from "next-auth/react";
 
 // import "react-toastify/dist/ReactToastify.css";

@@ -1,6 +1,6 @@
-import base from "@/assets/base.svg";
-import layerzero from "@/assets/layerzero-logo.svg";
-import hyperlane from "@/assets/hyperlane-logo.svg";
+import base from "@/../assets/base.svg";
+import layerzero from "@/../assets/layerzero-logo.svg";
+import hyperlane from "@/../assets/hyperlane-logo.svg";
 import Image from "next/image";
 import { Typography } from "../ui/typography";
 import { Button } from "../ui/button";

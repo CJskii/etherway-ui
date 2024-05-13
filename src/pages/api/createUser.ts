@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import handleUser from "@/prisma/src/handlers/user";
+import handleUser from "@/../prisma/src/handlers/user";
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "./auth/[...nextauth]";
 import { getCsrfToken } from "next-auth/react";

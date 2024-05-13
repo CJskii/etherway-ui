@@ -1,6 +1,6 @@
-import base from "@/assets/base-bg.svg";
-import polygonZkEvm from "@/assets/polygon-bg.svg";
-import mintly from "@/assets/homepage-background/mintly.svg";
+import base from "@/../assets/base-bg.svg";
+import polygonZkEvm from "@/../assets/polygon-bg.svg";
+import mintly from "@/../assets/homepage-background/mintly.svg";
 import Image from "next/image";
 import { Typography } from "../ui/typography";
 import { Card } from "../ui/card";

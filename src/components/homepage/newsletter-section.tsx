@@ -1,12 +1,12 @@
 import { Typography } from "../ui/typography";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { subscribeEmail } from "@/src/utils/api/email/subscribe";
+import { subscribeEmail } from "@/utils/api/email/subscribe";
 import { useAccount } from "wagmi";
 import { useState, ChangeEvent, useEffect } from "react";
 import { toast } from "sonner";
-import { isValidEmail } from "@/src/utils/helpers/validators/isValidEmail";
-import { resendEmail } from "@/src/utils/api/email/resend";
+import { isValidEmail } from "@/utils/helpers/validators/isValidEmail";
+import { resendEmail } from "@/utils/api/email/resend";
 
 export default function NewsletterSection({
   title = "Sign up for our newsletter",

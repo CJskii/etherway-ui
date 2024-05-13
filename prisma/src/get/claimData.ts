@@ -1,4 +1,4 @@
-import { prisma } from "@/prisma/client";
+import { prisma } from "../../client";
 import { InteractionType } from "@prisma/client";
 
 interface getClaimDataProps {

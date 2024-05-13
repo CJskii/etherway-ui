@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Typography } from "@/src/components/ui/typography";
-import { Button } from "@/src/components/ui/button";
-import { Label } from "@/src/components/ui/label";
-import { Input } from "@/src/components/ui/input";
+import { Typography } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { useNetworkSelection } from "@/src/hooks/useNetworkSelection";
-import { Network } from "@/src/types/network";
-import { getValidToNetworks } from "@/src/utils/helpers/getValidToNetworks";
-import { handleBridging } from "@/src/utils/contracts/handlers/handleBridging";
+import { useNetworkSelection } from "@/hooks/useNetworkSelection";
+import { Network } from "@/types/network";
+import { getValidToNetworks } from "@/utils/helpers/getValidToNetworks";
+import { handleBridging } from "@/utils/contracts/handlers/handleBridging";
 import NetworkModal from "../networkModal";
-import { handleErrors } from "@/src/utils/contracts/handlers/handleErrors";
+import { handleErrors } from "@/utils/contracts/handlers/handleErrors";
 import { useAccount, useSwitchChain } from "wagmi";
 import BridgeModal from "../modal-bridge";
 import { ContractType } from "@prisma/client";
-import { updateBridgeData } from "@/src/utils/api/bridge";
+import { updateBridgeData } from "@/utils/api/bridge";
 import { toast } from "sonner";
 import { useRouter } from "next/router";
-import { handleAPIError } from "@/src/utils/api/handleError";
+import { handleAPIError } from "@/utils/api/handleError";
 
 interface NFTBridgeProps {
   params: {

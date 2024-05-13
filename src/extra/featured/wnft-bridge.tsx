@@ -1,16 +1,16 @@
 import React from "react";
-import { Typography } from "@/src/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/components/ui/select";
-import { Button } from "@/src/components/ui/button";
-import { Layout } from "@/src/components/dashboard/layout";
-import { Label } from "@/src/components/ui/label";
-import { Input } from "@/src/components/ui/input";
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/dashboard/layout";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export default function WNFTBridge() {
   return (

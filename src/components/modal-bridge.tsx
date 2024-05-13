@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/src/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Typography } from "./ui/typography";
 import { Button } from "./ui/button";
 

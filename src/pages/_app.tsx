@@ -7,9 +7,9 @@ import Script from "next/script";
 import React, { useEffect } from "react";
 
 import useReferalCode from "../hooks/useReferalCode";
-import { Toaster } from "@/src/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 
-import { ThemeProvider } from "@/src/components/ui/theme-provider";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -26,7 +26,7 @@ import {
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 
-import { AuthContextProvider } from "@/src/context/authContext";
+import { AuthContextProvider } from "@/context/authContext";
 
 const queryClient = new QueryClient();
 

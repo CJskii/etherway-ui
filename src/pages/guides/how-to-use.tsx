@@ -1,7 +1,7 @@
 import HeadComponent from "../../components/head-component";
-import { Layout } from "@/src/components/dashboard/layout";
-import { Typography } from "@/src/components/ui/typography";
-import QnA from "@/src/components/guides/question-answer";
+import { Layout } from "@/components/dashboard/layout";
+import { Typography } from "@/components/ui/typography";
+import QnA from "@/components/guides/question-answer";
 
 const HowToStart = () => {
   const questionData = [

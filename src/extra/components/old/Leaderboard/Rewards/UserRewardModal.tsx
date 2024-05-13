@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import DisplayModalMessage from "./DisplayModalMessage";
-// import type { UserRewardModal } from "@/src/types/rewards";
+// import type { UserRewardModal } from "@/types/rewards";
 
 const UserRewardModal = (props: any) => {
   const { showRewardModal, setShowRewardModal, isLoading, response } = props;

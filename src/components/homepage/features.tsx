@@ -1,8 +1,8 @@
-import ellipse1 from "@/assets/ellipse3.svg";
-import ellipse2 from "@/assets/ellipse4.svg";
-import bgDark from "@/assets/features-bg-dark.svg";
-import bgLight from "@/assets/features-bg-light.svg";
-import { cn } from "@/src/lib/utils";
+import ellipse1 from "@/../assets/ellipse3.svg";
+import ellipse2 from "@/../assets/ellipse4.svg";
+import bgDark from "@/../assets/features-bg-dark.svg";
+import bgLight from "@/../assets/features-bg-light.svg";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Typography } from "../ui/typography";
 import { Card } from "../ui/card";

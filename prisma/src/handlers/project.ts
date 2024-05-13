@@ -4,18 +4,18 @@ import {
   getAllProjects,
   getProjectByID,
   getProjectByName,
-} from "@/prisma/src/get/projectData";
-import newProject, { NewProjectProps } from "@/prisma/src/create/newProject";
+} from "@/../prisma/src/get/projectData";
+import newProject, { NewProjectProps } from "@/../prisma/src/create/newProject";
 import {
   CategoryType,
   DifficultyType,
   LikelihoodType,
   LinkType,
 } from "@prisma/client";
-import newTask from "@/prisma/src/create/newTask";
-import newStep from "@/prisma/src/create/newStep";
-import newUserProject from "@/prisma/src/create/newUserProject";
-import newUserTask from "@/prisma/src/create/newUserTask";
+import newTask from "@/../prisma/src/create/newTask";
+import newStep from "@/../prisma/src/create/newStep";
+import newUserProject from "@/../prisma/src/create/newUserProject";
+import newUserTask from "@/../prisma/src/create/newUserTask";
 
 type getProjectProps = {
   id?: number;

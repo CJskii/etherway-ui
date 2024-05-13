@@ -1,7 +1,7 @@
-import image from "@/assets/under-construction.svg";
+import image from "@/../assets/under-construction.svg";
 import Image from "next/image";
-import { Button } from "@/src/components/ui/button";
-import { Layout } from "@/src/components/dashboard/layout";
+import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/dashboard/layout";
 import Link from "next/link";
 import NewsletterSection from "../../components/homepage/newsletter-section";
 

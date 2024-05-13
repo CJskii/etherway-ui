@@ -1,12 +1,12 @@
-import logoDark from "@/assets/dark-logo.svg";
-import logoLight from "@/assets/light-logo.svg";
-import logo from "@/assets/logo-symbol.svg";
+import logoDark from "@/../assets/dark-logo.svg";
+import logoLight from "@/../assets/light-logo.svg";
+import logo from "@/../assets/logo-symbol.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggler } from "../ui/toggle-theme";
 import { Button } from "../ui/button";
 import { HeaderSheet } from "./header-sheet";
-import { ConnectWalletButton } from "@/src/components/ui/connect-button";
+import { ConnectWalletButton } from "@/components/ui/connect-button";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,7 +16,7 @@ import {
   NavigationMenuTrigger,
   ListItem,
   navigationMenuTriggerStyle,
-} from "@/src/components/ui/navigation-menu";
+} from "@/components/ui/navigation-menu";
 import { Typography } from "../ui/typography";
 import { Separator } from "@radix-ui/react-separator";
 import React from "react";
