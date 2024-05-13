@@ -1,9 +1,9 @@
 export const requestNetworkSwitch = async (
-  networkChainId: number,
-  openChainModal: any
+  networkChainId: number | string,
+  openChainModal: any,
 ) => {
   const hexChainId = `0x${parseInt(networkChainId.toString(), 10).toString(
-    16
+    16,
   )}`;
   try {
     if (!window.ethereum) throw new Error("Ethereum provider not found");

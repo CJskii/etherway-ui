@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { useAccount, useBalance } from "wagmi";
+import { useAccount, useBalance, useSwitchChain } from "wagmi";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 
 import {
   RouteType,
@@ -18,7 +19,6 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import SquidNetworkModal, { NetworkModalProps } from "./network-modal";
 import SquidTokenModal, { TokenModalProps } from "./token-modal";
-import ethers from "ethers";
 
 import {
   ChainData,
@@ -41,6 +41,10 @@ import {
 import { ChevronDown } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "../ui/skeleton";
+import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
+import { useChainModal } from "@rainbow-me/rainbowkit";
+import Loader from "@/components/ui/loader";
+import { toast } from "sonner";
 
 export const SquidBridge = () => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK AND TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -59,13 +63,79 @@ export const SquidBridge = () => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [toAddress, setToAddress] = useState<string>();
+  const [isFetchingRoute, setIsFetchingRoute] = useState<boolean>(false);
 
-  const handleBridgeButton = () => {
-    console.log("Bridge button clicked");
+  const account = useAccount();
+  const { switchChain } = useSwitchChain();
+  const { openConnectModal } = useConnectModal();
+  const { openChainModal } = useChainModal();
+
+  const handleBridgeButton = async () => {
+    try {
+      if (!route) {
+        return;
+      }
+
+      const signer = await getProviderOrSigner(true);
+
+      const txReciept = await executeSquidRoute(route, signer as Signer);
+      console.log(txReciept);
+      setTxHash(txReciept?.transactionHash);
+
+      console.log(`Bridging complete with tx ${txReciept?.transactionHash}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handlePreviewButton = () => {
-    console.log("Preview button clicked");
+  const handlePreviewButton = async () => {
+    setIsFetchingRoute(true);
+    if (!isConnected && openConnectModal) {
+      openConnectModal();
+      setIsFetchingRoute(false);
+      return;
+    }
+    if (!isCorrectNetwork && fromChain?.chainId) {
+      console.log(fromChain.chainId);
+      try {
+        await requestNetworkSwitch(fromChain.chainId, openChainModal);
+      } catch (error) {
+        console.error("Failed to switch network:", error);
+        setIsFetchingRoute(false);
+        return;
+      }
+    }
+
+    if (inAmount == undefined || inAmount == 0) {
+      toast.error("Please enter an amount to bridge");
+      setIsFetchingRoute(false);
+      return;
+    }
+
+    try {
+      if (fromChain && toChain && fromToken && toToken) {
+        const routeParams = {
+          fromChain: fromChain.chainId,
+          fromAmount: parseUnits(
+            inAmount.toString(),
+            fromToken.decimals,
+          ).toString(),
+          fromToken: fromToken.address,
+          toChain: toChain.chainId,
+          toToken: toToken.address,
+          fromAddress: address ? address : `0x`,
+          toAddress: toAddress ? toAddress : address ? address : `0x`,
+          slippage: 1,
+        };
+
+        await fetchRoute(routeParams);
+      }
+    } catch (error) {
+      console.error("Error fetching route:", error);
+      toast.error("Failed to fetch route. Please try again.");
+    } finally {
+      setIsFetchingRoute(false);
+    }
   };
 
   const handleSelectToken = (token: TokenData) => {
@@ -120,6 +190,11 @@ export const SquidBridge = () => {
     81457,
     "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
   );
+
+  const isConnected = account.isConnected;
+  const isCorrectNetwork = fromChain
+    ? fromChain.chainId === (account.chainId ?? "")
+    : false;
 
   // reconfigure the chainId
   const result = useBalance({
@@ -220,56 +295,35 @@ export const SquidBridge = () => {
     dialogTitle: "Select a token to bridge to",
   };
 
-  useEffect(() => {
-    if (inAmount != undefined) {
-      if (fromChain && toChain && fromToken && toToken) {
-        const routeParams: GetRoute = {
-          fromChain: fromChain.chainId, // Avalanche
-          fromAmount: parseUnits(
-            inAmount.toString(),
-            fromToken.decimals,
-          ).toString(), // 0.1 AVAX
-          fromToken: fromToken.address,
-          toChain: toChain.chainId, // Polygon
-          toToken: toToken.address,
-          fromAddress: address ? address : `0x`,
-          toAddress: toAddress ? toAddress : address ? address : `0x`,
-          slippage: 1,
-        };
-        fetchRoute(routeParams);
-      }
-    }
-  }, [inAmount]);
+  // useEffect(() => {
+  //   if (inAmount != undefined) {
+  //     if (fromChain && toChain && fromToken && toToken) {
+  //       const routeParams: GetRoute = {
+  //         fromChain: fromChain.chainId, // Avalanche
+  //         fromAmount: parseUnits(
+  //           inAmount.toString(),
+  //           fromToken.decimals,
+  //         ).toString(), // 0.1 AVAX
+  //         fromToken: fromToken.address,
+  //         toChain: toChain.chainId, // Polygon
+  //         toToken: toToken.address,
+  //         fromAddress: address ? address : `0x`,
+  //         toAddress: toAddress ? toAddress : address ? address : `0x`,
+  //         slippage: 1,
+  //       };
+  //       fetchRoute(routeParams);
+  //     }
+  //   }
+  // }, [inAmount]);
 
   // might want to fetch the latest route every 20 seconds to refresh the price
   const fetchRoute = async (routeParams: GetRoute) => {
     try {
-      setIsLoading(true);
       const _route = await getSquidRoute(routeParams);
-      console.log(_route);
       if (_route) {
         setRoute(_route.route);
         setRequestId(_route.requestId);
       }
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleBridge = async () => {
-    try {
-      if (!route) {
-        return;
-      }
-
-      const signer = await getProviderOrSigner(true);
-
-      const txReciept = await executeSquidRoute(route, signer as Signer);
-      console.log(txReciept);
-      setTxHash(txReciept?.transactionHash);
-
-      console.log(`Bridging complete with tx ${txReciept?.transactionHash}`);
     } catch (error) {
       console.log(error);
     }
@@ -323,11 +377,14 @@ export const SquidBridge = () => {
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
       {/* <TestingButtons /> */}
+
       <div className="bg-gradient my-auto md:rounded-xl md:w-6/12 lg:w-5/12 xl:w-4/12 2xl:w-4/12 w-full items-start rounded-2xl">
         <div className="py-8 px-4 md:p-8 flex flex-col gap-6">
           <Typography variant={"h3"} className=" dark:text-black text-center">
             Bridge
           </Typography>
+
+          {/* BRIDGE FROM NETWORK  */}
           <div className="flex flex-col">
             <Label className=" space-y-2">
               <Typography variant={"large"} className="dark:text-black">
@@ -335,17 +392,6 @@ export const SquidBridge = () => {
               </Typography>
             </Label>
             <div className="flex flex-col bg-white rounded-lg p-2 md:p-4">
-              {/* <div className="flex justify-between items-center">
-                <SquidNetworkModal props={fromChainProps} />
-                <div className="flex justify-center items-center gap-4">
-                  <Typography variant="h4" className="dark:text-black">
-                    {userBalance} {fromToken?.symbol}
-                  </Typography>
-                  <Button variant={"etherway"} onClick={handleMaxButton}>
-                    Max
-                  </Button>
-                </div>
-              </div> */}
               <div className="flex justify-between items-center">
                 <SquidNetworkModal props={fromChainProps} />
                 <div className="flex items-center justify-center gap-2">
@@ -383,21 +429,24 @@ export const SquidBridge = () => {
                     placeholder="Enter amount"
                     onChange={(e) => setInAmount(Number(e.target.value))}
                   />
-                  {isLoading ? (
-                    <Skeleton className="h-5 w-10 rounded-xl" />
-                  ) : (
+                  {isFetchingRoute ? (
+                    <Skeleton className="h-5 w-12 rounded-xl" />
+                  ) : route?.estimate ? (
                     <Typography
                       variant="muted"
                       className="dark:text-black py-0 px-2 text-sm"
                     >
                       ${route?.estimate.fromAmountUSD}
                     </Typography>
+                  ) : (
+                    <Skeleton className="h-5 w-12 rounded-xl invisible" />
                   )}
                 </div>
               </div>
             </div>
           </div>
 
+          {/* BRIDGE TO NETWORK  */}
           <div className="flex flex-col">
             <Label className=" space-y-2 w-full ">
               <Typography variant={"large"} className="dark:text-black">
@@ -405,17 +454,6 @@ export const SquidBridge = () => {
               </Typography>
             </Label>
             <div className="flex flex-col bg-white rounded-lg p-2 md:p-4">
-              {/* <div className="flex justify-between items-center">
-                <SquidNetworkModal props={fromChainProps} />
-                <div className="flex justify-center items-center gap-4">
-                  <Typography variant="h4" className="dark:text-black">
-                    {userBalance} {fromToken?.symbol}
-                  </Typography>
-                  <Button variant={"etherway"} onClick={handleMaxButton}>
-                    Max
-                  </Button>
-                </div>
-              </div> */}
               <div className="flex justify-between items-center">
                 <SquidNetworkModal props={toChainProps} />
               </div>
@@ -425,33 +463,37 @@ export const SquidBridge = () => {
               />
               <div className="flex justify-between items-center">
                 <SquidTokenModal props={toTokenProps} />
-                {isLoading ? (
-                  <div className="flex flex-col items-end justify-center">
-                    <Skeleton className="h-5 w-10 rounded-xl" />
+                {isFetchingRoute ? (
+                  <div className="flex flex-col items-end justify-center gap-2 w-24 h-10">
+                    <Skeleton className="h-4 w-20 rounded-xl" />
+                    <Skeleton className="h-4 w-12 rounded-xl" />
                   </div>
-                ) : (
-                  <div className="flex flex-col items-end justify-center">
+                ) : route?.estimate ? (
+                  <div className="flex flex-col items-end justify-center gap-2 w-24 h-10">
                     <Typography
                       variant="smallTitle"
-                      className="dark:text-black font-semibold px-2"
+                      className="dark:text-black font-semibold truncate px-2"
                     >
-                      {/* // TODO: Read expected received amount from the state */}
-                      {route?.estimate && toToken
-                        ? Number(
-                            formatUnits(
-                              BigInt(route.estimate.toAmount),
-                              toToken?.decimals,
-                            ),
-                          ).toFixed(4)
-                        : ""}
-                      {toToken?.symbol}
+                      {toToken &&
+                        `${Number(
+                          formatUnits(
+                            BigInt(route.estimate.toAmount),
+                            toToken.decimals,
+                          ),
+                        ).toFixed(4)} ${toToken.symbol}`}
                     </Typography>
                     <Typography
                       variant="muted"
-                      className="dark:text-black py-0 px-2 text-sm"
+                      className="dark:text-black py-0 px-2 text-xs truncate"
                     >
-                      ${route?.estimate.toAmountUSD}
+                      ${route.estimate.toAmountUSD}
                     </Typography>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-end justify-center gap-2 w-24 h-10">
+                    {/* Invisible placeholders to maintain layout */}
+                    <div className="h-4 w-20 rounded-xl invisible"></div>
+                    <div className="h-4 w-12 rounded-xl invisible"></div>
                   </div>
                 )}
               </div>
@@ -470,16 +512,31 @@ export const SquidBridge = () => {
           </div>
 
           <div>
-            <Typography variant={"muted"} className="dark:text-black text-xs">
-              Estimated Fee:{" "}
-              {route?.estimate &&
-                formatUnits(
-                  BigInt(route?.estimate.gasCosts[0].amount),
-                  route?.estimate.gasCosts[0].token.decimals,
+            {isFetchingRoute ? (
+              <Skeleton className="h-4 w-full rounded-xl" />
+            ) : route?.estimate ? (
+              <Typography
+                variant={"muted"}
+                className="dark:text-black text-xs truncate"
+              >
+                Estimated Fee:{" "}
+                {formatUnits(
+                  BigInt(route.estimate.gasCosts[0].amount),
+                  route.estimate.gasCosts[0].token.decimals,
                 )}{" "}
-              {route?.estimate && route?.estimate.gasCosts[0].token.symbol} ~ $
-              {route?.estimate && route?.estimate.gasCosts[0].amountUSD}
-            </Typography>
+                {route.estimate.gasCosts[0].token.symbol} ~ $
+                {route.estimate.gasCosts[0].amountUSD}
+              </Typography>
+            ) : (
+              <div className="invisible">
+                <Typography
+                  variant={"muted"}
+                  className="dark:text-black text-xs truncate"
+                >
+                  Estimated Fee: 0 ~ $0
+                </Typography>
+              </div>
+            )}
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="item-1">
                 <AccordionTrigger className="flex justify-between items-center w-full py-2">
@@ -513,13 +570,15 @@ export const SquidBridge = () => {
                     {toToken?.symbol}
                   </Typography>
                   {route?.estimate.gasCosts &&
-                    route?.estimate.feeCosts.map((feeCost) => {
+                    route?.estimate.feeCosts.map((feeCost, index) => {
                       return (
                         <Typography
                           variant={"muted"}
                           className="dark:text-black text-xs"
+                          key={index}
                         >
-                          {feeCost.name} : ${feeCost.amountUSD}
+                          {feeCost.name} : $
+                          {Number(feeCost.amountUSD).toFixed(2)}
                         </Typography>
                       );
                     })}
@@ -528,20 +587,23 @@ export const SquidBridge = () => {
             </Accordion>
           </div>
 
-          {/* // TODO: Render either preview or bridge button based on the state of the route */}
           {route ? (
             <Button
               className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
               onClick={handleBridgeButton}
             >
-              Bridge
+              {isFetchingRoute ? <Loader className="w-8 h-8" /> : "Bridge"}
             </Button>
           ) : (
             <Button
               className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
               onClick={handlePreviewButton}
             >
-              Preview
+              {isFetchingRoute ? (
+                <Loader className="w-8 h-8 text-white/70" />
+              ) : (
+                "Preview"
+              )}
             </Button>
           )}
         </div>
