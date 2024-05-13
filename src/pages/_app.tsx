@@ -26,6 +26,8 @@ import {
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 
+import { AuthContextProvider } from "@/src/context/authContext";
+
 const queryClient = new QueryClient();
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
@@ -76,10 +78,12 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
                   enableSystem
                   disableTransitionOnChange
                 >
-                  <div className={`${raleway.variable}`}>
-                    <Component {...pageProps} />
-                    <Toaster richColors />
-                  </div>
+                  <AuthContextProvider>
+                    <div className={`${raleway.variable}`}>
+                      <Component {...pageProps} />
+                      <Toaster richColors />
+                    </div>
+                  </AuthContextProvider>
                 </ThemeProvider>
               </RainbowKitProvider>
             </RainbowKitSiweNextAuthProvider>
