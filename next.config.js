@@ -31,12 +31,6 @@ const nextConfig = {
     ];
   },
   images: {
-    // domains: [
-    //   "ipfs.io",
-    //   "s2.coinmarketcap.com",
-    //   "raw.githubusercontent.com",
-    //   "celoscan.io",
-    // ],
     remotePatterns: [
       {
         protocol: "https",
