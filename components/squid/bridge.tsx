@@ -323,33 +323,6 @@ export const SquidBridge = () => {
   //   // setIsLoading(true);
   // }, []);
 
-  // It should wait until the user has selected all the inputs
-  // useEffect(() => {
-  //   const delay = setTimeout(() => {
-  //     if (inAmount != undefined) {
-  //       if (fromChain && toChain && fromToken && toToken) {
-  //         const routeParams: GetRoute = {
-  //           fromChain: fromChain.chainId, // Avalanche
-  //           fromAmount: parseUnits(
-  //             inAmount.toString(),
-  //             fromToken.decimals,
-  //           ).toString(), // 0.1 AVAX
-  //           fromToken: fromToken.address,
-  //           toChain: toChain.chainId, // Polygon
-  //           toToken: toToken.address,
-  //           fromAddress: address ? address : `0x`,
-  //           toAddress: toAddress ? toAddress : address ? address : `0x`,
-  //           slippage: 1,
-  //         };
-  //         fetchRoute(routeParams);
-  //       }
-  //     }
-  //   }, 2000); // 3000 milliseconds delay (adjust as needed)
-
-  //   // Clear the timeout if the amount changes before the delay
-  //   return () => clearTimeout(delay);
-  // }, [inAmount]);
-
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
       <StatusModal
