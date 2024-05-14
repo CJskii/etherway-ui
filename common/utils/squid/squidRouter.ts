@@ -30,20 +30,18 @@ interface SquidResponse {
 export async function getSquidRoute(
   routeParams: RouteRequest,
 ): Promise<SquidResponse | undefined> {
-  try {
-    await squid.init();
+  await squid.init();
 
-    const response = await squid.getRoute(routeParams);
-    const { route, requestId } = response;
+  const response = await squid.getRoute(routeParams);
+  const { route, requestId } = response;
 
-    return { route, requestId };
-  } catch (error) {
-    console.error("Error fetching route:", error);
-    return undefined;
-  }
+  return { route, requestId };
 }
 
-export async function executeSquidRoute(route: RouteType, signer: Signer) {
+export async function executeSquidRoute(
+  route: RouteResponse["route"],
+  signer: Signer,
+): Promise<ethers.providers.TransactionReceipt | undefined> {
   try {
     await squid.init();
 
@@ -51,13 +49,15 @@ export async function executeSquidRoute(route: RouteType, signer: Signer) {
       signer: signer,
       route,
     })) as unknown as ethers.providers.TransactionResponse;
-    console.log(`Transaction sent via squid Router ...`);
+
+    console.log(`Transaction sent via Squid Router ...`);
     const txReceipt = await tx.wait();
 
     return txReceipt;
   } catch (error) {
-    console.log(error);
-    return;
+    console.error("Error executing Squid route:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(errorMessage);
   }
 }
 

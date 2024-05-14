@@ -16,13 +16,10 @@ interface StatusModalProps {
     isOpen: boolean;
     setIsOpen: (value: boolean) => void;
     isLoading: boolean;
-    modalTitle: string;
-    modalDescription: string;
-    modalButtonText: string;
     errorMessage: string | undefined;
     setErrorMessage: (value: string) => void;
-    fromNetwork: ChainData;
-    toNetwork: ChainData;
+    fromNetwork: ChainData | undefined;
+    toNetwork: ChainData | undefined;
   };
 }
 
@@ -31,9 +28,6 @@ const StatusModal = ({ props }: StatusModalProps) => {
     isOpen: open,
     setIsOpen: setOpen,
     isLoading,
-    modalTitle,
-    modalDescription,
-    modalButtonText,
     errorMessage,
     setErrorMessage,
     fromNetwork,
@@ -61,7 +55,7 @@ const StatusModal = ({ props }: StatusModalProps) => {
           </div>
           <div
             ref={containerRef}
-            className="relative flex h-full w-2/3 justify-between self-center"
+            className="relative flex h-full w-2/3 justify-between self-center mt-4"
           >
             <AnimatedBeam
               containerRef={containerRef}
@@ -70,18 +64,16 @@ const StatusModal = ({ props }: StatusModalProps) => {
             />
             <Image
               ref={div1Ref}
-              // src={fromNetwork.chainIconURI}
-              src={Arbitrum}
-              alt="Arbitrum"
+              src={fromNetwork ? fromNetwork.chainIconURI : Arbitrum}
+              alt={fromNetwork ? fromNetwork.networkName : "Arbitrum"}
               width={40}
               height={40}
               className="z-10 h-10 w-10 rounded-full shadow-xl"
             />
             <Image
               ref={div2Ref}
-              // src={toNetwork.chainIconURI}
-              src={Avalanche}
-              alt="Avalanche"
+              src={toNetwork ? toNetwork.chainIconURI : Avalanche}
+              alt={toNetwork ? toNetwork.networkName : "Avalanche"}
               width={40}
               height={40}
               className="z-10 h-10 w-10 rounded-full shadow-xl"

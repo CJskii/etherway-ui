@@ -9,7 +9,7 @@ export const useTokenSelection = (
   initialTokenAddress?: string,
   filterFn: (token: Token) => boolean = () => true,
 ) => {
-  const [selectedtoken, setSelectedToken] = useState<Token>();
+  const [selectedToken, setSelectedToken] = useState<Token>();
   const [chaintokens, setChainTokens] = useState<Token[]>();
   const [allTokens, setAllTokens] = useState<Token[]>();
   const [searchTerm, setSearchTerm] = useState("");
@@ -85,7 +85,7 @@ export const useTokenSelection = (
   };
 
   return {
-    selectedtoken,
+    selectedToken,
     tokens: chaintokens,
     onTokenSelect,
     searchTerm,

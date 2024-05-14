@@ -30,20 +30,12 @@ export interface NetworkModalProps {
   onNetworkSelect: (network: ChainData) => void;
   filteredChains: ChainData[] | undefined;
   dialogTitle: string;
-  dialogDescription: string;
-  commandHeading: string;
 }
 const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK SELECTIONS WITHIN THIS COMPONENT?
   // - We have to , as the input is taken in this component itself , we can just set the values back in the main component
-  const {
-    selectedNetwork,
-    onNetworkSelect,
-    filteredChains,
-    dialogTitle,
-    dialogDescription,
-    commandHeading,
-  } = props;
+  const { selectedNetwork, onNetworkSelect, filteredChains, dialogTitle } =
+    props;
 
   const handleSelection = (network: ChainData) => {
     console.log(network.networkName);
