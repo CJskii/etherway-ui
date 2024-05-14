@@ -365,6 +365,7 @@ export const SquidBridge = () => {
                     variant="small"
                     className="dark:text-black font-semibold"
                   >
+                    {/* // TODO: this balance isn't displaying correctly  */}
                     {result.data
                       ? formatToFixed2({
                           value: result.data.value,
