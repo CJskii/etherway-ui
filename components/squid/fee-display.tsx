@@ -9,13 +9,14 @@ import {
 } from "@radix-ui/react-accordion";
 import React from "react";
 import { formatUnits } from "viem";
-import { RouteData, TokenData } from "@0xsquid/sdk";
+import { RouteType } from "@/common/utils/squid/squidRouter";
+import { Token } from "@0xsquid/squid-types";
 
 interface FeesProps {
   props: {
     isFetchingRoute: boolean;
-    route: RouteData | undefined;
-    toToken: TokenData | undefined;
+    route: RouteType | undefined;
+    toToken: Token | undefined;
   };
 }
 
@@ -37,7 +38,7 @@ export const FeeDetails = ({ props }: FeesProps) => {
             route.estimate.gasCosts[0].token.decimals,
           )}{" "}
           {route.estimate.gasCosts[0].token.symbol} ~ $
-          {route.estimate.gasCosts[0].amountUSD}
+          {route.estimate.gasCosts[0].amountUsd}
         </Typography>
       ) : (
         <div className="invisible">
@@ -63,18 +64,20 @@ export const FeeDetails = ({ props }: FeesProps) => {
             <Typography variant={"muted"} className="dark:text-black text-xs">
               Slippage: 1%
             </Typography>
-            <Typography variant={"muted"} className="dark:text-black text-xs">
-              Minmum received amount:{" "}
-              {route?.estimate && toToken
-                ? Number(
-                    formatUnits(
-                      BigInt(route.estimate.toAmountMin),
-                      toToken?.decimals,
-                    ),
-                  ).toFixed(4)
-                : ""}
-              {toToken?.symbol}
-            </Typography>
+
+            {route?.estimate && toToken ? (
+              <Typography variant={"muted"} className="dark:text-black text-xs">
+                Minmum received amount:{" "}
+                {Number(
+                  formatUnits(
+                    BigInt(route.estimate.toAmountMin),
+                    toToken?.decimals,
+                  ),
+                ).toFixed(4)}
+                {toToken?.symbol}
+              </Typography>
+            ) : null}
+
             {route?.estimate.gasCosts &&
               route?.estimate.feeCosts.map((feeCost, index) => {
                 return (
@@ -83,7 +86,7 @@ export const FeeDetails = ({ props }: FeesProps) => {
                     className="dark:text-black text-xs"
                     key={index}
                   >
-                    {feeCost.name} : ${Number(feeCost.amountUSD).toFixed(2)}
+                    {feeCost.name} : ${Number(feeCost.amountUsd).toFixed(2)}
                   </Typography>
                 );
               })}

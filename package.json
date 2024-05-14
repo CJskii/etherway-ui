@@ -14,7 +14,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@0xsquid/sdk": "1.14.16",
+    "@0xsquid/sdk": "^2.8.1",
     "@0xsquid/squid-types": "^0.1.59",
     "@hookform/resolvers": "^3.3.4",
     "@layerzerolabs/lz-v2-utilities": "^2.1.18",

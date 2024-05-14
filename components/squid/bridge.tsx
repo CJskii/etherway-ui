@@ -1,9 +1,41 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+
+import { useChainSelection } from "@/common/hooks/useChainSelection";
+import { useTokenSelection } from "@/common/hooks/useTokenSelection";
+import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
+
+import { formatUnits, parseUnits } from "viem";
+import { useChainModal } from "@rainbow-me/rainbowkit";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { Signer } from "ethers";
+
+import { Typography } from "../ui/typography";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+import { Separator } from "@radix-ui/react-separator";
+import { Skeleton } from "../ui/skeleton";
+import { FeeDetails } from "./fee-display";
+import { CheckBoxComponent } from "./check-box";
+import StatusModal from "./status-modal";
+import Loader from "@/components/ui/loader";
+import { toast } from "sonner";
+
+import getProviderOrSigner from "@/common/utils/getters/getProviderOrSigner";
+import SquidNetworkModal, { NetworkModalProps } from "./network-modal";
+import SquidTokenModal, { TokenModalProps } from "./token-modal";
 
 import {
-  RouteType,
+  ChainName,
+  RouteRequest,
+  Estimate,
+  SquidData,
+  ChainData,
+} from "@0xsquid/squid-types";
+import { RouteType } from "@/common/utils/squid/squidRouter";
+
+import {
   executeSquidRoute,
   getSquidChains,
   getSquidRoute,
@@ -11,38 +43,10 @@ import {
   getTxStatus,
   integratorId,
 } from "@/common/utils/squid/squidRouter";
-import { useEffect, useState } from "react";
-import getProviderOrSigner from "@/common/utils/getters/getProviderOrSigner";
-import { Signer } from "ethers";
-import { Typography } from "../ui/typography";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import SquidNetworkModal, { NetworkModalProps } from "./network-modal";
-import SquidTokenModal, { TokenModalProps } from "./token-modal";
-
-import {
-  ChainData,
-  ChainName,
-  GetRoute,
-  RouteData,
-  TokenData,
-} from "@0xsquid/sdk";
-import { useChainSelection } from "@/common/hooks/useChainSelection";
-import { useTokenSelection } from "@/common/hooks/useTokenSelection";
-import { formatUnits, parseUnits } from "viem";
-import { Separator } from "@radix-ui/react-separator";
-import { Skeleton } from "../ui/skeleton";
-import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
-import { useChainModal } from "@rainbow-me/rainbowkit";
-import Loader from "@/components/ui/loader";
-import { toast } from "sonner";
-import StatusModal from "./status-modal";
-import { FeeDetails } from "./fee-display";
-import { CheckBoxComponent } from "./check-box";
 
 export const SquidBridge = () => {
   const { address } = useAccount();
-  const [route, setRoute] = useState<RouteData | undefined>();
+  const [route, setRoute] = useState<RouteType | undefined>();
   const [requestId, setRequestId] = useState<string | undefined>();
   const [inAmount, setInAmount] = useState<number>();
   const [outAmount, setOutAmount] = useState<number>();
@@ -92,7 +96,6 @@ export const SquidBridge = () => {
       return;
     }
     if (!isCorrectNetwork && fromChain?.chainId) {
-      console.log(fromChain.chainId);
       try {
         await requestNetworkSwitch(fromChain.chainId, openChainModal);
       } catch (error) {
@@ -121,7 +124,9 @@ export const SquidBridge = () => {
           toToken: toToken.address,
           fromAddress: address ? address : `0x`,
           toAddress: toAddress ? toAddress : address ? address : `0x`,
-          slippage: 1,
+          slippageConfig: {
+            autoMode: 1, // 1 is "normal" slippage. Always set to 1
+          },
         };
 
         await fetchRoute(routeParams);
@@ -149,16 +154,34 @@ export const SquidBridge = () => {
   };
 
   const {
-    selectedchain: fromChain,
+    selectedChain: fromChain,
     chains: fromChains,
     onChainSelect: setFromNetwork,
   } = useChainSelection(ChainName.ARBITRUM);
 
+  const fromChainProps: NetworkModalProps = {
+    selectedNetwork: fromChain,
+    onNetworkSelect: setFromNetwork,
+    filteredChains: fromChains,
+    dialogTitle: "Select a network to bridge from",
+    dialogDescription: "",
+    commandHeading: "Select a network",
+  };
+
   const {
-    selectedchain: toChain,
+    selectedChain: toChain,
     chains: toChains,
     onChainSelect: setToNetwork,
-  } = useChainSelection("blast");
+  } = useChainSelection(ChainName.BASE, fromChain?.networkName);
+
+  const toChainProps: NetworkModalProps = {
+    selectedNetwork: toChain,
+    onNetworkSelect: setToNetwork,
+    filteredChains: toChains,
+    dialogTitle: "Select a network to bridge to",
+    dialogDescription: "",
+    commandHeading: "Select a network",
+  };
 
   const {
     selectedtoken: fromToken,
@@ -166,7 +189,7 @@ export const SquidBridge = () => {
     onTokenSelect: setFromToken,
   } = useTokenSelection(
     fromChain,
-    42161,
+    fromChain?.chainId ?? 42161,
     "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
   );
 
@@ -176,7 +199,7 @@ export const SquidBridge = () => {
     onTokenSelect: setToToken,
   } = useTokenSelection(
     toChain,
-    81457,
+    toChain?.chainId ?? 8453,
     "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
   );
 
@@ -199,24 +222,6 @@ export const SquidBridge = () => {
     setInAmount(Number(formatUnits(result.data?.value, result.data?.decimals)));
   };
 
-  const fromChainProps: NetworkModalProps = {
-    selectedNetwork: fromChain,
-    onNetworkSelect: setFromNetwork,
-    filteredChains: fromChains,
-    dialogTitle: "Select a network to bridge from",
-    dialogDescription: "Select a network to bridge from",
-    commandHeading: "Select a network",
-  };
-
-  const toChainProps: NetworkModalProps = {
-    selectedNetwork: toChain,
-    onNetworkSelect: setToNetwork,
-    filteredChains: toChains,
-    dialogTitle: "Select a network to bridge to",
-    dialogDescription: "Select a network to bridge to",
-    commandHeading: "Select a network",
-  };
-
   const fromTokenProps: TokenModalProps = {
     selectedToken: fromToken,
     onTokenSelect: setFromToken,
@@ -232,7 +237,7 @@ export const SquidBridge = () => {
   };
 
   // might want to fetch the latest route every 20 seconds to refresh the price
-  const fetchRoute = async (routeParams: GetRoute) => {
+  const fetchRoute = async (routeParams: RouteRequest) => {
     try {
       const _route = await getSquidRoute(routeParams);
       if (_route) {

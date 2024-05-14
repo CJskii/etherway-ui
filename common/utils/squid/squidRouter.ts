@@ -1,8 +1,8 @@
-import { GetRoute, RouteData, Squid } from "@0xsquid/sdk";
+import { Squid } from "@0xsquid/sdk";
 import {
-  Estimate,
-  RouteRequest,
   RouteResponse,
+  RouteRequest,
+  Estimate,
   SquidData,
 } from "@0xsquid/squid-types";
 import { Signer, ethers } from "ethers";
@@ -11,51 +11,39 @@ const userAddress = "0x62C43323447899acb61C18181e34168903E033Bf";
 export const integratorId = "etherway-2c794744-6972-4f23-bdcb-784032b1a377";
 
 const squid = new Squid({
-  baseUrl: "https://api.squidrouter.com",
+  baseUrl: "https://v2.api.squidrouter.com",
   integratorId: integratorId,
 });
 
-export type RouteType = {
+export interface RouteType {
   estimate: Estimate;
   transactionRequest?: SquidData;
   params: RouteRequest;
-};
+}
 
-// export async function getSquidRoute(
-//   routeParams: RouteRequest,
-// ): Promise<RouteType | undefined> {
-//   try {
-//     await squid.init();
-
-//     const { route, requestId, integratorId } =
-//       await squid.getRoute(routeParams);
-
-//     console.log(route, requestId);
-//     return route;
-//   } catch (error) {
-//     console.log(error);
-//     return;
-//   }
-// }
+interface SquidResponse {
+  route: RouteResponse["route"];
+  requestId: string | undefined;
+  integratorId?: string;
+}
 
 export async function getSquidRoute(
-  routeParams: GetRoute,
-): Promise<{ route: RouteData; requestId: string | undefined } | undefined> {
+  routeParams: RouteRequest,
+): Promise<SquidResponse | undefined> {
   try {
     await squid.init();
 
-    const { route, requestId, integratorId } =
-      await squid.getRoute(routeParams);
+    const response = await squid.getRoute(routeParams);
+    const { route, requestId } = response;
 
-    console.log(route, requestId);
     return { route, requestId };
   } catch (error) {
-    console.log(error);
-    return;
+    console.error("Error fetching route:", error);
+    return undefined;
   }
 }
 
-export async function executeSquidRoute(route: RouteData, signer: Signer) {
+export async function executeSquidRoute(route: RouteType, signer: Signer) {
   try {
     await squid.init();
 

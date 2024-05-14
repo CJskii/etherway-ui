@@ -20,13 +20,13 @@ import {
 import { Typography } from "../ui/typography";
 import { CardContent } from "../ui/card";
 import Image from "next/image";
-import { TokenData } from "@0xsquid/sdk";
+import { Token } from "@0xsquid/squid-types";
 import { ChevronDown } from "lucide-react";
 
 export interface TokenModalProps {
-  selectedToken: TokenData | undefined;
-  onTokenSelect: (token: TokenData) => void;
-  filteredTokens: TokenData[] | undefined;
+  selectedToken: Token | undefined;
+  onTokenSelect: (token: Token) => void;
+  filteredTokens: Token[] | undefined;
   dialogTitle: string;
 }
 
@@ -35,7 +35,7 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
 
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF TOKEN SELECTIONS WITHIN THIS COMPONENT?
 
-  const handleSelection = (token: TokenData) => {
+  const handleSelection = (token: Token) => {
     console.log(token);
     onTokenSelect(token);
   };

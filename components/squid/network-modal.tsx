@@ -23,8 +23,7 @@ import { ChevronDown } from "lucide-react";
 
 import { Network } from "@/common/types/network";
 import Image from "next/image";
-
-import { ChainData } from "@0xsquid/sdk";
+import { ChainData } from "@0xsquid/squid-types";
 
 export interface NetworkModalProps {
   selectedNetwork: ChainData | undefined;
@@ -47,7 +46,7 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
   } = props;
 
   const handleSelection = (network: ChainData) => {
-    console.log(network.chainName);
+    console.log(network.networkName);
     onNetworkSelect(network);
   };
 
@@ -69,12 +68,12 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
                 src={selectedNetwork.chainIconURI as string}
                 width={18}
                 height={18}
-                alt={selectedNetwork.chainName}
+                alt={selectedNetwork.networkName}
                 className="rounded-full"
               />
               <div className="flex-1 min-w-0 space-y-1 text-start">
                 <Typography className="dark:text-black text-left font-semibold truncate lg:text-sm text-xs overflow-hidden text-overflow-ellipsis white-space-nowrap">
-                  {capitalizeFirstLetter(selectedNetwork.chainName)}
+                  {capitalizeFirstLetter(selectedNetwork.networkName)}
                 </Typography>
               </div>
               <ChevronDown size={12} className="text-black" />
@@ -100,7 +99,7 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
                 {filteredChains &&
                   filteredChains.map((network) => (
                     <CommandItem
-                      key={network.chainName}
+                      key={network.networkName}
                       onSelect={() => handleSelection(network)}
                       className="flex items-center p-4 mb-1 rounded-md bg-white/30 cursor-pointer justify-start  gap-2 hover:opacity-80"
                     >
@@ -116,7 +115,7 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
                           variant={"smallTitle"}
                           className="dark:text-black"
                         >
-                          {capitalizeFirstLetter(network.chainName)}
+                          {capitalizeFirstLetter(network.networkName)}
                         </Typography>
                         <Typography
                           variant={"muted"}

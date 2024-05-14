@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import { ChainData, ChainName, TokenData } from "@0xsquid/sdk";
 import { getSquidTokens } from "../utils/squid/squidRouter";
+import { ChainData, ChainName, Token } from "@0xsquid/squid-types";
 
 export const useTokenSelection = (
   chain: ChainData | undefined,
   initialChainID: number | string,
   initialTokenAddress?: string,
-  filterFn: (token: TokenData) => boolean = () => true,
+  filterFn: (token: Token) => boolean = () => true,
 ) => {
-  const [selectedtoken, setSelectedToken] = useState<TokenData>();
-  const [chaintokens, setChainTokens] = useState<TokenData[]>();
-  const [allTokens, setAllTokens] = useState<TokenData[]>();
+  const [selectedtoken, setSelectedToken] = useState<Token>();
+  const [chaintokens, setChainTokens] = useState<Token[]>();
+  const [allTokens, setAllTokens] = useState<Token[]>();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -44,12 +44,12 @@ export const useTokenSelection = (
   }, []);
 
   useEffect(() => {
-    console.log(chain, allTokens);
+    // console.log(chain, allTokens);
     if (chain && allTokens) {
       const filteredTokensForChain = allTokens.filter(
         (token) => token.chainId == chain.chainId,
       );
-      console.log(filteredTokensForChain);
+      // console.log(filteredTokensForChain);
       setChainTokens(filteredTokensForChain);
       if (initialTokenAddress) {
         const initialToken = filteredTokensForChain.filter(
@@ -67,7 +67,7 @@ export const useTokenSelection = (
     }
   }, [chain]);
 
-  const onTokenSelect = (token: TokenData) => {
+  const onTokenSelect = (token: Token) => {
     setSelectedToken(token);
   };
 

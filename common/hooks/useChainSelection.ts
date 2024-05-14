@@ -1,57 +1,50 @@
 import { useState, useEffect } from "react";
-
-import { useAccount } from "wagmi";
-import { ChainData, ChainName } from "@0xsquid/sdk";
+import { ChainData, ChainName } from "@0xsquid/sdk/dist/types";
 import { getSquidChains } from "../utils/squid/squidRouter";
 
 export const useChainSelection = (
   initialChainName: ChainName | string,
+  excludeChainName: ChainName | string = "",
   filterFn: (chain: ChainData) => boolean = () => true,
 ) => {
-  const [selectedchain, setSelectedChain] = useState<ChainData>();
-  const [chains, setChains] = useState<ChainData[]>();
-
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedChain, setSelectedChain] = useState<ChainData>();
+  const [chains, setChains] = useState<ChainData[]>([]);
 
   useEffect(() => {
-    // TODO: Update the selected chain based on user's current connection
-    async function getChains() {
+    async function fetchChains() {
       const _chains = await getSquidChains();
-      //   console.log(_chains);
       setChains(_chains);
-      const initialChain = _chains.filter(
-        (chain) => chain.chainName == initialChainName,
-      )[0];
+      const initialChain = _chains.find(
+        (chain) =>
+          chain.networkName.toLowerCase() === initialChainName.toLowerCase(),
+      );
       setSelectedChain(initialChain);
     }
 
-    if (!chains) {
-      getChains();
+    fetchChains();
+  }, [initialChainName]);
+
+  useEffect(() => {
+    // Update selected chain if it's the same as the excluded chain
+    if (selectedChain && selectedChain.networkName === excludeChainName) {
+      const newChain = chains.find(
+        (chain) => chain.networkName !== excludeChainName,
+      );
+      setSelectedChain(newChain);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [excludeChainName, selectedChain, chains]);
 
   const onChainSelect = (chain: ChainData) => {
     setSelectedChain(chain);
   };
 
-  const onSearchChange = (term: string) => {
-    setSearchTerm(term);
-  };
-
-  const onClose = (dialogId: string) => {
-    const dialog = document.getElementById(dialogId);
-    if (dialog instanceof HTMLDialogElement) {
-      dialog.close();
-    }
-  };
+  const filteredChains = chains.filter(
+    (chain) => filterFn(chain) && chain.networkName !== excludeChainName,
+  );
 
   return {
-    selectedchain,
-    chains,
+    selectedChain,
+    chains: filteredChains,
     onChainSelect,
-    searchTerm,
-    onSearchChange,
-    onClose,
   };
 };

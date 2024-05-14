@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 import React, { useRef } from "react";
-import { ChainData } from "@0xsquid/sdk";
+import { ChainData } from "@0xsquid/squid-types";
 import { AnimatedBeam } from "../magicui/animated-beam";
 import Arbitrum from "../../public/chain-icons/arbitrum.svg";
 import Avalanche from "../../public/chain-icons/avalanche.svg";
@@ -45,9 +45,6 @@ const StatusModal = ({ props }: StatusModalProps) => {
   const div2Ref = useRef<HTMLImageElement>(null);
 
   const router = useRouter();
-
-  console.log("fromNetwork", fromNetwork);
-  console.log("toNetwork", toNetwork);
 
   const renderModalContent = () => {
     if (isLoading) {
