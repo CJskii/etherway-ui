@@ -5,6 +5,7 @@ import { ChainData, ChainName, Token } from "@0xsquid/squid-types";
 export const useTokenSelection = (
   chain: ChainData | undefined,
   initialChainID: number | string,
+  setRoute: (route: any) => void,
   initialTokenAddress?: string,
   filterFn: (token: Token) => boolean = () => true,
 ) => {
@@ -69,6 +70,7 @@ export const useTokenSelection = (
 
   const onTokenSelect = (token: Token) => {
     setSelectedToken(token);
+    setRoute(undefined);
   };
 
   const onSearchChange = (term: string) => {

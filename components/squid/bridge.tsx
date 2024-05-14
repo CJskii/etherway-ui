@@ -26,6 +26,8 @@ import getProviderOrSigner from "@/common/utils/getters/getProviderOrSigner";
 import SquidNetworkModal, { NetworkModalProps } from "./network-modal";
 import SquidTokenModal, { TokenModalProps } from "./token-modal";
 
+import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
+
 import {
   ChainName,
   RouteRequest,
@@ -73,6 +75,8 @@ export const SquidBridge = () => {
       if (!route) {
         return;
       }
+      setIsExecutingTransaction(true);
+      setShowStatusModal(true);
 
       const signer = await getProviderOrSigner(true);
 
@@ -83,8 +87,11 @@ export const SquidBridge = () => {
         handleStartPoll(txReciept?.transactionHash);
       }
       console.log(`Bridging started with tx ${txReciept?.transactionHash}`);
+      setIsExecutingTransaction(false);
     } catch (error) {
       console.log(error);
+      setIsExecutingTransaction(false);
+      handleErrors({ e: error, setErrorMessage: setErrorMessage });
     }
   };
 
@@ -190,6 +197,7 @@ export const SquidBridge = () => {
   } = useTokenSelection(
     fromChain,
     fromChain?.chainId ?? 42161,
+    setRoute,
     "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
   );
 
@@ -200,6 +208,7 @@ export const SquidBridge = () => {
   } = useTokenSelection(
     toChain,
     toChain?.chainId ?? 8453,
+    setRoute,
     "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
   );
 
@@ -323,10 +332,10 @@ export const SquidBridge = () => {
 
   // UNCOMMENT TO TEST STATUS MODAL
 
-  // useEffect(() => {
-  //   setShowStatusModal(true);
-  //   // setIsLoading(true);
-  // }, []);
+  useEffect(() => {
+    setShowStatusModal(true);
+    setIsExecutingTransaction(true);
+  }, []);
 
   return (
     <div className=" z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
@@ -334,7 +343,7 @@ export const SquidBridge = () => {
         props={{
           isOpen: showStatusModal,
           setIsOpen: setShowStatusModal,
-          isLoading: isLoading,
+          isLoading: isExecutingTransaction,
           errorMessage: errorMessage,
           setErrorMessage: setErrorMessage,
           fromNetwork: fromChain as ChainData,
@@ -483,6 +492,9 @@ export const SquidBridge = () => {
             <Button
               className=" py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
               onClick={handleBridgeButton}
+              disabled={
+                inAmount == 0 || isFetchingRoute || inAmount == undefined
+              }
             >
               {isFetchingRoute ? <Loader className="w-8 h-8" /> : "Bridge"}
             </Button>
