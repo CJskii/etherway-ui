@@ -21,6 +21,7 @@ import { parseUnits } from "viem";
 
 import { RouteType } from "@/common/utils/squid/squidRouter";
 import { ChainName, RouteRequest } from "@0xsquid/squid-types";
+import { ModalStatus } from "./status-modal";
 
 import StatusModal from "./status-modal";
 import Loader from "@/components/ui/loader";
@@ -43,6 +44,9 @@ export const SquidBridge = () => {
   const [isFetchingRoute, setIsFetchingRoute] = useState<boolean>(false);
   const [isExecutingTransaction, setIsExecutingTransaction] =
     useState<boolean>(false);
+  const [modalStatus, setModalStatus] = useState<ModalStatus>(
+    ModalStatus.APPROVE,
+  );
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
@@ -120,6 +124,7 @@ export const SquidBridge = () => {
       if (status?.squidTransactionStatus === "success") {
         handleStopPoll();
         setErrorMessage("");
+        setModalStatus(ModalStatus.SUCCESS);
       } else if (status?.squidTransactionStatus === "needs_gas") {
         handleStopPoll();
         setErrorMessage("Transaction needs more gas");
@@ -147,10 +152,12 @@ export const SquidBridge = () => {
 
     setIsExecutingTransaction(true);
     setShowStatusModal(true);
+    setModalStatus(ModalStatus.APPROVE);
 
     try {
       const signer = await getProviderOrSigner(true);
       const txReceipt = await executeSquidRoute(route, signer as Signer);
+      setModalStatus(ModalStatus.AWAIT_TX);
 
       setTxHash(txReceipt?.transactionHash);
       if (txReceipt?.transactionHash)
@@ -246,6 +253,7 @@ export const SquidBridge = () => {
           setErrorMessage,
           fromNetwork: fromChain,
           toNetwork: toChain,
+          modalStatus,
         }}
       />
       <div className="bg-gradient my-auto md:rounded-xl md:w-6/12 lg:w-5/12 xl:w-4/12 2xl:w-4/12 w-full items-start rounded-2xl">
