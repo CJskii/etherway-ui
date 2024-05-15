@@ -163,7 +163,7 @@ export const SquidBridge = () => {
     }
   };
 
-  const handlePreviewButton = async () => {
+  const handleFetchRouteButton = async () => {
     setIsFetchingRoute(true);
     if (!isConnected && openConnectModal) {
       openConnectModal();
@@ -266,6 +266,7 @@ export const SquidBridge = () => {
             handleMaxButton={handleMaxButton}
             isFetchingRoute={isFetchingRoute}
             route={route}
+            setRoute={setRoute}
             balanceData={balanceData}
             inAmount={inAmount}
             setInAmount={setInAmount}
@@ -282,6 +283,7 @@ export const SquidBridge = () => {
             }}
             isFetchingRoute={isFetchingRoute}
             route={route}
+            handleFetchRoute={handleFetchRouteButton}
           />
 
           <CheckBoxComponent {...{ isChecked, setIsChecked, setToAddress }} />
@@ -298,12 +300,12 @@ export const SquidBridge = () => {
           ) : (
             <Button
               className="py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-              onClick={handlePreviewButton}
+              onClick={handleFetchRouteButton}
             >
               {isFetchingRoute ? (
                 <Loader className="w-8 h-8 text-white/70" />
               ) : (
-                "Preview"
+                "Fetch route"
               )}
             </Button>
           )}

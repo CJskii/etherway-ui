@@ -1,6 +1,7 @@
-import { NetworkModalProps } from "@/common/types/network";
+import React from "react";
 import { TokenModalProps } from "./token-modal";
 import { RouteType } from "@/common/utils/squid/squidRouter";
+import { formatUnits } from "viem";
 
 import { Label } from "../ui/label";
 import { Typography } from "@/components/ui/typography";
@@ -11,8 +12,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import SquidNetworkModal from "./network-modal";
 import SquidTokenModal from "./token-modal";
 
-import { formatToFixed2 } from "@/common/utils/squid/bridgeUtils";
+import { fetchRoute, formatToFixed2 } from "@/common/utils/squid/bridgeUtils";
 import { ChainData } from "@0xsquid/squid-types";
+import { RefreshCw } from "lucide-react";
 
 export type ChainProps = {
   selectedNetwork: ChainData;
@@ -28,9 +30,11 @@ type BridgeSectionProps = {
   handleMaxButton?: () => void;
   isFetchingRoute: boolean;
   route: RouteType | undefined;
+  setRoute?: (route: RouteType | undefined) => void;
   balanceData?: any;
   inAmount?: number;
   setInAmount?: (amount: number) => void;
+  handleFetchRoute?: () => void;
 };
 
 export const BridgeSection: React.FC<BridgeSectionProps> = ({
@@ -40,9 +44,11 @@ export const BridgeSection: React.FC<BridgeSectionProps> = ({
   handleMaxButton,
   isFetchingRoute,
   route,
+  setRoute,
   balanceData,
   inAmount,
   setInAmount,
+  handleFetchRoute,
 }) => {
   const formattedBalance = balanceData
     ? formatToFixed2({
@@ -81,36 +87,95 @@ export const BridgeSection: React.FC<BridgeSectionProps> = ({
               )}
             </div>
           )}
+          {label === "To" && handleFetchRoute && route && (
+            <Button
+              variant="etherway"
+              onClick={handleFetchRoute}
+              className="text-xs h-6 rounded-md px-2 text-white flex items-center"
+              disabled={isFetchingRoute}
+            >
+              <RefreshCw
+                width={12}
+                height={12}
+                className={`mr-1 ${isFetchingRoute ? "animate-spin" : ""}`}
+              />
+              Re-fetch
+            </Button>
+          )}
         </div>
         <Separator
           orientation="horizontal"
           className="my-2 border-[1px] border-black/10 dark:border-black/10 rounded-lg w-full place-self-center"
         />
-        <div className="flex justify-between items-center">
-          <SquidTokenModal props={tokenProps} />
-          <div className="flex flex-col items-end justify-center">
-            {setInAmount && (
-              <Input
-                type="number"
-                className="text-right text-xs h-6 border-0 w-28 px-2 rounded-xl dark:bg-white dark:text-black dark:focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0"
-                placeholder="Enter amount"
-                onChange={(e) => setInAmount(Number(e.target.value))}
-              />
-            )}
+        {label === "From" && (
+          <div className="flex justify-between items-center">
+            <SquidTokenModal props={tokenProps} />
+            <div className="flex flex-col items-end justify-center">
+              {setInAmount && (
+                <Input
+                  type="number"
+                  className="text-right text-xs h-6 border-0 w-28 px-2 rounded-xl dark:bg-white dark:text-black dark:focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0"
+                  placeholder="Enter amount"
+                  onChange={(e) => {
+                    setInAmount(Number(e.target.value));
+                    setRoute?.(undefined);
+                  }}
+                />
+              )}
+              {isFetchingRoute ? (
+                <Skeleton className="h-5 w-12 rounded-md" />
+              ) : route?.estimate ? (
+                <Typography
+                  variant="muted"
+                  className="dark:text-black py-0 px-2 text-sm"
+                >
+                  ${route.estimate.fromAmountUSD}
+                </Typography>
+              ) : (
+                <Skeleton className="h-5 w-12 rounded-md invisible" />
+              )}
+            </div>
+          </div>
+        )}
+
+        {label === "To" && (
+          <div className="flex justify-between items-center">
+            <SquidTokenModal props={tokenProps} />
             {isFetchingRoute ? (
-              <Skeleton className="h-5 w-12 rounded-xl" />
+              <div className="flex flex-col items-end justify-center gap-2 w-24 h-10">
+                <Skeleton className="h-4 w-24 rounded-md" />
+                <Skeleton className="h-4 w-12 rounded-md" />
+              </div>
             ) : route?.estimate ? (
-              <Typography
-                variant="muted"
-                className="dark:text-black py-0 px-2 text-sm"
-              >
-                ${route.estimate.fromAmountUSD}
-              </Typography>
+              <div className="flex flex-col items-end justify-center gap-2 w-24 h-10">
+                <Typography
+                  variant="smallTitle"
+                  className="dark:text-black font-semibold truncate px-2"
+                >
+                  {tokenProps.selectedToken &&
+                    `${Number(
+                      formatUnits(
+                        BigInt(route.estimate.toAmount),
+                        tokenProps.selectedToken.decimals,
+                      ),
+                    ).toFixed(4)} ${tokenProps.selectedToken.symbol}`}
+                </Typography>
+                <Typography
+                  variant="muted"
+                  className="dark:text-black py-0 px-2 text-xs truncate"
+                >
+                  ${route.estimate.toAmountUSD}
+                </Typography>
+              </div>
             ) : (
-              <Skeleton className="h-5 w-12 rounded-xl invisible" />
+              <div className="flex flex-col items-end justify-center gap-2 w-24 h-10">
+                {/* Invisible placeholders to maintain layout */}
+                <div className="h-4 w-20 rounded-xl invisible"></div>
+                <div className="h-4 w-12 rounded-xl invisible"></div>
+              </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
