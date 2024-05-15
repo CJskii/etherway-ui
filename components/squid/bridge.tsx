@@ -240,6 +240,7 @@ export const SquidBridge = () => {
   // useEffect(() => {
   //   setShowStatusModal(true);
   //   setIsExecutingTransaction(true);
+  //   setModalStatus(ModalStatus.AWAIT_TX);
   // }, []);
 
   return (

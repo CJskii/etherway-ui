@@ -60,7 +60,10 @@ const StatusModal = ({ props }: StatusModalProps) => {
               We&apos;re working hard to bridge your tokens
             </Typography>
 
-            <Typography variant="small" className="text-center dark:text-black">
+            <Typography
+              variant="extraSmall"
+              className="text-center dark:text-black"
+            >
               This might take a few seconds...
             </Typography>
           </div>
@@ -175,7 +178,10 @@ const StatusModal = ({ props }: StatusModalProps) => {
             >
               Success 🎉
             </Typography>
-            <Typography variant="small" className="text-center dark:text-black">
+            <Typography
+              variant="extraSmall"
+              className="text-center dark:text-black"
+            >
               Please allow few minutes for the transaction to finalise on the
               destination network
             </Typography>
