@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChainData, ChainName } from "@0xsquid/sdk/dist/types";
+import { ChainData, ChainName, ChainType } from "@0xsquid/sdk/dist/types";
 import { getSquidChains } from "../utils/squid/squidRouter";
 
 export const useChainSelection = (
@@ -13,7 +13,13 @@ export const useChainSelection = (
   useEffect(() => {
     async function fetchChains() {
       const _chains = await getSquidChains();
-      setChains(_chains);
+      // Pass _chains for all chains and evmChains for EVM chains only
+      const evmChains = _chains.filter(
+        (chain) => chain.chainType === ChainType.EVM,
+      );
+
+      setChains(evmChains);
+
       const initialChain = _chains.find(
         (chain) =>
           chain.networkName.toLowerCase() === initialChainName.toLowerCase(),
