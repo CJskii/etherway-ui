@@ -6,6 +6,7 @@ import {
   bridgeInteractionONFT,
 } from "../create/newBridge";
 import { gasRefuel } from "../create/newGasRefuel";
+import { squidBridge } from "../create/newSquidBridge";
 
 type handleInteractionProps = {
   ethAddress: string;
@@ -57,6 +58,14 @@ export default async function handleInteraction({
       });
     case InteractionType.GAS_REFUEL:
       return await gasRefuel({
+        ethAddress: ethAddress.toLowerCase(),
+        contractType,
+        interactionType,
+        chainId,
+        amount,
+      });
+    case InteractionType.SQUID_BRIDGE:
+      return await squidBridge({
         ethAddress: ethAddress.toLowerCase(),
         contractType,
         interactionType,

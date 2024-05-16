@@ -27,6 +27,7 @@ import Loader from "@/components/ui/loader";
 import { FeeDetails } from "./fee-display";
 import { CheckBoxComponent } from "./check-box";
 import { BridgeSection, ChainProps } from "./bridge-section";
+import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/handleSquidBridge";
 
 export const SquidBridge = () => {
   const { address } = useAccount();
@@ -64,7 +65,7 @@ export const SquidBridge = () => {
     selectedChain: toChain,
     chains: toChains,
     onChainSelect: setToNetwork,
-  } = useChainSelection(ChainName.BASE, fromChain?.networkName);
+  } = useChainSelection(ChainName.BASE);
 
   const toChainProps = {
     selectedNetwork: toChain,
@@ -101,9 +102,7 @@ export const SquidBridge = () => {
     : false;
 
   const { data: balanceData } = useBalance({
-    address: fromToken
-      ? (fromToken.address as `0x${string}`)
-      : "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+    address: fromToken ? (fromToken.address as `0x${string}`) : "0x",
   });
 
   const handleStopPoll = () => {
@@ -119,6 +118,16 @@ export const SquidBridge = () => {
     (status) => {
       if (status?.squidTransactionStatus === "success") {
         handleStopPoll();
+
+        if (route?.estimate.fromAmountUSD && fromChain?.chainId && address) {
+          handleSquidBridgePoints({
+            userAddress: address,
+            chainId: Number(fromChain.chainId!),
+            txAmountUSD: Number(route?.estimate.fromAmountUSD!),
+          });
+        }
+        // TODO: Show errors just in case the points adding fails maybe using a toast
+
         setErrorMessage("");
       } else if (status?.squidTransactionStatus === "needs_gas") {
         handleStopPoll();
@@ -149,7 +158,9 @@ export const SquidBridge = () => {
     setShowStatusModal(true);
 
     try {
-      const signer = await getProviderOrSigner(true);
+      const signer = (await getProviderOrSigner(true)) as Signer;
+
+      console.log(signer._isSigner);
       const txReceipt = await executeSquidRoute(route, signer as Signer);
 
       setTxHash(txReceipt?.transactionHash);

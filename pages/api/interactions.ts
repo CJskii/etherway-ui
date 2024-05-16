@@ -21,7 +21,11 @@ export default async function handler(
     return res.status(400).json({ message: "Missing parameters" });
   }
 
-  if (interactionType == "MINT_OFT" || interactionType == "BRIDGE_OFT") {
+  if (
+    interactionType == "MINT_OFT" ||
+    interactionType == "BRIDGE_OFT" ||
+    interactionType == "SQUID_BRIDGE"
+  ) {
     if (!amount) {
       console.error("Missing parameters");
       return res.status(400).json({ message: "Missing parameters" });

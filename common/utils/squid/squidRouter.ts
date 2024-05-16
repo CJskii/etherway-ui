@@ -14,6 +14,7 @@ const squid = new Squid({
   baseUrl: "https://v2.api.squidrouter.com",
   integratorId: integratorId,
 });
+// https://apiplus.squidrouter.com
 
 export interface RouteType {
   estimate: Estimate;
