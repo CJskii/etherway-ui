@@ -54,17 +54,17 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
     <Dialog>
       <DialogTrigger>
         {selectedNetwork && (
-          <CardContent className="grid gap-4 px-0 pb-0 lg:w-36 w-32 flex-1">
+          <CardContent className="grid gap-4 px-0 pb-0 xl:w-44 lg:w-36 w-32 flex-1">
             <div className="flex items-center justify-center space-x-2 bg-primary rounded-md p-2 overflow-hidden">
               <Image
                 src={selectedNetwork.chainIconURI as string}
                 width={18}
                 height={18}
                 alt={selectedNetwork.networkName}
-                className="rounded-full"
+                className="rounded-full xl:w-[24px]"
               />
               <div className="flex-1 min-w-0 space-y-1 text-start">
-                <Typography className="dark:text-black text-left font-semibold truncate lg:text-sm text-xs overflow-hidden text-overflow-ellipsis white-space-nowrap">
+                <Typography className="dark:text-black text-left font-semibold truncate xl:text-lg text-xs overflow-hidden text-overflow-ellipsis white-space-nowrap">
                   {capitalizeFirstLetter(selectedNetwork.networkName)}
                 </Typography>
               </div>
