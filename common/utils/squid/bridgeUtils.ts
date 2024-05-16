@@ -58,14 +58,16 @@ export const getStatus = async (
     fromChainId: string;
     toChainId: string;
   },
-  setStatusCallback: (status: any) => void,
+  setStatusCallback?: (status: any) => void,
 ): Promise<void> => {
   try {
     const status = await getTxStatus({
       ...params,
       integratorId: integratorId,
     });
-    setStatusCallback(status);
+    if (setStatusCallback) {
+      setStatusCallback(status);
+    }
   } catch (error) {
     console.log(error);
   }

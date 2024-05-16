@@ -16,7 +16,11 @@ import {
   getStatus,
 } from "@/common/utils/squid/bridgeUtils";
 import getProviderOrSigner from "../../common/utils/getters/getProviderOrSigner";
-import { executeSquidRoute } from "@/common/utils/squid/squidRouter";
+import {
+  executeSquidRoute,
+  getTxStatus,
+  integratorId,
+} from "@/common/utils/squid/squidRouter";
 import { parseUnits } from "viem";
 
 import { RouteType } from "@/common/utils/squid/squidRouter";
@@ -48,6 +52,8 @@ export const SquidBridge = () => {
   const [modalStatus, setModalStatus] = useState<ModalStatus>(
     ModalStatus.APPROVE,
   );
+  const [axelarURL, setAxelarURL] = useState<string>();
+  const [loadingToastId, setLoadingToastId] = useState<string | number>();
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
@@ -111,15 +117,32 @@ export const SquidBridge = () => {
 
   const handleStopPoll = () => {
     setIsLoading(false);
-    setShowStatusModal(true);
+    setShowStatusModal(true); // TODO: Close the modal once the Polling is stopped
+
+    // Pop the toast
   };
 
   useTransactionPolling(
     txHash!,
     requestId!,
-    fromChain,
-    toChain,
-    (status) => {
+    fromChain!,
+    toChain!,
+    async ({ txHash, requestId, fromChain, toChain }) => {
+      const getStatusParams = {
+        transactionId: txHash,
+        requestId: requestId,
+        integratorId: integratorId,
+        fromChainId: fromChain.chainId.toString(),
+        toChainId: toChain.chainId.toString(),
+      };
+
+      const status = await getTxStatus(getStatusParams);
+      console.log(status);
+
+      if (!axelarURL) {
+        setAxelarURL(status?.axelarTransactionUrl);
+      }
+
       if (status?.squidTransactionStatus === "success") {
         handleStopPoll();
 
@@ -134,19 +157,37 @@ export const SquidBridge = () => {
 
         setErrorMessage("");
         setModalStatus(ModalStatus.SUCCESS);
+
+        if (showStatusModal == false) {
+          toast.dismiss();
+          toast.dismiss(loadingToastId);
+          toast.success("Transaction successful");
+        }
       } else if (status?.squidTransactionStatus === "needs_gas") {
         handleStopPoll();
         setErrorMessage("Transaction needs more gas");
+        if (showStatusModal == false) {
+          toast.error("Transaction in progress...");
+        }
       } else if (
         status?.squidTransactionStatus === "ongoing" ||
         status?.squidTransactionStatus === "partial_success"
       ) {
         setIsLoading(true);
-        setShowStatusModal(true);
+        // setShowStatusModal(true);
         setErrorMessage("");
+        if (showStatusModal == false) {
+          if (!loadingToastId) {
+            const toastId = toast.loading("Transaction in progress...");
+            setLoadingToastId(toastId);
+          }
+        }
       } else if (status?.squidTransactionStatus === "not_found") {
         handleStopPoll();
         setErrorMessage("Transaction not found");
+        if (showStatusModal == false) {
+          toast.loading("Transaction in progress...");
+        }
       }
     },
     handleStopPoll,
