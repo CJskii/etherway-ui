@@ -26,7 +26,7 @@ export const FeeDetails = ({ props }: FeesProps) => {
   return (
     <div>
       {isFetchingRoute ? (
-        <Skeleton className="h-4 w-full rounded-xl" />
+        <Skeleton className="h-4 w-full rounded-md" />
       ) : route?.estimate ? (
         <Typography
           variant={"muted"}

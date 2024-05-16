@@ -10,6 +10,7 @@ import { ChainData } from "@0xsquid/squid-types";
 import { AnimatedBeam } from "../magicui/animated-beam";
 import Arbitrum from "../../public/chain-icons/arbitrum.svg";
 import Avalanche from "../../public/chain-icons/avalanche.svg";
+import { Wallet } from "lucide-react";
 
 interface StatusModalProps {
   props: {
@@ -20,7 +21,14 @@ interface StatusModalProps {
     setErrorMessage: (value: string) => void;
     fromNetwork: ChainData | undefined;
     toNetwork: ChainData | undefined;
+    modalStatus: ModalStatus;
   };
+}
+
+export enum ModalStatus {
+  APPROVE = "approve",
+  AWAIT_TX = "awaitTx",
+  SUCCESS = "success",
 }
 
 const StatusModal = ({ props }: StatusModalProps) => {
@@ -32,16 +40,19 @@ const StatusModal = ({ props }: StatusModalProps) => {
     setErrorMessage,
     fromNetwork,
     toNetwork,
+    modalStatus,
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const div1Ref = useRef<HTMLImageElement>(null);
-  const div2Ref = useRef<HTMLImageElement>(null);
+  const awaitFromRef = useRef<HTMLImageElement>(null);
+  const awaitToRef = useRef<HTMLImageElement>(null);
+  const approveFromRef = useRef<HTMLDivElement>(null);
+  const approveToRef = useRef<HTMLImageElement>(null);
 
   const router = useRouter();
 
   const renderModalContent = () => {
-    if (isLoading) {
+    if (isLoading && modalStatus === ModalStatus.AWAIT_TX) {
       return (
         <>
           <div className="flex flex-col justify-center items-center gap-6 h-full">
@@ -49,7 +60,10 @@ const StatusModal = ({ props }: StatusModalProps) => {
               We&apos;re working hard to bridge your tokens
             </Typography>
 
-            <Typography variant="small" className="text-center dark:text-black">
+            <Typography
+              variant="extraSmall"
+              className="text-center dark:text-black"
+            >
               This might take a few seconds...
             </Typography>
           </div>
@@ -59,11 +73,11 @@ const StatusModal = ({ props }: StatusModalProps) => {
           >
             <AnimatedBeam
               containerRef={containerRef}
-              fromRef={div1Ref}
-              toRef={div2Ref}
+              fromRef={awaitFromRef}
+              toRef={awaitToRef}
             />
             <Image
-              ref={div1Ref}
+              ref={awaitFromRef}
               src={fromNetwork ? fromNetwork.chainIconURI : Arbitrum}
               alt={fromNetwork ? fromNetwork.networkName : "Arbitrum"}
               width={40}
@@ -71,12 +85,64 @@ const StatusModal = ({ props }: StatusModalProps) => {
               className="z-10 h-10 w-10 rounded-full shadow-xl"
             />
             <Image
-              ref={div2Ref}
+              ref={awaitToRef}
               src={toNetwork ? toNetwork.chainIconURI : Avalanche}
               alt={toNetwork ? toNetwork.networkName : "Avalanche"}
               width={40}
               height={40}
               className="z-10 h-10 w-10 rounded-full shadow-xl"
+            />
+          </div>
+        </>
+      );
+    } else if (isLoading && modalStatus === ModalStatus.APPROVE) {
+      return (
+        <>
+          <div className="flex flex-col justify-center items-center gap-6 h-full">
+            <Typography variant="h4" className="text-center dark:text-black">
+              Please sign transaction in your wallet
+            </Typography>
+          </div>
+          <div
+            className="relative flex w-full max-w-[500px] items-center justify-center overflow-hidden rounded-lg p-10"
+            ref={containerRef}
+          >
+            <div className="flex h-full w-full flex-col items-stretch justify-between gap-10">
+              <div className="flex flex-row justify-between">
+                <div
+                  className="z-10 flex h-10 w-10 items-center justify-center rounded-full bg-gray-300/60 shadow-[0_0_20px_-12px_rgba(0,0,0,0.8)]"
+                  ref={approveFromRef}
+                >
+                  <Wallet className="stroke-yellow-300/70" />
+                </div>
+
+                <Image
+                  ref={approveToRef}
+                  src={fromNetwork ? fromNetwork.chainIconURI : Arbitrum}
+                  alt={fromNetwork ? fromNetwork.networkName : "Arbitrum"}
+                  width={40}
+                  height={40}
+                  className="z-10 h-10 w-10 rounded-full shadow-xl"
+                />
+              </div>
+            </div>
+
+            <AnimatedBeam
+              containerRef={containerRef}
+              fromRef={approveFromRef}
+              toRef={approveToRef}
+              startYOffset={10}
+              endYOffset={10}
+              curvature={-20}
+            />
+            <AnimatedBeam
+              containerRef={containerRef}
+              fromRef={approveFromRef}
+              toRef={approveToRef}
+              reverse
+              startYOffset={-10}
+              endYOffset={-10}
+              curvature={20}
             />
           </div>
         </>
@@ -110,9 +176,12 @@ const StatusModal = ({ props }: StatusModalProps) => {
               variant="smallTitle"
               className="text-center dark:text-black"
             >
-              Tokens Sent
+              Success 🎉
             </Typography>
-            <Typography variant="small" className="text-center dark:text-black">
+            <Typography
+              variant="extraSmall"
+              className="text-center dark:text-black"
+            >
               Please allow few minutes for the transaction to finalise on the
               destination network
             </Typography>

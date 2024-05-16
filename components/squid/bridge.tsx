@@ -21,6 +21,7 @@ import { parseUnits } from "viem";
 
 import { RouteType } from "@/common/utils/squid/squidRouter";
 import { ChainName, RouteRequest } from "@0xsquid/squid-types";
+import { ModalStatus } from "./status-modal";
 
 import StatusModal from "./status-modal";
 import Loader from "@/components/ui/loader";
@@ -44,6 +45,9 @@ export const SquidBridge = () => {
   const [isFetchingRoute, setIsFetchingRoute] = useState<boolean>(false);
   const [isExecutingTransaction, setIsExecutingTransaction] =
     useState<boolean>(false);
+  const [modalStatus, setModalStatus] = useState<ModalStatus>(
+    ModalStatus.APPROVE,
+  );
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
@@ -129,6 +133,7 @@ export const SquidBridge = () => {
         // TODO: Show errors just in case the points adding fails maybe using a toast
 
         setErrorMessage("");
+        setModalStatus(ModalStatus.SUCCESS);
       } else if (status?.squidTransactionStatus === "needs_gas") {
         handleStopPoll();
         setErrorMessage("Transaction needs more gas");
@@ -156,12 +161,14 @@ export const SquidBridge = () => {
 
     setIsExecutingTransaction(true);
     setShowStatusModal(true);
+    setModalStatus(ModalStatus.APPROVE);
 
     try {
       const signer = (await getProviderOrSigner(true)) as Signer;
 
       console.log(signer._isSigner);
       const txReceipt = await executeSquidRoute(route, signer as Signer);
+      setModalStatus(ModalStatus.AWAIT_TX);
 
       setTxHash(txReceipt?.transactionHash);
       if (txReceipt?.transactionHash)
@@ -174,7 +181,7 @@ export const SquidBridge = () => {
     }
   };
 
-  const handlePreviewButton = async () => {
+  const handleFetchRouteButton = async () => {
     setIsFetchingRoute(true);
     if (!isConnected && openConnectModal) {
       openConnectModal();
@@ -244,6 +251,7 @@ export const SquidBridge = () => {
   // useEffect(() => {
   //   setShowStatusModal(true);
   //   setIsExecutingTransaction(true);
+  //   setModalStatus(ModalStatus.AWAIT_TX);
   // }, []);
 
   return (
@@ -257,6 +265,7 @@ export const SquidBridge = () => {
           setErrorMessage,
           fromNetwork: fromChain,
           toNetwork: toChain,
+          modalStatus,
         }}
       />
       <div className="bg-gradient my-auto md:rounded-xl md:w-6/12 lg:w-5/12 xl:w-4/12 2xl:w-4/12 w-full items-start rounded-2xl">
@@ -277,6 +286,7 @@ export const SquidBridge = () => {
             handleMaxButton={handleMaxButton}
             isFetchingRoute={isFetchingRoute}
             route={route}
+            setRoute={setRoute}
             balanceData={balanceData}
             inAmount={inAmount}
             setInAmount={setInAmount}
@@ -293,6 +303,7 @@ export const SquidBridge = () => {
             }}
             isFetchingRoute={isFetchingRoute}
             route={route}
+            handleFetchRoute={handleFetchRouteButton}
           />
 
           <CheckBoxComponent {...{ isChecked, setIsChecked, setToAddress }} />
@@ -309,12 +320,12 @@ export const SquidBridge = () => {
           ) : (
             <Button
               className="py-6 w-full dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
-              onClick={handlePreviewButton}
+              onClick={handleFetchRouteButton}
             >
               {isFetchingRoute ? (
                 <Loader className="w-8 h-8 text-white/70" />
               ) : (
-                "Preview"
+                "Fetch route"
               )}
             </Button>
           )}
