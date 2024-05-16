@@ -7,6 +7,8 @@ import {
 import { toast } from "sonner";
 import { RouteRequest } from "@0xsquid/squid-types";
 import { RouteType } from "@/common/utils/squid/squidRouter";
+import { TokenModalProps } from "@/components/squid/token-modal";
+import { TokenBalance, Token } from "@0xsquid/sdk/dist/types";
 
 export const formatToFixed2 = ({
   value,
@@ -60,4 +62,54 @@ export const getStatus = async (
   } catch (error) {
     console.log(error);
   }
+};
+
+export const roundedTokenBalance = ({
+  balanceData,
+  tokenProps,
+}: {
+  balanceData: TokenBalance[];
+  tokenProps: TokenModalProps;
+}) => {
+  if (!balanceData || !tokenProps.selectedToken) return null;
+  const userBalance = balanceData.find(
+    (balance: any) =>
+      balance.address.toLowerCase() ===
+      tokenProps.selectedToken?.address.toLowerCase(),
+  );
+
+  if (userBalance) {
+    const formattedBalance = parseFloat(
+      formatUnits(
+        BigInt(userBalance.balance),
+        tokenProps.selectedToken?.decimals,
+      ),
+    );
+
+    return formattedBalance > 0 ? formattedBalance.toFixed(4) : "0.0";
+  }
+
+  return null;
+};
+
+export const rawTokenBalance = ({
+  balanceData,
+  tokenProps,
+}: {
+  balanceData: TokenBalance[];
+  tokenProps: Token | undefined;
+}) => {
+  if (!balanceData || !tokenProps) return null;
+  const userBalance = balanceData.find(
+    (balance: any) =>
+      balance.address.toLowerCase() === tokenProps?.address.toLowerCase(),
+  );
+
+  if (userBalance) {
+    return parseFloat(
+      formatUnits(BigInt(userBalance.balance), tokenProps?.decimals),
+    ).toFixed(6);
+  }
+
+  return null;
 };

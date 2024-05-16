@@ -11,10 +11,10 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import SquidNetworkModal from "./network-modal";
 import SquidTokenModal from "./token-modal";
-
-import { fetchRoute, formatToFixed2 } from "@/common/utils/squid/bridgeUtils";
 import { ChainData } from "@0xsquid/squid-types";
 import { RefreshCw } from "lucide-react";
+
+import { roundedTokenBalance } from "@/common/utils/squid/bridgeUtils";
 
 export type ChainProps = {
   selectedNetwork: ChainData;
@@ -32,8 +32,8 @@ type BridgeSectionProps = {
   route: RouteType | undefined;
   setRoute?: (route: RouteType | undefined) => void;
   balanceData?: any;
-  inAmount?: number;
-  setInAmount?: (amount: number) => void;
+  inAmount?: string;
+  setInAmount?: (amount: string) => void;
   handleFetchRoute?: () => void;
 };
 
@@ -50,29 +50,16 @@ export const BridgeSection: React.FC<BridgeSectionProps> = ({
   setInAmount,
   handleFetchRoute,
 }) => {
-  const tokenBalance = () => {
-    if (!balanceData || !tokenProps.selectedToken) return null;
-    const userBalance = balanceData.find(
-      (balance: any) =>
-        balance.address.toLowerCase() ===
-        tokenProps.selectedToken?.address.toLowerCase(),
-    );
+  const balance = roundedTokenBalance({ balanceData, tokenProps });
 
-    if (userBalance) {
-      const formattedBalance = parseFloat(
-        formatUnits(
-          BigInt(userBalance.balance),
-          tokenProps.selectedToken?.decimals,
-        ),
-      );
-
-      return formattedBalance > 0 ? formattedBalance.toFixed(4) : "0.0";
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Use a regex to allow only numbers and one decimal point
+    if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
+      setInAmount?.(value);
+      setRoute?.(undefined);
     }
-
-    return null;
   };
-
-  const balance = tokenBalance();
 
   return (
     <div className="flex flex-col">
@@ -130,13 +117,11 @@ export const BridgeSection: React.FC<BridgeSectionProps> = ({
             <div className="flex flex-col items-end justify-center">
               {setInAmount && (
                 <Input
-                  type="number"
+                  type="text"
                   className="text-right text-xs h-6 border-0 w-28 px-2 rounded-xl dark:bg-white dark:text-black dark:focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0"
                   placeholder="Enter amount"
-                  onChange={(e) => {
-                    setInAmount(Number(e.target.value));
-                    setRoute?.(undefined);
-                  }}
+                  value={inAmount}
+                  onChange={handleChange}
                 />
               )}
               {isFetchingRoute ? (

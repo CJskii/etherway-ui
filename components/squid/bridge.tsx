@@ -28,6 +28,8 @@ import { RouteType } from "@/common/utils/squid/squidRouter";
 import { ChainName, RouteRequest } from "@0xsquid/squid-types";
 import { ModalStatus } from "./status-modal";
 
+import { TokenBalance } from "@0xsquid/sdk/dist/types";
+
 import StatusModal from "./status-modal";
 import Loader from "@/components/ui/loader";
 import { FeeDetails } from "./fee-display";
@@ -35,14 +37,14 @@ import { CheckBoxComponent } from "./check-box";
 import { BridgeSection, ChainProps } from "./bridge-section";
 import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/handleSquidBridge";
 import { useEthersSigner } from "@/common/hooks/useEthersSigner";
-import { getUserBalance } from "@/common/utils/getters/getBalance";
+import { rawTokenBalance } from "@/common/utils/squid/bridgeUtils";
 
 export const SquidBridge = () => {
   const { address } = useAccount();
   const account = useAccount();
   const [route, setRoute] = useState<RouteType | undefined>();
   const [requestId, setRequestId] = useState<string | undefined>();
-  const [inAmount, setInAmount] = useState<number>();
+  const [inAmount, setInAmount] = useState<string>("");
   const [txHash, setTxHash] = useState<string>();
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -57,7 +59,7 @@ export const SquidBridge = () => {
   );
   const [axelarURL, setAxelarURL] = useState<string>();
   const [loadingToastId, setLoadingToastId] = useState<string | number>();
-  const [balanceData, setBalanceData] = useState<any>();
+  const [balanceData, setBalanceData] = useState<TokenBalance[]>();
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
@@ -116,12 +118,6 @@ export const SquidBridge = () => {
   const isCorrectNetwork = fromChain
     ? fromChain.chainId === (account.chainId ?? "")
     : false;
-
-  // const { data: balanceData } = useBalance({
-  //   address: "0x8a51D7A312ED079b653D16be724023442f1F3f47",
-  //   token: fromToken ? (fromToken.address as `0x${string}`) : undefined,
-  //   chainId: fromChain ? Number(fromChain.chainId) : 42161,
-  // });
 
   const handleStopPoll = () => {
     setIsLoading(false);
@@ -290,15 +286,15 @@ export const SquidBridge = () => {
   };
 
   const handleMaxButton = () => {
-    if (!balanceData?.value) return;
-    setInAmount(
-      Number(
-        formatToFixed2({
-          value: balanceData.value,
-          decimals: balanceData.decimals,
-        }),
-      ),
-    );
+    if (!balanceData) return;
+    const rawBalance = rawTokenBalance({
+      balanceData,
+      tokenProps: fromToken,
+    });
+
+    console.log(rawBalance);
+    setInAmount(String(rawBalance));
+    setRoute?.(undefined);
   };
 
   useEffect(() => {
