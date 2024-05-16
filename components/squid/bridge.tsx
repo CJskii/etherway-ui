@@ -5,7 +5,7 @@ import { useChainSelection } from "@/common/hooks/useChainSelection";
 import { useTokenSelection } from "@/common/hooks/useTokenSelection";
 import useTransactionPolling from "@/common/hooks/useTransactionPooling";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
-import { useAccount, useBalance, useSwitchChain } from "wagmi";
+import { useAccount, useBalance, useSwitchChain, useWalletClient } from "wagmi";
 import { Signer } from "ethers";
 import { toast } from "sonner";
 import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
@@ -33,6 +33,7 @@ import { FeeDetails } from "./fee-display";
 import { CheckBoxComponent } from "./check-box";
 import { BridgeSection, ChainProps } from "./bridge-section";
 import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/handleSquidBridge";
+import { useEthersSigner } from "@/common/hooks/useEthersSigner";
 
 export const SquidBridge = () => {
   const { address } = useAccount();
@@ -57,6 +58,8 @@ export const SquidBridge = () => {
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
+
+  const signer = useEthersSigner();
 
   const {
     selectedChain: fromChain,
@@ -112,7 +115,9 @@ export const SquidBridge = () => {
     : false;
 
   const { data: balanceData } = useBalance({
-    address: fromToken ? (fromToken.address as `0x${string}`) : "0x",
+    address: "0x8a51D7A312ED079b653D16be724023442f1F3f47",
+    token: fromToken ? (fromToken.address as `0x${string}`) : undefined,
+    chainId: fromChain ? Number(fromChain.chainId) : 42161,
   });
 
   const handleStopPoll = () => {
@@ -205,7 +210,11 @@ export const SquidBridge = () => {
     setModalStatus(ModalStatus.APPROVE);
 
     try {
-      const signer = (await getProviderOrSigner(true)) as Signer;
+      // const signer = (await getProviderOrSigner(true)) as Signer;
+      if (!signer) {
+        console.log("No signer found");
+        return;
+      }
 
       console.log(signer._isSigner);
       const txReceipt = await executeSquidRoute(route, signer as Signer);
