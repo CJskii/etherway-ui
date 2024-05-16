@@ -1,4 +1,4 @@
-import { formatUnits, parseUnits } from "viem";
+import { formatUnits } from "viem";
 import {
   getTxStatus,
   getSquidRoute,
@@ -17,17 +17,6 @@ export const formatToFixed2 = ({
 }): string => {
   const formattedValue = formatUnits(value, decimals);
   return parseFloat(formattedValue).toFixed(2);
-};
-
-export const handleErrors = ({
-  e,
-  setErrorMessage,
-}: {
-  e: any;
-  setErrorMessage: (msg: string) => void;
-}): void => {
-  console.error(e);
-  setErrorMessage(e.message);
 };
 
 export const fetchRoute = async (

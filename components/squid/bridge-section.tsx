@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TokenModalProps } from "./token-modal";
 import { RouteType } from "@/common/utils/squid/squidRouter";
 import { formatUnits } from "viem";
@@ -50,12 +50,29 @@ export const BridgeSection: React.FC<BridgeSectionProps> = ({
   setInAmount,
   handleFetchRoute,
 }) => {
-  const formattedBalance = balanceData
-    ? formatToFixed2({
-        value: balanceData.value,
-        decimals: balanceData.decimals,
-      })
-    : "0.00";
+  const tokenBalance = () => {
+    if (!balanceData || !tokenProps.selectedToken) return null;
+    const userBalance = balanceData.find(
+      (balance: any) =>
+        balance.address.toLowerCase() ===
+        tokenProps.selectedToken?.address.toLowerCase(),
+    );
+
+    if (userBalance) {
+      const formattedBalance = parseFloat(
+        formatUnits(
+          BigInt(userBalance.balance),
+          tokenProps.selectedToken?.decimals,
+        ),
+      );
+
+      return formattedBalance > 0 ? formattedBalance.toFixed(4) : "0.0";
+    }
+
+    return null;
+  };
+
+  const balance = tokenBalance();
 
   return (
     <div className="flex flex-col">
@@ -73,8 +90,8 @@ export const BridgeSection: React.FC<BridgeSectionProps> = ({
                 variant="small"
                 className="dark:text-black font-semibold"
               >
-                {formattedBalance}{" "}
-                {chainProps.selectedNetwork?.nativeCurrency.symbol}
+                {balance ? `${balance} ` : "0.0 "}{" "}
+                {tokenProps.selectedToken?.symbol}
               </Typography>
               {handleMaxButton && (
                 <Button

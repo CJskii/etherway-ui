@@ -11,13 +11,14 @@ import { toast } from "sonner";
 import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
 import {
   formatToFixed2,
-  handleErrors,
   fetchRoute,
   getStatus,
 } from "@/common/utils/squid/bridgeUtils";
+import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
 import getProviderOrSigner from "../../common/utils/getters/getProviderOrSigner";
 import {
   executeSquidRoute,
+  getSquidEvmBalance,
   getTxStatus,
   integratorId,
 } from "@/common/utils/squid/squidRouter";
@@ -34,6 +35,7 @@ import { CheckBoxComponent } from "./check-box";
 import { BridgeSection, ChainProps } from "./bridge-section";
 import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/handleSquidBridge";
 import { useEthersSigner } from "@/common/hooks/useEthersSigner";
+import { getUserBalance } from "@/common/utils/getters/getBalance";
 
 export const SquidBridge = () => {
   const { address } = useAccount();
@@ -55,6 +57,7 @@ export const SquidBridge = () => {
   );
   const [axelarURL, setAxelarURL] = useState<string>();
   const [loadingToastId, setLoadingToastId] = useState<string | number>();
+  const [balanceData, setBalanceData] = useState<any>();
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
@@ -114,11 +117,11 @@ export const SquidBridge = () => {
     ? fromChain.chainId === (account.chainId ?? "")
     : false;
 
-  const { data: balanceData } = useBalance({
-    address: "0x8a51D7A312ED079b653D16be724023442f1F3f47",
-    token: fromToken ? (fromToken.address as `0x${string}`) : undefined,
-    chainId: fromChain ? Number(fromChain.chainId) : 42161,
-  });
+  // const { data: balanceData } = useBalance({
+  //   address: "0x8a51D7A312ED079b653D16be724023442f1F3f47",
+  //   token: fromToken ? (fromToken.address as `0x${string}`) : undefined,
+  //   chainId: fromChain ? Number(fromChain.chainId) : 42161,
+  // });
 
   const handleStopPoll = () => {
     setIsLoading(false);
@@ -163,7 +166,7 @@ export const SquidBridge = () => {
         setErrorMessage("");
         setModalStatus(ModalStatus.SUCCESS);
 
-        if (showStatusModal == false) {
+        if (!showStatusModal) {
           toast.dismiss();
           toast.dismiss(loadingToastId);
           toast.success("Transaction successful");
@@ -171,7 +174,7 @@ export const SquidBridge = () => {
       } else if (status?.squidTransactionStatus === "needs_gas") {
         handleStopPoll();
         setErrorMessage("Transaction needs more gas");
-        if (showStatusModal == false) {
+        if (!showStatusModal) {
           toast.error("Transaction in progress...");
         }
       } else if (
@@ -181,7 +184,7 @@ export const SquidBridge = () => {
         setIsLoading(true);
         // setShowStatusModal(true);
         setErrorMessage("");
-        if (showStatusModal == false) {
+        if (!showStatusModal) {
           if (!loadingToastId) {
             const toastId = toast.loading("Transaction in progress...");
             setLoadingToastId(toastId);
@@ -297,6 +300,19 @@ export const SquidBridge = () => {
       ),
     );
   };
+
+  useEffect(() => {
+    const fetchBalances = async () => {
+      if (!account.address || !fromChain?.chainId) return;
+      const balances = await getSquidEvmBalance({
+        userAddress: account.address,
+        chains: [fromChain?.chainId],
+      });
+      setBalanceData(balances);
+    };
+
+    fetchBalances();
+  }, [fromChain?.chainId, account.address]);
 
   // useEffect(() => {
   //   setShowStatusModal(true);

@@ -96,3 +96,17 @@ export async function getSquidChains() {
 
   return squid.chains;
 }
+
+export async function getSquidEvmBalance({
+  userAddress,
+  chains,
+}: {
+  userAddress: `0x${string}`;
+  chains: number[] | string[];
+}) {
+  await squid.init();
+
+  const balances = await squid.getEvmBalances({ userAddress, chains });
+
+  return balances;
+}
