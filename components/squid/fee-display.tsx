@@ -20,35 +20,61 @@ interface FeesProps {
   };
 }
 
+const renderFeeCost = (
+  feeCost: any,
+  toToken: Token | undefined,
+  index: number,
+) => {
+  const ethAmount = Number(
+    formatUnits(BigInt(feeCost.amount), toToken?.decimals ?? 18),
+  ).toFixed(5);
+  const usdAmount = Number(feeCost.amountUsd).toFixed(2);
+
+  return (
+    <Typography
+      variant={"muted"}
+      className="dark:text-black text-xs"
+      key={index}
+    >
+      {feeCost.name}: {/* Uncomment this to display token fee cost in the UI */}
+      {/* {Number(ethAmount) > 0 ? `${ethAmount} ${toToken?.symbol} / ` : ""} */}
+      ${usdAmount}
+    </Typography>
+  );
+};
+
+const renderTotalCost = (route: RouteType | undefined) => {
+  if (!route?.estimate) return null;
+
+  const gasCost = route.estimate.gasCosts[0];
+  const ethAmount = formatUnits(BigInt(gasCost.amount), gasCost.token.decimals);
+  const usdAmount = gasCost.amountUsd ? `~ $${gasCost.amountUsd}` : "";
+
+  return (
+    <Typography variant={"muted"} className="dark:text-black text-xs truncate">
+      Estimated Fee: {ethAmount} {gasCost.token.symbol} {usdAmount}
+    </Typography>
+  );
+};
+
 export const FeeDetails = ({ props }: FeesProps) => {
   const { isFetchingRoute, route, toToken } = props;
+
+  const minReceivedAmount = route?.estimate
+    ? Number(
+        formatUnits(
+          BigInt(route.estimate.toAmountMin),
+          toToken?.decimals ?? 18,
+        ),
+      ).toFixed(5)
+    : null;
 
   return (
     <div>
       {isFetchingRoute ? (
         <Skeleton className="h-4 w-full rounded-md" />
-      ) : route?.estimate ? (
-        <Typography
-          variant={"muted"}
-          className="dark:text-black text-xs truncate"
-        >
-          Estimated Fee:{" "}
-          {formatUnits(
-            BigInt(route.estimate.gasCosts[0].amount),
-            route.estimate.gasCosts[0].token.decimals,
-          )}{" "}
-          {route.estimate.gasCosts[0].token.symbol} ~ $
-          {route.estimate.gasCosts[0].amountUsd}
-        </Typography>
       ) : (
-        <div className="invisible">
-          <Typography
-            variant={"muted"}
-            className="dark:text-black text-xs truncate"
-          >
-            Estimated Fee: 0 ~ $0
-          </Typography>
-        </div>
+        renderTotalCost(route)
       )}
       <Accordion type="single" collapsible className="w-full">
         <AccordionItem value="item-1">
@@ -65,34 +91,21 @@ export const FeeDetails = ({ props }: FeesProps) => {
               Slippage: 1%
             </Typography>
 
-            {route?.estimate && toToken ? (
+            {route?.estimate && toToken && minReceivedAmount && (
               <Typography variant={"muted"} className="dark:text-black text-xs">
-                Minmum received amount:{" "}
-                {Number(
-                  formatUnits(
-                    BigInt(route.estimate.toAmountMin),
-                    toToken?.decimals,
-                  ),
-                ).toFixed(4)}
-                {toToken?.symbol}
+                Minimum received amount: {minReceivedAmount} {toToken.symbol}
               </Typography>
-            ) : null}
+            )}
 
-            {route?.estimate.gasCosts &&
-              route?.estimate.feeCosts.map((feeCost, index) => {
-                return (
-                  <Typography
-                    variant={"muted"}
-                    className="dark:text-black text-xs"
-                    key={index}
-                  >
-                    {feeCost.name} : ${Number(feeCost.amountUsd).toFixed(2)}
-                  </Typography>
-                );
-              })}
+            {route?.estimate?.feeCosts &&
+              route.estimate.feeCosts.map((feeCost, index) =>
+                renderFeeCost(feeCost, toToken, index),
+              )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>
   );
 };
+
+export default FeeDetails;
