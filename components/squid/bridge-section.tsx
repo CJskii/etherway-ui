@@ -13,6 +13,7 @@ import SquidNetworkModal from "./network-modal";
 import SquidTokenModal from "./token-modal";
 import { ChainData } from "@0xsquid/squid-types";
 import { RefreshCw } from "lucide-react";
+import { TokenBalance } from "@0xsquid/sdk/dist/types";
 
 import {
   roundedTokenBalance,
@@ -34,7 +35,7 @@ type BridgeSectionProps = {
   isFetchingRoute: boolean;
   route: RouteType | undefined;
   setRoute?: (route: RouteType | undefined) => void;
-  balanceData?: any;
+  balanceData?: TokenBalance[] | undefined;
   inAmount?: string;
   setInAmount?: (amount: string) => void;
   handleFetchRoute?: () => void;
@@ -97,7 +98,7 @@ export const BridgeSection: React.FC<BridgeSectionProps> = ({
         />
         {label === "From" && (
           <div className="flex justify-between items-center">
-            <SquidTokenModal props={tokenProps} />
+            <SquidTokenModal props={tokenProps} balanceData={balanceData} />
             {renderInput(
               setInAmount,
               inAmount,

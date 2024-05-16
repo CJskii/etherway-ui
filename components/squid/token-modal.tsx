@@ -22,6 +22,11 @@ import { CardContent } from "../ui/card";
 import Image from "next/image";
 import { Token } from "@0xsquid/squid-types";
 import { ChevronDown } from "lucide-react";
+import { TokenBalance } from "@0xsquid/sdk/dist/types";
+import {
+  rawTokenBalance,
+  formatToFixedDecimals,
+} from "@/common/utils/squid/bridgeUtils";
 
 export interface TokenModalProps {
   selectedToken: Token | undefined;
@@ -30,7 +35,13 @@ export interface TokenModalProps {
   dialogTitle: string;
 }
 
-const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
+const SquidTokenModal = ({
+  props,
+  balanceData,
+}: {
+  props: TokenModalProps;
+  balanceData?: TokenBalance[] | undefined;
+}) => {
   const { selectedToken, onTokenSelect, filteredTokens, dialogTitle } = props;
 
   // DO WE WANT TO MANAGE ENTIRE LOGIC OF TOKEN SELECTIONS WITHIN THIS COMPONENT?
@@ -42,6 +53,11 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const balance = (token: Token) => {
+    if (!selectedToken || !balanceData) return "0.00";
+    return rawTokenBalance({ balanceData, tokenProps: token });
   };
 
   return (
@@ -96,12 +112,24 @@ const SquidTokenModal = ({ props }: { props: TokenModalProps }) => {
                         className="rounded-full"
                       />
                       <div className="flex flex-col text-lg">
-                        <Typography
-                          variant={"smallTitle"}
-                          className="dark:text-black"
-                        >
-                          {token.name}
-                        </Typography>
+                        <div className="flex justify-start items-center gap-2">
+                          <Typography
+                            variant={"smallTitle"}
+                            className="dark:text-black"
+                          >
+                            {token.name}
+                          </Typography>
+                          {balanceData && (
+                            <Typography
+                              variant={"muted"}
+                              className="dark:text-black/50 text-xs"
+                            >
+                              [ {Number(balance(token))} {""}
+                              {token.symbol} ]
+                            </Typography>
+                          )}
+                        </div>
+
                         <Typography
                           variant={"muted"}
                           className="dark:text-black/50 text-black/50 text-xs truncate md:hidden"

@@ -80,7 +80,7 @@ export const roundedTokenBalance = ({
   balanceData,
   tokenProps,
 }: {
-  balanceData: TokenBalance[];
+  balanceData: TokenBalance[] | undefined;
   tokenProps: TokenModalProps;
 }) => {
   if (!balanceData || !tokenProps.selectedToken) return null;
