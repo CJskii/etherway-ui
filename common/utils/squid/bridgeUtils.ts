@@ -21,6 +21,18 @@ export const formatToFixed2 = ({
   return parseFloat(formattedValue).toFixed(2);
 };
 
+export const formatToFixedDecimals = (
+  value: string,
+  decimals: number,
+  limit: number,
+) => {
+  const [integerPart, fractionalPart] = value.split(".");
+  const truncatedFraction = fractionalPart
+    ? fractionalPart.slice(0, limit)
+    : "";
+  return `${integerPart}.${truncatedFraction.padEnd(limit, "0")}`;
+};
+
 export const fetchRoute = async (
   routeParams: RouteRequest,
   setRoute: (route: RouteType) => void,
