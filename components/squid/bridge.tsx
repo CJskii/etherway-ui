@@ -209,15 +209,16 @@ export const SquidBridge = () => {
     setModalStatus(ModalStatus.APPROVE);
 
     try {
-      // const signer = (await getProviderOrSigner(true)) as Signer;
       if (!signer) {
         console.log("No signer found");
         return;
       }
 
-      console.log(signer._isSigner);
-      const txReceipt = await executeSquidRoute(route, signer as Signer);
-      setModalStatus(ModalStatus.AWAIT_TX);
+      const txReceipt = await executeSquidRoute(
+        route,
+        signer as Signer,
+        setModalStatus,
+      );
 
       setTxHash(txReceipt?.transactionHash);
       if (txReceipt?.transactionHash)
@@ -328,6 +329,7 @@ export const SquidBridge = () => {
           fromNetwork: fromChain,
           toNetwork: toChain,
           modalStatus,
+          axelarURL,
         }}
       />
       <div className="bg-gradient my-auto md:rounded-xl md:w-6/12 lg:w-5/12 xl:w-4/12 2xl:w-4/12 w-full items-start rounded-2xl">

@@ -6,6 +6,7 @@ import {
   SquidData,
 } from "@0xsquid/squid-types";
 import { Signer, ethers } from "ethers";
+import { ModalStatus } from "@/components/squid/status-modal";
 
 const userAddress = "0x62C43323447899acb61C18181e34168903E033Bf";
 export const integratorId = "etherway-2c794744-6972-4f23-bdcb-784032b1a377";
@@ -42,6 +43,7 @@ export async function getSquidRoute(
 export async function executeSquidRoute(
   route: RouteResponse["route"],
   signer: Signer,
+  setModalStatus: (status: ModalStatus) => void,
 ): Promise<ethers.providers.TransactionReceipt | undefined> {
   try {
     await squid.init();
@@ -50,6 +52,7 @@ export async function executeSquidRoute(
       signer: signer,
       route,
     })) as unknown as ethers.providers.TransactionResponse;
+    setModalStatus(ModalStatus.AWAIT_TX);
 
     console.log(`Transaction sent via Squid Router ...`);
     const txReceipt = await tx.wait();

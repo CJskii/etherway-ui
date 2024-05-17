@@ -11,6 +11,7 @@ import { AnimatedBeam } from "../magicui/animated-beam";
 import Arbitrum from "../../public/chain-icons/arbitrum.svg";
 import Avalanche from "../../public/chain-icons/avalanche.svg";
 import { Wallet } from "lucide-react";
+import Link from "next/link";
 
 interface StatusModalProps {
   props: {
@@ -22,6 +23,7 @@ interface StatusModalProps {
     fromNetwork: ChainData | undefined;
     toNetwork: ChainData | undefined;
     modalStatus: ModalStatus;
+    axelarURL?: string;
   };
 }
 
@@ -41,6 +43,7 @@ const StatusModal = ({ props }: StatusModalProps) => {
     fromNetwork,
     toNetwork,
     modalStatus,
+    axelarURL,
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -185,6 +188,22 @@ const StatusModal = ({ props }: StatusModalProps) => {
               Please allow few minutes for the transaction to finalise on the
               destination network
             </Typography>
+
+            {axelarURL && (
+              <Typography
+                variant="extraSmall"
+                className="text-center dark:text-black"
+              >
+                <Link
+                  href={axelarURL}
+                  target="_blank"
+                  className="text-blue-500 hover:underline"
+                >
+                  Check transaction status on Axelar
+                </Link>
+              </Typography>
+            )}
+
             <Button
               className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
               onClick={() => setOpen(false)}
