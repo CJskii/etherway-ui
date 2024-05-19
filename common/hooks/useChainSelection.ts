@@ -24,7 +24,10 @@ export const useChainSelection = (
         (chain) =>
           chain.networkName.toLowerCase() === initialChainName.toLowerCase(),
       );
-      setSelectedChain(initialChain);
+
+      initialChain
+        ? setSelectedChain(initialChain)
+        : setSelectedChain(evmChains[1]);
     }
 
     fetchChains();

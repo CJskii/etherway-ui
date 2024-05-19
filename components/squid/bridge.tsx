@@ -39,6 +39,7 @@ import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/han
 import { useEthersSigner } from "@/common/hooks/useEthersSigner";
 import { rawTokenBalance } from "@/common/utils/squid/bridgeUtils";
 import { useRouter } from "next/router";
+import { Copy } from "lucide-react";
 
 interface TransactionType {
   txHash: string;
@@ -77,6 +78,15 @@ export const SquidBridge = () => {
   const [initalFromChain, setInitalFromChain] = useState<ChainName>(
     ChainName.ARBITRUM,
   );
+  const [initialToChain, setInitialToChain] = useState<ChainName>(
+    ChainName.BASE,
+  );
+  const [initialTokenFrom, setInitialTokenFrom] = useState<string>(
+    "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+  );
+  const [initialTokenTo, setInitialTokenTo] = useState<string>(
+    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+  );
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
@@ -84,12 +94,6 @@ export const SquidBridge = () => {
   const signer = useEthersSigner();
 
   const router = useRouter();
-
-  // useEffect(()=>{
-
-  //   const { fromChain , fromToken , toChain , toToken } = router.query;
-
-  // },[router.query])
 
   const {
     selectedChain: fromChain,
@@ -108,7 +112,7 @@ export const SquidBridge = () => {
     selectedChain: toChain,
     chains: toChains,
     onChainSelect: setToNetwork,
-  } = useChainSelection(ChainName.BASE);
+  } = useChainSelection(initialToChain);
 
   const toChainProps = {
     selectedNetwork: toChain,
@@ -125,7 +129,7 @@ export const SquidBridge = () => {
     fromChain,
     fromChain?.chainId ?? 42161,
     setRoute,
-    "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+    initialTokenFrom,
   );
 
   const {
@@ -136,7 +140,7 @@ export const SquidBridge = () => {
     toChain,
     toChain?.chainId ?? 8453,
     setRoute,
-    "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+    initialTokenTo,
   );
 
   const isConnected = useAccount().isConnected;
@@ -364,6 +368,14 @@ export const SquidBridge = () => {
     setRoute?.(undefined);
   };
 
+  const handleCopyButton = () => {
+    const baseURL = "https://etherway.io/bridge";
+    const url = `${baseURL}/?fromChain=${fromChain?.networkName}&toChain=${toChain?.networkName}&fromToken=${fromToken?.address}&toToken=${toToken?.address}`;
+
+    navigator.clipboard.writeText(url);
+    toast.success("URL copied to clipboard");
+  };
+
   useEffect(() => {
     const fetchBalances = async () => {
       if (!account.address || !fromChain?.chainId) return;
@@ -376,6 +388,22 @@ export const SquidBridge = () => {
 
     fetchBalances();
   }, [fromChain?.chainId, account.address]);
+
+  useEffect(() => {
+    const { fromChain, fromToken, toChain, toToken } = router.query;
+    if (fromChain) {
+      setInitalFromChain(fromChain as ChainName);
+    }
+    if (toChain) {
+      setInitialToChain(toChain as ChainName);
+    }
+    if (fromToken) {
+      setInitialTokenFrom(fromToken as string);
+    }
+    if (toToken) {
+      setInitialTokenTo(toToken as string);
+    }
+  }, [router.query]);
 
   // useEffect(() => {
   //   setTxHash(
@@ -412,7 +440,11 @@ export const SquidBridge = () => {
       <div className="bg-gradient my-auto md:rounded-xl md:w-6/12 lg:w-5/12 xl:w-4/12 2xl:w-4/12 w-full items-start rounded-2xl">
         <div className="py-8 px-4 md:p-8 flex flex-col gap-6">
           <Typography variant="h3" className="dark:text-black text-center">
-            Bridge
+            Bridge{" "}
+            <Copy
+              className="w-6 h-6 inline cursor-pointer ml-2 hover:text-black/60"
+              onClick={handleCopyButton}
+            />
           </Typography>
 
           <BridgeSection
