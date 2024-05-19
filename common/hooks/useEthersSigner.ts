@@ -5,6 +5,9 @@ import { Config, useConnectorClient, useWalletClient } from "wagmi";
 
 export function clientToSigner(client: Client<Transport, Chain, Account>) {
   const { account, chain, transport } = client;
+  if (!account || !chain || !transport) {
+    return;
+  }
   const network = {
     chainId: chain.id,
     name: chain.name,
@@ -18,5 +21,6 @@ export function clientToSigner(client: Client<Transport, Chain, Account>) {
 /** Action to convert a Viem Client to an ethers.js Signer. */
 export function useEthersSigner() {
   const { data: client } = useWalletClient();
+
   return useMemo(() => (client ? clientToSigner(client) : undefined), [client]);
 }

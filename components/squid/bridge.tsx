@@ -25,7 +25,7 @@ import {
 import { parseUnits } from "viem";
 
 import { RouteType } from "@/common/utils/squid/squidRouter";
-import { ChainName, RouteRequest } from "@0xsquid/squid-types";
+import { ChainData, ChainName, RouteRequest } from "@0xsquid/squid-types";
 import { ModalStatus } from "./status-modal";
 
 import { TokenBalance } from "@0xsquid/sdk/dist/types";
@@ -38,6 +38,17 @@ import { BridgeSection, ChainProps } from "./bridge-section";
 import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/handleSquidBridge";
 import { useEthersSigner } from "@/common/hooks/useEthersSigner";
 import { rawTokenBalance } from "@/common/utils/squid/bridgeUtils";
+import { useRouter } from "next/router";
+
+interface TransactionType {
+  txHash: string;
+  requestId: string;
+  fromChain: ChainData;
+  toChain: ChainData;
+  status: string;
+  intervalId: NodeJS.Timeout | null;
+  toastId: number | string;
+}
 
 export const SquidBridge = () => {
   const { address } = useAccount();
@@ -57,20 +68,34 @@ export const SquidBridge = () => {
   const [modalStatus, setModalStatus] = useState<ModalStatus>(
     ModalStatus.APPROVE,
   );
+
   const [axelarURL, setAxelarURL] = useState<string>();
   const [loadingToastId, setLoadingToastId] = useState<string | number>();
   const [balanceData, setBalanceData] = useState<TokenBalance[]>();
+  const [transactions, setTransactions] = useState<TransactionType[]>();
+
+  const [initalFromChain, setInitalFromChain] = useState<ChainName>(
+    ChainName.ARBITRUM,
+  );
 
   const { openConnectModal } = useConnectModal();
   const { openChainModal } = useChainModal();
 
   const signer = useEthersSigner();
 
+  const router = useRouter();
+
+  // useEffect(()=>{
+
+  //   const { fromChain , fromToken , toChain , toToken } = router.query;
+
+  // },[router.query])
+
   const {
     selectedChain: fromChain,
     chains: fromChains,
     onChainSelect: setFromNetwork,
-  } = useChainSelection(ChainName.ARBITRUM);
+  } = useChainSelection(initalFromChain);
 
   const fromChainProps = {
     selectedNetwork: fromChain,
@@ -119,86 +144,131 @@ export const SquidBridge = () => {
     ? fromChain.chainId === (account.chainId ?? "")
     : false;
 
-  const handleStopPoll = () => {
+  const getTransactionStatus = async ({
+    txHash,
+    requestId,
+    fromChain,
+    toChain,
+  }: {
+    txHash: string;
+    requestId: string;
+    fromChain: ChainData;
+    toChain: ChainData;
+  }) => {
+    const getStatusParams = {
+      transactionId: txHash,
+      requestId: requestId,
+      integratorId: integratorId,
+      fromChainId: fromChain.chainId.toString(),
+      toChainId: toChain.chainId.toString(),
+    };
+
+    const status = await getTxStatus(getStatusParams);
+    console.log(status);
+
+    const tx = transactions?.find((tx) => tx.txHash === txHash);
+    const txIndex = transactions?.findIndex((tx) => tx.txHash === txHash);
+    if (txIndex === -1 || tx == undefined || txIndex === undefined) return;
+
+    // NOTE: the URL will be the first transaction URL that's in the queue
+    if (!axelarURL) {
+      setAxelarURL(status?.axelarTransactionUrl);
+    }
+
+    if (status?.squidTransactionStatus === "success") {
+      handleStopPoll(txHash);
+
+      if (route?.estimate.fromAmountUSD && fromChain?.chainId && address) {
+        handleSquidBridgePoints({
+          userAddress: address,
+          chainId: Number(fromChain.chainId!),
+          txAmountUSD: Number(route?.estimate.fromAmountUSD!),
+        });
+      }
+      setErrorMessage("");
+
+      if (!showStatusModal) {
+        toast.dismiss(tx?.toastId);
+        toast.success("Transaction successful");
+      } else {
+        setModalStatus(ModalStatus.SUCCESS);
+      }
+    } else if (status?.squidTransactionStatus === "needs_gas") {
+      handleStopPoll(txHash);
+      setErrorMessage("Transaction needs more gas");
+
+      //TODO: Pop the modal to show the axelar txLink to complete the tx by filling the gas
+      if (!showStatusModal) {
+        toast.dismiss(tx?.toastId);
+        toast.error("Transaction needs more gas");
+      }
+    } else if (
+      status?.squidTransactionStatus === "ongoing" ||
+      status?.squidTransactionStatus === "partial_success"
+    ) {
+      setIsLoading(true);
+      // setShowStatusModal(true);
+      setErrorMessage("");
+      if (!showStatusModal) {
+        if (!tx?.toastId) {
+          const toastId = toast.loading(
+            `Transaction with hash ${tx.txHash.slice(0, 6)}..${tx.txHash.slice(-6)} in progress...`,
+          );
+          // @ts-ignore
+          tx?.toastId = toastId as number;
+          const currentTransactions = transactions;
+          if (currentTransactions) {
+            currentTransactions[txIndex] = tx;
+          } else {
+            setTransactions([tx]);
+          }
+        }
+      }
+    } else if (status?.squidTransactionStatus === "not_found") {
+      handleStopPoll(txHash);
+      setErrorMessage("Transaction not found");
+      if (showStatusModal == false) {
+        toast.error("Transaction not found");
+      }
+    }
+  };
+
+  const handleStartPoll = (txHash: string) => {
+    // Add the tx to the record and start polling for the tx , also add the intervalId
+    if (txHash && requestId && fromChain && toChain) {
+      const newIntervalId = setInterval(() => {
+        getTransactionStatus({ txHash, requestId, fromChain, toChain });
+      }, 5000);
+
+      const txData: TransactionType = {
+        txHash,
+        requestId,
+        fromChain,
+        toChain,
+        status: "",
+        intervalId: newIntervalId,
+        toastId: 0,
+      };
+      const currentTransactions = transactions;
+      currentTransactions?.push(txData);
+      setTransactions(currentTransactions);
+    }
+  };
+
+  const handleStopPoll = (txHash: string) => {
+    const currentTransactions = transactions;
+    const txData = currentTransactions?.find((tx) => tx.txHash === txHash);
+    if (txData?.intervalId) {
+      clearInterval(txData?.intervalId);
+      const remainingTransaction = currentTransactions?.filter(
+        (tx) => tx.txHash !== txHash,
+      );
+      setTransactions(remainingTransaction);
+    }
     setIsLoading(false);
     setShowStatusModal(true); // TODO: Close the modal once the Polling is stopped
 
     // Pop the toast
-  };
-
-  useTransactionPolling(
-    txHash!,
-    requestId!,
-    fromChain!,
-    toChain!,
-    async ({ txHash, requestId, fromChain, toChain }) => {
-      const getStatusParams = {
-        transactionId: txHash,
-        requestId: requestId,
-        integratorId: integratorId,
-        fromChainId: fromChain.chainId.toString(),
-        toChainId: toChain.chainId.toString(),
-      };
-
-      const status = await getTxStatus(getStatusParams);
-      console.log(status);
-
-      if (!axelarURL) {
-        setAxelarURL(status?.axelarTransactionUrl);
-      }
-
-      if (status?.squidTransactionStatus === "success") {
-        handleStopPoll();
-
-        if (route?.estimate.fromAmountUSD && fromChain?.chainId && address) {
-          handleSquidBridgePoints({
-            userAddress: address,
-            chainId: Number(fromChain.chainId!),
-            txAmountUSD: Number(route?.estimate.fromAmountUSD!),
-          });
-        }
-        // TODO: Show errors just in case the points adding fails maybe using a toast
-
-        setErrorMessage("");
-        setModalStatus(ModalStatus.SUCCESS);
-
-        if (!showStatusModal) {
-          toast.dismiss();
-          toast.dismiss(loadingToastId);
-          toast.success("Transaction successful");
-        }
-      } else if (status?.squidTransactionStatus === "needs_gas") {
-        handleStopPoll();
-        setErrorMessage("Transaction needs more gas");
-        if (!showStatusModal) {
-          toast.error("Transaction in progress...");
-        }
-      } else if (
-        status?.squidTransactionStatus === "ongoing" ||
-        status?.squidTransactionStatus === "partial_success"
-      ) {
-        setIsLoading(true);
-        // setShowStatusModal(true);
-        setErrorMessage("");
-        if (!showStatusModal) {
-          if (!loadingToastId) {
-            const toastId = toast.loading("Transaction in progress...");
-            setLoadingToastId(toastId);
-          }
-        }
-      } else if (status?.squidTransactionStatus === "not_found") {
-        handleStopPoll();
-        setErrorMessage("Transaction not found");
-        if (showStatusModal == false) {
-          toast.loading("Transaction in progress...");
-        }
-      }
-    },
-    handleStopPoll,
-  );
-
-  const handleStartPoll = (txHash: string) => {
-    setTxHash(txHash);
   };
 
   const handleBridgeButton = async () => {

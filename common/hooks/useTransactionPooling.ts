@@ -13,6 +13,7 @@ const useTransactionPolling = (
   requestId: string,
   fromChain: ChainData,
   toChain: ChainData,
+  // intervalId: NodeJS.Timeout | null,
   setStatusCallback: (props: StatusCallBackProps) => void,
   stopCallback: () => void,
 ): void => {
@@ -24,9 +25,9 @@ const useTransactionPolling = (
         setStatusCallback({ txHash, requestId, fromChain, toChain });
       }, 5000);
 
-      return () => {
-        if (intervalId.current) clearInterval(intervalId.current);
-      };
+      // return () => {
+      //   if (intervalId.current) clearInterval(intervalId.current);
+      // };
     }
   }, [txHash, requestId, fromChain, toChain, setStatusCallback]);
 
