@@ -72,7 +72,7 @@ export const SquidBridge = () => {
   const [axelarURL, setAxelarURL] = useState<string>();
   const [loadingToastId, setLoadingToastId] = useState<string | number>();
   const [balanceData, setBalanceData] = useState<TokenBalance[]>();
-  const [transactions, setTransactions] = useState<TransactionType[]>();
+  const [transactions, setTransactions] = useState<TransactionType[]>([]);
 
   const [initalFromChain, setInitalFromChain] = useState<ChainName>(
     ChainName.ARBITRUM,
@@ -210,12 +210,11 @@ export const SquidBridge = () => {
       // setShowStatusModal(true);
       setErrorMessage("");
       if (!showStatusModal) {
-        if (!tx?.toastId) {
+        if (!tx.toastId) {
           const toastId = toast.loading(
             `Transaction with hash ${tx.txHash.slice(0, 6)}..${tx.txHash.slice(-6)} in progress...`,
           );
-          // @ts-ignore
-          tx?.toastId = toastId as number;
+          tx.toastId = toastId as number;
           const currentTransactions = transactions;
           if (currentTransactions) {
             currentTransactions[txIndex] = tx;
@@ -227,14 +226,14 @@ export const SquidBridge = () => {
     } else if (status?.squidTransactionStatus === "not_found") {
       handleStopPoll(txHash);
       setErrorMessage("Transaction not found");
-      if (showStatusModal == false) {
+      if (!showStatusModal) {
         toast.error("Transaction not found");
       }
     }
   };
 
   const handleStartPoll = (txHash: string) => {
-    // Add the tx to the record and start polling for the tx , also add the intervalId
+    // Add the tx to the record and start polling for the tx, also add the intervalId
     if (txHash && requestId && fromChain && toChain) {
       const newIntervalId = setInterval(() => {
         getTransactionStatus({ txHash, requestId, fromChain, toChain });
@@ -260,15 +259,12 @@ export const SquidBridge = () => {
     const txData = currentTransactions?.find((tx) => tx.txHash === txHash);
     if (txData?.intervalId) {
       clearInterval(txData?.intervalId);
-      const remainingTransaction = currentTransactions?.filter(
+      const remainingTransactions = currentTransactions?.filter(
         (tx) => tx.txHash !== txHash,
       );
-      setTransactions(remainingTransaction);
+      setTransactions(remainingTransactions);
     }
     setIsLoading(false);
-    setShowStatusModal(true); // TODO: Close the modal once the Polling is stopped
-
-    // Pop the toast
   };
 
   const handleBridgeButton = async () => {
@@ -363,7 +359,6 @@ export const SquidBridge = () => {
       tokenProps: fromToken,
     });
 
-    console.log(rawBalance);
     setInAmount(String(rawBalance));
     setRoute?.(undefined);
   };
@@ -380,6 +375,17 @@ export const SquidBridge = () => {
 
     fetchBalances();
   }, [fromChain?.chainId, account.address]);
+
+  // useEffect(() => {
+  //   setTxHash(
+  //     "0x2bc1eb877a361c383c4c317d87c8a5b10f338ea658c13e88bff22ee8827172b7",
+  //   );
+  //   setRequestId("fc2c413c-6d66-4785-86f7-d2b5ca06325a");
+
+  //   handleStartPoll(
+  //     "0x2bc1eb877a361c383c4c317d87c8a5b10f338ea658c13e88bff22ee8827172b7",
+  //   );
+  // }, [fromChain]);
 
   // useEffect(() => {
   //   setShowStatusModal(true);
