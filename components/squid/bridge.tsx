@@ -72,7 +72,7 @@ export const SquidBridge = () => {
   const [axelarURL, setAxelarURL] = useState<string>();
   const [loadingToastId, setLoadingToastId] = useState<string | number>();
   const [balanceData, setBalanceData] = useState<TokenBalance[]>();
-  const [transactions, setTransactions] = useState<TransactionType[]>();
+  const [transactions, setTransactions] = useState<TransactionType[]>([]);
 
   const [initalFromChain, setInitalFromChain] = useState<ChainName>(
     ChainName.ARBITRUM,
@@ -215,7 +215,7 @@ export const SquidBridge = () => {
             `Transaction with hash ${tx.txHash.slice(0, 6)}..${tx.txHash.slice(-6)} in progress...`,
           );
           // @ts-ignore
-          tx?.toastId = toastId as number;
+          tx.toastId = toastId as number;
           const currentTransactions = transactions;
           if (currentTransactions) {
             currentTransactions[txIndex] = tx;
@@ -236,6 +236,7 @@ export const SquidBridge = () => {
   const handleStartPoll = (txHash: string) => {
     // Add the tx to the record and start polling for the tx , also add the intervalId
     if (txHash && requestId && fromChain && toChain) {
+      getTransactionStatus({ txHash, requestId, fromChain, toChain });
       const newIntervalId = setInterval(() => {
         getTransactionStatus({ txHash, requestId, fromChain, toChain });
       }, 5000);
