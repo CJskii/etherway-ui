@@ -235,6 +235,7 @@ export const SquidBridge = () => {
   const handleStartPoll = (txHash: string) => {
     // Add the tx to the record and start polling for the tx, also add the intervalId
     if (txHash && requestId && fromChain && toChain) {
+      getTransactionStatus({ txHash, requestId, fromChain, toChain });
       const newIntervalId = setInterval(() => {
         getTransactionStatus({ txHash, requestId, fromChain, toChain });
       }, 5000);
