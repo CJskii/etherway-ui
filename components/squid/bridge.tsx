@@ -6,19 +6,13 @@ import {
   useChainSelection,
 } from "@/common/hooks/useChainSelection";
 import { useTokenSelection } from "@/common/hooks/useTokenSelection";
-import useTransactionPolling from "@/common/hooks/useTransactionPooling";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
-import { useAccount, useBalance, useSwitchChain, useWalletClient } from "wagmi";
+import { useAccount } from "wagmi";
 import { Signer } from "ethers";
 import { toast } from "sonner";
 import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
-import {
-  formatToFixed2,
-  fetchRoute,
-  getStatus,
-} from "@/common/utils/squid/bridgeUtils";
+import { fetchRoute } from "@/common/utils/squid/bridgeUtils";
 import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
-import getProviderOrSigner from "../../common/utils/getters/getProviderOrSigner";
 import {
   executeSquidRoute,
   getSquidEvmBalance,
@@ -41,7 +35,6 @@ import { BridgeSection, ChainProps } from "./bridge-section";
 import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/handleSquidBridge";
 import { useEthersSigner } from "@/common/hooks/useEthersSigner";
 import { rawTokenBalance } from "@/common/utils/squid/bridgeUtils";
-import { useRouter } from "next/router";
 import { Copy } from "lucide-react";
 
 interface TransactionType {
@@ -74,7 +67,6 @@ export const SquidBridge = () => {
   );
 
   const [axelarURL, setAxelarURL] = useState<string>();
-  const [loadingToastId, setLoadingToastId] = useState<string | number>();
   const [balanceData, setBalanceData] = useState<TokenBalance[]>();
   const [transactions, setTransactions] = useState<TransactionType[]>([]);
 
@@ -95,8 +87,6 @@ export const SquidBridge = () => {
   const { openChainModal } = useChainModal();
 
   const signer = useEthersSigner();
-
-  const router = useRouter();
 
   const {
     selectedChain: fromChain,
@@ -203,13 +193,14 @@ export const SquidBridge = () => {
       }
     } else if (status?.squidTransactionStatus === "needs_gas") {
       handleStopPoll(txHash);
-      setErrorMessage("Transaction needs more gas");
 
-      //TODO: Pop the modal to show the axelar txLink to complete the tx by filling the gas
       if (!showStatusModal) {
         toast.dismiss(tx?.toastId);
         toast.error("Transaction needs more gas");
       }
+
+      setShowStatusModal(true);
+      setModalStatus(ModalStatus.NEED_GAS);
     } else if (
       status?.squidTransactionStatus === "ongoing" ||
       status?.squidTransactionStatus === "partial_success"
@@ -406,8 +397,9 @@ export const SquidBridge = () => {
 
   // useEffect(() => {
   //   setShowStatusModal(true);
-  //   setIsExecutingTransaction(true);
-  //   setModalStatus(ModalStatus.AWAIT_TX);
+  //   // setIsExecutingTransaction(true);
+  //   setModalStatus(ModalStatus.NEED_GAS);
+  //   setAxelarURL("https://axelar.network");
   // }, []);
 
   return (

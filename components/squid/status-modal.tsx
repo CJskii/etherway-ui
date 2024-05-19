@@ -4,7 +4,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Typography } from "../ui/typography";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import { ChainData } from "@0xsquid/squid-types";
 import { AnimatedBeam } from "../magicui/animated-beam";
@@ -31,6 +30,7 @@ export enum ModalStatus {
   APPROVE = "approve",
   AWAIT_TX = "awaitTx",
   SUCCESS = "success",
+  NEED_GAS = "needGas",
 }
 
 const StatusModal = ({ props }: StatusModalProps) => {
@@ -51,8 +51,6 @@ const StatusModal = ({ props }: StatusModalProps) => {
   const awaitToRef = useRef<HTMLImageElement>(null);
   const approveFromRef = useRef<HTMLDivElement>(null);
   const approveToRef = useRef<HTMLImageElement>(null);
-
-  const router = useRouter();
 
   const renderModalContent = () => {
     if (isLoading && modalStatus === ModalStatus.AWAIT_TX) {
@@ -148,6 +146,50 @@ const StatusModal = ({ props }: StatusModalProps) => {
               curvature={20}
             />
           </div>
+        </>
+      );
+    } else if (modalStatus === ModalStatus.NEED_GAS) {
+      return (
+        <>
+          <Typography
+            variant="smallTitle"
+            className="text-center dark:text-black"
+          >
+            Not enough gas
+          </Typography>
+          <Typography variant="small" className="text-center dark:text-black">
+            Looks like your transaction ran out of gas
+          </Typography>
+
+          <Typography
+            variant="small"
+            className="text-center dark:text-black font-normal pt-4"
+          >
+            Please check the transaction status on{" "}
+            {axelarURL ? (
+              <Typography
+                variant="extraSmall"
+                className="text-center dark:text-black"
+              >
+                <Link
+                  href={axelarURL}
+                  target="_blank"
+                  className="text-blue-500 hover:underline"
+                >
+                  Axelar Scan
+                </Link>
+              </Typography>
+            ) : (
+              "Axelar Scan"
+            )}
+          </Typography>
+
+          <Button
+            className="dark:bg-black dark:text-white dark:hover:bg-black/80 rounded-xl"
+            onClick={() => setOpen(false)}
+          >
+            Close
+          </Button>
         </>
       );
     } else if (errorMessage) {
