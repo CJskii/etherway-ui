@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Typography } from "../ui/typography";
-import { useChainSelection } from "@/common/hooks/useChainSelection";
+import {
+  BridgeHookType,
+  useChainSelection,
+} from "@/common/hooks/useChainSelection";
 import { useTokenSelection } from "@/common/hooks/useTokenSelection";
 import useTransactionPolling from "@/common/hooks/useTransactionPooling";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
@@ -112,7 +115,7 @@ export const SquidBridge = () => {
     selectedChain: toChain,
     chains: toChains,
     onChainSelect: setToNetwork,
-  } = useChainSelection(initialToChain);
+  } = useChainSelection(initialToChain, "", BridgeHookType.TO);
 
   const toChainProps = {
     selectedNetwork: toChain,
@@ -141,6 +144,7 @@ export const SquidBridge = () => {
     toChain?.chainId ?? 8453,
     setRoute,
     initialTokenTo,
+    BridgeHookType.TO,
   );
 
   const isConnected = useAccount().isConnected;
@@ -388,22 +392,6 @@ export const SquidBridge = () => {
 
     fetchBalances();
   }, [fromChain?.chainId, account.address]);
-
-  useEffect(() => {
-    const { fromChain, fromToken, toChain, toToken } = router.query;
-    if (fromChain) {
-      setInitalFromChain(fromChain as ChainName);
-    }
-    if (toChain) {
-      setInitialToChain(toChain as ChainName);
-    }
-    if (fromToken) {
-      setInitialTokenFrom(fromToken as string);
-    }
-    if (toToken) {
-      setInitialTokenTo(toToken as string);
-    }
-  }, [router.query]);
 
   // useEffect(() => {
   //   setTxHash(

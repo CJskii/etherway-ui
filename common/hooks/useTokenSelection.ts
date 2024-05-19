@@ -1,72 +1,108 @@
 import { useState, useEffect } from "react";
 import { getSquidTokens } from "../utils/squid/squidRouter";
-import { ChainData, ChainName, Token } from "@0xsquid/squid-types";
+import { ChainData, Token } from "@0xsquid/squid-types";
+import { BridgeHookType } from "./useChainSelection";
+import { useRouter } from "next/router";
 
 export const useTokenSelection = (
   chain: ChainData | undefined,
   initialChainID: number | string,
   setRoute: (route: any) => void,
   initialTokenAddress?: string,
-  filterFn: (token: Token) => boolean = () => true,
+  type: BridgeHookType = BridgeHookType.FROM,
 ) => {
   const [selectedToken, setSelectedToken] = useState<Token>();
-  const [chaintokens, setChainTokens] = useState<Token[]>();
+  const [chainTokens, setChainTokens] = useState<Token[]>();
   const [allTokens, setAllTokens] = useState<Token[]>();
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
-    // TODO: Update the selected token based on user's current connection
     async function getTokens() {
       const _tokens = await getSquidTokens();
-      //   console.log(_tokens);
       setAllTokens(_tokens);
 
       const filteredTokensForChain = _tokens.filter(
         (token) => token.chainId == initialChainID,
       );
-      console.log(filteredTokensForChain);
-
       setChainTokens(filteredTokensForChain);
-      if (initialTokenAddress) {
-        const initialToken = filteredTokensForChain.filter(
+
+      const { fromToken, toToken } = router.query;
+      let initialToken;
+
+      if (type === BridgeHookType.FROM && fromToken) {
+        initialToken = filteredTokensForChain.find(
           (token) =>
-            token.address.toLowerCase() == initialTokenAddress.toLowerCase(),
-        )[0];
-        setSelectedToken(initialToken);
-      } else {
-        setSelectedToken(filteredTokensForChain[0]);
+            token.address.toLowerCase() === (fromToken as string).toLowerCase(),
+        );
+      } else if (type === BridgeHookType.TO && toToken) {
+        initialToken = filteredTokensForChain.find(
+          (token) =>
+            token.address.toLowerCase() === (toToken as string).toLowerCase(),
+        );
       }
+
+      if (!initialToken && initialTokenAddress) {
+        initialToken = filteredTokensForChain.find(
+          (token) =>
+            token.address.toLowerCase() === initialTokenAddress.toLowerCase(),
+        );
+      }
+
+      if (!initialToken) {
+        console.error(
+          `Token with address ${fromToken || toToken || initialTokenAddress} not found. Using default token.`,
+        );
+        initialToken = filteredTokensForChain[0];
+      }
+
+      setSelectedToken(initialToken);
     }
 
     if (!allTokens) {
       getTokens();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialChainID, initialTokenAddress, router.query, type, allTokens]);
 
   useEffect(() => {
-    // console.log(chain, allTokens);
     if (chain && allTokens) {
       const filteredTokensForChain = allTokens.filter(
         (token) => token.chainId == chain.chainId,
       );
-      // console.log(filteredTokensForChain);
       setChainTokens(filteredTokensForChain);
-      if (initialTokenAddress) {
-        const initialToken = filteredTokensForChain.filter(
+
+      const { fromToken, toToken } = router.query;
+      let initialToken;
+
+      if (type === BridgeHookType.FROM && fromToken) {
+        initialToken = filteredTokensForChain.find(
           (token) =>
-            token.address.toLowerCase() == initialTokenAddress.toLowerCase(),
-        )[0];
-        if (initialToken) {
-          setSelectedToken(initialToken);
-        } else {
-          setSelectedToken(filteredTokensForChain[0]);
-        }
-      } else {
-        setSelectedToken(filteredTokensForChain[0]);
+            token.address.toLowerCase() === (fromToken as string).toLowerCase(),
+        );
+      } else if (type === BridgeHookType.TO && toToken) {
+        initialToken = filteredTokensForChain.find(
+          (token) =>
+            token.address.toLowerCase() === (toToken as string).toLowerCase(),
+        );
       }
+
+      if (!initialToken && initialTokenAddress) {
+        initialToken = filteredTokensForChain.find(
+          (token) =>
+            token.address.toLowerCase() === initialTokenAddress.toLowerCase(),
+        );
+      }
+
+      if (!initialToken) {
+        console.error(
+          `Token with address ${fromToken || toToken || initialTokenAddress} not found. Using default token.`,
+        );
+        initialToken = filteredTokensForChain[0];
+      }
+
+      setSelectedToken(initialToken);
     }
-  }, [chain]);
+  }, [chain, allTokens, initialTokenAddress, router.query, type]);
 
   const onTokenSelect = (token: Token) => {
     setSelectedToken(token);
@@ -86,7 +122,7 @@ export const useTokenSelection = (
 
   return {
     selectedToken,
-    tokens: chaintokens,
+    tokens: chainTokens,
     onTokenSelect,
     searchTerm,
     onSearchChange,
