@@ -33,6 +33,8 @@ import { handleSquidBridgePoints } from "@/utils/contracts/handlers/handleSquidB
 import { useEthersSigner } from "@/hooks/useEthersSigner";
 import { rawTokenBalance } from "@/utils/squid/bridgeUtils";
 import { Copy } from "lucide-react";
+import PoweredBySquid from "@/../assets/squid_axelar_powered.svg";
+import Image from "next/image";
 
 import {
   Tooltip,
@@ -495,6 +497,13 @@ export const SquidBridge = () => {
               )}
             </Button>
           )}
+          <Image
+            src={PoweredBySquid}
+            width={200}
+            height={50}
+            alt="Powered by Squid Axelar"
+            className="place-self-center"
+          />
         </div>
       </div>
     </div>
