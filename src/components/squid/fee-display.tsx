@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/react-accordion";
 import React from "react";
 import { formatUnits } from "viem";
-import { RouteType } from "@/src/utils/squid/squidRouter";
+import { RouteType } from "@/utils/squid/squidRouter";
 import { Token } from "@0xsquid/squid-types";
 
 interface FeesProps {

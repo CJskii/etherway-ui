@@ -3,9 +3,9 @@ import { IConfirm } from "../../types/gas-refuel";
 import { useEffect, useState } from "react";
 import { coingeckoMapping } from "../../constants/tokenMappings";
 import GasPriceDisplay from "./gas-price-display";
-import { Button } from "@/src/components/ui/button";
-import { Label } from "@/src/components/ui/label";
-import { Typography } from "@/src/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Typography } from "@/components/ui/typography";
 import { Separator } from "@radix-ui/react-separator";
 
 const Confirm = ({

@@ -1,7 +1,7 @@
 import Image from "next/image";
-import logoBlack from "@/assets/logo-black.svg";
-import logoWhite from "@/assets/logo-white.svg";
-import { Sheet, SheetContent, SheetTrigger } from "@/src/components/ui/sheet";
+import logoBlack from "@/../assets/logo-black.svg";
+import logoWhite from "@/../assets/logo-white.svg";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
 import { MobileNavLinks } from "./navbar";
 import { ThemeToggler } from "../ui/toggle-theme";

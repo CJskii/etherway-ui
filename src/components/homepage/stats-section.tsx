@@ -1,10 +1,10 @@
-import elipse1 from "@/assets/ellipse5.svg";
-import elipse2 from "@/assets/ellipse6.svg";
-import globeDark from "@/assets/globe-dark.svg";
-import globe from "@/assets/globe.svg";
+import elipse1 from "@/../assets/ellipse5.svg";
+import elipse2 from "@/../assets/ellipse6.svg";
+import globeDark from "@/../assets/globe-dark.svg";
+import globe from "@/../assets/globe.svg";
 import Image from "next/image";
-import { Typography } from "../../../components/ui/typography";
-import { Card } from "../../../components/ui/card";
+import { Typography } from "@/components/ui/typography";
+import { Card } from "@/components/ui/card";
 
 const stats = [
   {

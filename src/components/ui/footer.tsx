@@ -1,14 +1,14 @@
-import { DiscordIcon } from "@/assets/icons/Discord";
-import { XIcon } from "@/assets/icons/XIcon";
-import logoBlack from "@/assets/logo-black.svg";
-import logoWhite from "@/assets/logo-white.svg";
+import { DiscordIcon } from "@/../assets/icons/Discord";
+import { XIcon } from "@/../assets/icons/XIcon";
+import logoBlack from "@/../assets/logo-black.svg";
+import logoWhite from "@/../assets/logo-white.svg";
 import Image from "next/image";
 import { Typography } from "./typography";
 import { Button } from "./button";
 import { Instagram, Plane, PlaneLandingIcon } from "lucide-react";
-import { cn } from "@/src/lib/utils";
-import { TelegramIcon } from "@/assets/icons/TelegramIcon";
-import { GitBookIcon } from "@/assets/icons/GitBookIcon";
+import { cn } from "@/lib/utils";
+import { TelegramIcon } from "@/../assets/icons/TelegramIcon";
+import { GitBookIcon } from "@/../assets/icons/GitBookIcon";
 import Link from "next/link";
 
 interface FooterProps {

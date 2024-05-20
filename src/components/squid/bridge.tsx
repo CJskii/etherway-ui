@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Typography } from "../ui/typography";
-import {
-  BridgeHookType,
-  useChainSelection,
-} from "@/common/hooks/useChainSelection";
-import { useTokenSelection } from "@/common/hooks/useTokenSelection";
+import { BridgeHookType, useChainSelection } from "@/hooks/useChainSelection";
+import { useTokenSelection } from "@/hooks/useTokenSelection";
 import { useChainModal, useConnectModal } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { Signer } from "ethers";
 import { toast } from "sonner";
-import { requestNetworkSwitch } from "@/common/utils/requestNetworkSwitch";
-import { fetchRoute } from "@/src/utils/squid/bridgeUtils";
-import { handleErrors } from "@/common/utils/interaction/handlers/handleErrors";
+import { requestNetworkSwitch } from "@/utils/requestNetworkSwitch";
+import { fetchRoute } from "@/utils/squid/bridgeUtils";
+import { handleErrors } from "@/utils/contracts/handlers/handleErrors";
 import {
   executeSquidRoute,
   getSquidEvmBalance,
   getTxStatus,
   integratorId,
-} from "@/src/utils/squid/squidRouter";
+  RouteType,
+} from "@/utils/squid/squidRouter";
 import { parseUnits } from "viem";
 
-import { RouteType } from "@/src/utils/squid/squidRouter";
 import { ChainData, ChainName, RouteRequest } from "@0xsquid/squid-types";
 import { ModalStatus } from "./status-modal";
 
@@ -32,9 +29,9 @@ import Loader from "@/components/ui/loader";
 import { FeeDetails } from "./fee-display";
 import { CheckBoxComponent } from "./check-box";
 import { BridgeSection, ChainProps } from "./bridge-section";
-import { handleSquidBridgePoints } from "@/common/utils/interaction/handlers/handleSquidBridge";
-import { useEthersSigner } from "@/common/hooks/useEthersSigner";
-import { rawTokenBalance } from "@/src/utils/squid/bridgeUtils";
+import { handleSquidBridgePoints } from "@/utils/contracts/handlers/handleSquidBridge";
+import { useEthersSigner } from "@/hooks/useEthersSigner";
+import { rawTokenBalance } from "@/utils/squid/bridgeUtils";
 import { Copy } from "lucide-react";
 
 interface TransactionType {

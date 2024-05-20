@@ -3,11 +3,11 @@ import {
   getTxStatus,
   getSquidRoute,
   integratorId,
-} from "@/src/utils/squid/squidRouter";
+} from "@/utils/squid/squidRouter";
 import { toast } from "sonner";
 import { RouteRequest } from "@0xsquid/squid-types";
-import { RouteType } from "@/src/utils/squid/squidRouter";
-import { TokenModalProps } from "@/src/components/squid/token-modal";
+import { RouteType } from "@/utils/squid/squidRouter";
+import { TokenModalProps } from "@/components/squid/token-modal";
 import { TokenBalance, Token } from "@0xsquid/sdk/dist/types";
 
 export const formatToFixed2 = ({

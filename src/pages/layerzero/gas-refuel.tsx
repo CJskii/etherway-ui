@@ -1,6 +1,6 @@
-import HeadComponent from "@/src/components/head-component";
-import Gas from "@/src/components/gas/gas-refuel";
-import { Layout } from "@/src/components/dashboard/layout";
+import HeadComponent from "@/components/head-component";
+import Gas from "@/components/gas/gas-refuel";
+import { Layout } from "@/components/dashboard/layout";
 
 const GasRefuel = () => {
   return (

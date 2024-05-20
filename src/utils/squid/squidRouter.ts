@@ -6,7 +6,7 @@ import {
   SquidData,
 } from "@0xsquid/squid-types";
 import { Signer, ethers } from "ethers";
-import { ModalStatus } from "@/src/components/squid/status-modal";
+import { ModalStatus } from "@/components/squid/status-modal";
 
 const userAddress = "0x62C43323447899acb61C18181e34168903E033Bf";
 export const integratorId = "etherway-2c794744-6972-4f23-bdcb-784032b1a377";

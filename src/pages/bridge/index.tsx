@@ -1,6 +1,6 @@
 import { Layout } from "@/components/dashboard/layout";
-import HeadComponent from "@/common/elements/HeadComponent";
-import { SquidBridge } from "@/src/components/squid/bridge";
+import { SquidBridge } from "@/components/squid/bridge";
+import HeadComponent from "@/components/head-component";
 
 const SquidBridgePage = () => {
   return (

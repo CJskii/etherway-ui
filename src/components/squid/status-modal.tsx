@@ -6,9 +6,9 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import React, { useRef } from "react";
 import { ChainData } from "@0xsquid/squid-types";
-import { AnimatedBeam } from "../../../components/magicui/animated-beam";
-import Arbitrum from "../../public/chain-icons/arbitrum.svg";
-import Avalanche from "../../public/chain-icons/avalanche.svg";
+import { AnimatedBeam } from "@/components/magicui/animated-beam";
+import Arbitrum from "@/../public/chain-icons/arbitrum.svg";
+import Avalanche from "@/../public/chain-icons/avalanche.svg";
 import { Wallet } from "lucide-react";
 import Link from "next/link";
 

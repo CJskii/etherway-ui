@@ -21,7 +21,7 @@ import { Typography } from "../ui/typography";
 import { CardContent } from "../ui/card";
 import { ChevronDown } from "lucide-react";
 
-import { Network } from "@/common/types/network";
+import { Network } from "@/types/network";
 import Image from "next/image";
 import { ChainData } from "@0xsquid/squid-types";
 

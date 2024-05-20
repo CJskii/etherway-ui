@@ -1,7 +1,7 @@
 import { ethers, Contract } from "ethers";
 import getProviderOrSigner from "./getProviderOrSigner";
-import { Network } from "@/src/types/network";
-import { DeployedContracts } from "@/src/types/network";
+import { Network } from "@/types/network";
+import { DeployedContracts } from "@/types/network";
 
 interface getUserBalanceProps {
   fromNetwork: Network;

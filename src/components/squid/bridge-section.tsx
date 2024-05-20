@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { TokenModalProps } from "./token-modal";
-import { RouteType } from "@/src/utils/squid/squidRouter";
+import { RouteType } from "@/utils/squid/squidRouter";
 import { formatUnits } from "viem";
 
 import { Label } from "../ui/label";
@@ -18,7 +18,7 @@ import { TokenBalance } from "@0xsquid/sdk/dist/types";
 import {
   roundedTokenBalance,
   formatToFixedDecimals,
-} from "@/src/utils/squid/bridgeUtils";
+} from "@/utils/squid/bridgeUtils";
 
 export type ChainProps = {
   selectedNetwork: ChainData;

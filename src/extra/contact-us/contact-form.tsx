@@ -2,11 +2,11 @@ import layerzero from "@/assets/layerzero-logo.svg";
 import wormhole from "@/assets/warmhole-logo.svg";
 import layerzeroDark from "@/assets/homepage-background/layerzerk-dark.svg";
 import wormholeDark from "@/assets/homepage-background/wormhole-dark.png";
-import { Typography } from "@/src/components/ui/typography";
-import { Input } from "@/src/components/ui/input";
+import { Typography } from "@/components/ui/typography";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function Contact() {
   return (

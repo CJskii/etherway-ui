@@ -1,4 +1,4 @@
-import { Typography } from "@/src/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import milkyway from "@/assets/dashboard/milkyway2.svg";
 import Image from "next/image";
 import {
@@ -10,9 +10,9 @@ import {
   LucideIcon,
   Star,
 } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import DashboardCard from "@/src/components/dashboard/dashboard-card";
+import DashboardCard from "@/components/dashboard/dashboard-card";
 import Link from "next/link";
 import QuestsDetails from "./quests-details";
 

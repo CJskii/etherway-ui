@@ -1,6 +1,6 @@
 import HeadComponent from "../../components/head-component";
-import { Layout } from "@/src/components/dashboard/layout";
-import QnA from "@/src/components/guides/question-answer";
+import { Layout } from "@/components/dashboard/layout";
+import QnA from "@/components/guides/question-answer";
 
 const FAQ = () => {
   const data = [

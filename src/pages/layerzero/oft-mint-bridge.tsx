@@ -1,6 +1,6 @@
-import TokenMintAndBridge from "@/src/components/token/mint-bridge";
-import { Layout } from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/head-component";
+import TokenMintAndBridge from "@/components/token/mint-bridge";
+import { Layout } from "@/components/dashboard/layout";
+import HeadComponent from "@/components/head-component";
 
 const OFTMintBridge = () => {
   const params = {

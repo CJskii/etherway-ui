@@ -1,7 +1,7 @@
 import React from "react";
 import AirdropDetails from "./airdrop-details";
 import QuestsDetails from "./quests-details";
-import DashboardLayout from "@/src/components/dashboard/layout";
+import DashboardLayout from "@/components/dashboard/layout";
 import dynamic from "next/dynamic";
 
 function AirdropPage() {

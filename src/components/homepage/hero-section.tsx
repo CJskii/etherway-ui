@@ -1,15 +1,15 @@
-import ellipse1 from "@/assets/ellipse1.svg";
-import ellipse2 from "@/assets/ellipse2.svg";
-import layerzero from "@/assets/layerzero-logo.svg";
-import hyperlane from "@/assets/hyperlane-logo.svg";
-import axelar from "@/assets/axelar-logo.svg";
-import squid from "@/assets/squid-logo.svg";
-import morph from "@/assets/morph-logo.svg";
+import ellipse1 from "@/../assets/ellipse1.svg";
+import ellipse2 from "@/../assets/ellipse2.svg";
+import layerzero from "@/../assets/layerzero-logo.svg";
+import hyperlane from "@/../assets/hyperlane-logo.svg";
+import axelar from "@/../assets/axelar-logo.svg";
+import squid from "@/../assets/squid-logo.svg";
+import morph from "@/../assets/morph-logo.svg";
 import { ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
 import Marquee from "react-fast-marquee";
-import { Typography } from "../../../components/ui/typography";
-import { Button } from "../../../components/ui/button";
+import { Typography } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function HeroSection() {

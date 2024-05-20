@@ -16,7 +16,7 @@
     "incremental": true,
     "types": ["babel__core", "jest", "node", "react", "react-dom"],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [

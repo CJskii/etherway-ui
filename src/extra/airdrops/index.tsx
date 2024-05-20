@@ -1,4 +1,4 @@
-import DashboardLayout from "@/src/components/dashboard/layout";
+import DashboardLayout from "@/components/dashboard/layout";
 import AirdropsTable from "./airdrops-table";
 
 export default function AirdropHunterPage() {

@@ -26,7 +26,7 @@ import { TokenBalance } from "@0xsquid/sdk/dist/types";
 import {
   rawTokenBalance,
   formatToFixedDecimals,
-} from "@/src/utils/squid/bridgeUtils";
+} from "@/utils/squid/bridgeUtils";
 
 export interface TokenModalProps {
   selectedToken: Token | undefined;
