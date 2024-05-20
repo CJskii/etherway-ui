@@ -34,6 +34,13 @@ import { useEthersSigner } from "@/hooks/useEthersSigner";
 import { rawTokenBalance } from "@/utils/squid/bridgeUtils";
 import { Copy } from "lucide-react";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 interface TransactionType {
   txHash: string;
   requestId: string;
@@ -418,10 +425,19 @@ export const SquidBridge = () => {
         <div className="py-8 px-4 md:p-8 flex flex-col gap-6">
           <Typography variant="h3" className="dark:text-black text-center">
             Bridge{" "}
-            <Copy
-              className="w-6 h-6 inline cursor-pointer ml-2 hover:text-black/60"
-              onClick={handleCopyButton}
-            />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Copy
+                    className="w-6 h-6 inline cursor-pointer ml-2 hover:text-black/60"
+                    onClick={handleCopyButton}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="text-white">Copy to clipboard</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </Typography>
 
           <BridgeSection
