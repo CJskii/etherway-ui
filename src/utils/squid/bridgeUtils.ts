@@ -54,28 +54,6 @@ export const fetchRoute = async (
   }
 };
 
-export const getStatus = async (
-  params: {
-    transactionId: string;
-    requestId: string;
-    fromChainId: string;
-    toChainId: string;
-  },
-  setStatusCallback?: (status: any) => void,
-): Promise<void> => {
-  try {
-    const status = await getTxStatus({
-      ...params,
-      integratorId: integratorId,
-    });
-    if (setStatusCallback) {
-      setStatusCallback(status);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const roundedTokenBalance = ({
   balanceData,
   tokenProps,
