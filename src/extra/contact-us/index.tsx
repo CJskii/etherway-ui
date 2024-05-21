@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout } from "@/src/components/dashboard/layout";
+import { Layout } from "@/components/dashboard/layout";
 import Contact from "./contact-form";
 
 export default function ContactUs() {

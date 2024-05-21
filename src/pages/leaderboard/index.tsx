@@ -1,6 +1,6 @@
-import DashboardLayout from "@/src/components/dashboard/layout";
+import DashboardLayout from "@/components/dashboard/layout";
 import LeaderboardTable from "./leaderboard-table";
-import HeadComponent from "@/src/components/head-component";
+import HeadComponent from "@/components/head-component";
 
 export default function LeaderboardPage() {
   return (

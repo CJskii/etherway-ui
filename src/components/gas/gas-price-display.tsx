@@ -1,11 +1,11 @@
 import { GasPriceProps } from "../../types/gas-refuel";
-import { Typography } from "@/src/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/src/components/ui/tooltip";
+} from "@/components/ui/tooltip";
 
 import { FaRegQuestionCircle } from "react-icons/fa";
 

@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { getAuthOptions } from "./auth/[...nextauth]";
 import { ContractType, InteractionType } from "@prisma/client";
 import { getCsrfToken } from "next-auth/react";
-import { claimV1Interaction } from "@/prisma/src/create/newClaim";
-import { getClaimData } from "@/prisma/src/get/claimData";
+import { claimV1Interaction } from "@/../prisma/src/create/newClaim";
+import { getClaimData } from "@/../prisma/src/get/claimData";
 
 const newPointMultiplier = 0.1;
 

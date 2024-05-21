@@ -1,6 +1,6 @@
-import { Layout } from "@/src/components/dashboard/layout";
-import { Card, CardContent, CardHeader } from "@/src/components/ui/card";
-import { Typography } from "@/src/components/ui/typography";
+import { Layout } from "@/components/dashboard/layout";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

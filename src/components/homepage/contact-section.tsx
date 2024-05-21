@@ -2,9 +2,9 @@ import base from "@/assets/base.svg";
 import layerzero from "@/assets/layerzero-logo.svg";
 import hyperlane from "@/assets/hyperlane-logo.svg";
 import Image from "next/image";
-import { Typography } from "../ui/typography";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
+import { Typography } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import NewsletterSection from "./newsletter-section";
 import Link from "next/link";
 

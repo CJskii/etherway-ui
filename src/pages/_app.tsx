@@ -7,9 +7,9 @@ import Script from "next/script";
 import React, { useEffect } from "react";
 
 import useReferalCode from "../hooks/useReferalCode";
-import { Toaster } from "@/src/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 
-import { ThemeProvider } from "@/src/components/ui/theme-provider";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 import "@rainbow-me/rainbowkit/styles.css";
 import { GoogleAnalytics } from "@next/third-parties/google";

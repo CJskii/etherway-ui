@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/src/components/ui/table";
+} from "@/components/ui/table";
 import {
   Drawer,
   DrawerClose,
@@ -15,23 +15,20 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/src/components/ui/drawer";
-import { Typography } from "@/src/components/ui/typography";
+} from "@/components/ui/drawer";
+import { Typography } from "@/components/ui/typography";
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { toast } from "sonner";
-import { Button } from "@/src/components/ui/button";
-import {
-  getLeaderboadData,
-  getUserPointData,
-} from "@/src/utils/api/leaderboard";
-import { claimV1Points, getClaimData } from "@/src/utils/api/claim";
-import { ConnectWalletButton } from "@/src/components/ui/connect-button";
+import { Button } from "@/components/ui/button";
+import { getLeaderboadData, getUserPointData } from "@/utils/api/leaderboard";
+import { claimV1Points, getClaimData } from "@/utils/api/claim";
+import { ConnectWalletButton } from "@/components/ui/connect-button";
 import {
   calculateUserLevel,
   calculateProgressToNextLevel,
-} from "@/src/utils/helpers/getLevel";
-import { Progress } from "@/src/components/ui/progress";
+} from "@/utils/helpers/getLevel";
+import { Progress } from "@/components/ui/progress";
 
 export interface OldUserDataType {
   ethereumAddress: string;
