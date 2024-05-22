@@ -218,6 +218,11 @@ export const SquidBridge = () => {
         if (!tx.toastId) {
           const toastId = toast.loading(
             `Transaction with hash ${tx.txHash.slice(0, 6)}..${tx.txHash.slice(-6)} in progress...`,
+            {
+              style: {
+                backgroundColor: "#fde047",
+              },
+            },
           );
           tx.toastId = toastId as number;
           const currentTransactions = transactions;
