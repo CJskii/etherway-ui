@@ -6,23 +6,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Typography } from "@/components/ui/typography";
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { getLeaderboadData, getUserPointData } from "@/utils/api/leaderboard";
-import { claimV1Points, getClaimData } from "@/utils/api/claim";
 import { ConnectWalletButton } from "@/components/ui/connect-button";
 import {
   calculateUserLevel,
@@ -66,8 +53,6 @@ export default function LeaderboardTable() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
   const [userData, setUserData] = useState<LeaderboardData | null>(null);
   const account = useAccount();
-  const [oldUserData, setOldUserData] = useState<OldUserDataType | null>(null);
-  const [hasClaimed, setHasClaimed] = useState(false);
   const [userProgress, setUserProgress] = useState(0);
 
   useEffect(() => {
@@ -101,53 +86,6 @@ export default function LeaderboardTable() {
     }
   }, [userData]);
 
-  useEffect(() => {
-    const fetchOldData = async () => {
-      if (!account.address) {
-        console.log("No account address provided.");
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          "https://omnichain-minter-ppkm.vercel.app/api/userData",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              ethereumAddress: account.address,
-            }),
-          },
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          const claimData = await getClaimData();
-          if (claimData) {
-            setHasClaimed(true);
-          } else {
-            toast.success(
-              "Looks like you might be eligible to claim legacy points!",
-            );
-          }
-          setOldUserData(data.user);
-        } else if (response.status === 404) {
-          // toast.error("No data found for this address.");
-          console.log("No data found for this address.");
-        } else {
-          toast.error("Error fetching old data.");
-        }
-      } catch (error) {
-        console.error("Error fetching old data:", error);
-        toast.error("Error fetching old data.");
-      }
-    };
-
-    fetchOldData();
-  }, [account.address]);
-
   const truncateAddress = (address: string) => {
     return `${address.substring(0, 6)}...${address.substring(
       address.length - 4,
@@ -179,14 +117,6 @@ export default function LeaderboardTable() {
               className="w-[100%]"
             />
           </div>
-
-          {oldUserData && !hasClaimed && (
-            <ClaimLegacyPoints
-              oldUserData={oldUserData}
-              hasClaimed={hasClaimed}
-              setHasClaimed={setHasClaimed}
-            />
-          )}
 
           <Table>
             <TableHeader>
@@ -231,109 +161,6 @@ export default function LeaderboardTable() {
     </>
   );
 }
-
-const ClaimLegacyPoints = ({
-  oldUserData,
-  hasClaimed,
-  setHasClaimed,
-}: {
-  oldUserData: OldUserDataType;
-  hasClaimed: boolean;
-  setHasClaimed: Function;
-}) => {
-  const legacyMultiplier = 0.1;
-
-  const handleClaimButton = async () => {
-    try {
-      const response = (await claimV1Points()) as Response;
-
-      if (response.status === 400) {
-        toast.error("You have already claimed your legacy points.");
-        setHasClaimed(true);
-        return;
-      }
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Claim response:", data);
-        toast.success("Legacy points claimed successfully!");
-        setHasClaimed(true);
-      } else {
-        toast.error("Error claiming legacy points.");
-      }
-    } catch (error) {
-      console.error("Error claiming legacy points:", error);
-      toast.error("Error claiming legacy points.");
-    }
-  };
-
-  return (
-    <div className="flex flex-col justify-center items-start gap-2">
-      <Typography variant={"h3"}>Legacy Points</Typography>
-      <Typography variant={"smallTitle"} className="font-raleway font-[500]">
-        You might be eligible to claim legacy points from your previous on-chain
-        activity
-      </Typography>
-      <Drawer>
-        <DrawerTrigger asChild>
-          <Button variant="outline">Check</Button>
-        </DrawerTrigger>
-        <DrawerContent className="border-none">
-          <div className="mx-auto w-full max-w-lg">
-            <DrawerHeader>
-              <DrawerTitle>Status of your legacy points</DrawerTitle>
-              <DrawerDescription>
-                Here you can claim XP accumulated prior to Etherway rebranding.
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="p-4 pb-0 flex flex-col justify-center items-start">
-              <Typography variant={"h4"}>Your Stats</Typography>
-              <Typography variant={"smallTitle"}>
-                {"> "}
-                {oldUserData.mints[0].count} mint interactions.
-              </Typography>
-              <Typography variant={"smallTitle"}>
-                {"> "}
-                {oldUserData.bridges[0].count} bridge interactions.
-              </Typography>
-              <Typography variant={"smallTitle"}>
-                {"> "}
-                {oldUserData.inviteCount} invited friends.
-              </Typography>
-
-              <div className="mt-2 ">
-                {hasClaimed ? (
-                  <Typography variant={"h4"}>
-                    Looks like you&apos;ve already claimed your points
-                  </Typography>
-                ) : (
-                  <Typography variant={"h3"}>
-                    Total of{" "}
-                    <span className="text-secondary">
-                      {oldUserData.totalPoints * legacyMultiplier} XP
-                    </span>{" "}
-                    available to claim.
-                  </Typography>
-                )}
-              </div>
-            </div>
-            <DrawerFooter>
-              <Button
-                onClick={hasClaimed ? () => {} : handleClaimButton}
-                disabled={hasClaimed}
-              >
-                Claim
-              </Button>
-              <DrawerClose asChild>
-                <Button variant="outline">Close</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </div>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  );
-};
 
 const ConnectWallet = () => {
   return (
