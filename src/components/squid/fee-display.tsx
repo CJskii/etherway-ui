@@ -36,9 +36,7 @@ const renderFeeCost = (
       className="dark:text-black text-xs"
       key={index}
     >
-      {feeCost.name}: {/* Uncomment this to display token fee cost in the UI */}
-      {/* {Number(ethAmount) > 0 ? `${ethAmount} ${toToken?.symbol} / ` : ""} */}
-      ${usdAmount}
+      {feeCost.name}: ${usdAmount}
     </Typography>
   );
 };

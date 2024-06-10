@@ -395,24 +395,6 @@ export const SquidBridge = () => {
     fetchBalances();
   }, [fromChain?.chainId, account.address]);
 
-  // useEffect(() => {
-  //   setTxHash(
-  //     "0x2bc1eb877a361c383c4c317d87c8a5b10f338ea658c13e88bff22ee8827172b7",
-  //   );
-  //   setRequestId("fc2c413c-6d66-4785-86f7-d2b5ca06325a");
-
-  //   handleStartPoll(
-  //     "0x2bc1eb877a361c383c4c317d87c8a5b10f338ea658c13e88bff22ee8827172b7",
-  //   );
-  // }, [fromChain]);
-
-  // useEffect(() => {
-  //   setShowStatusModal(true);
-  //   // setIsExecutingTransaction(true);
-  //   setModalStatus(ModalStatus.NEED_GAS);
-  //   setAxelarURL("https://axelar.network");
-  // }, []);
-
   return (
     <div className="z-10 py-20 md:py-16 flex items-center justify-center flex-col min-h-[90vh]">
       <StatusModal

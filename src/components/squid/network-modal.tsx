@@ -21,7 +21,6 @@ import { Typography } from "../ui/typography";
 import { CardContent } from "../ui/card";
 import { ChevronDown } from "lucide-react";
 
-import { Network } from "@/types/network";
 import Image from "next/image";
 import { ChainData } from "@0xsquid/squid-types";
 
@@ -32,8 +31,6 @@ export interface NetworkModalProps {
   dialogTitle: string;
 }
 const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
-  // DO WE WANT TO MANAGE ENTIRE LOGIC OF NETWORK SELECTIONS WITHIN THIS COMPONENT?
-  // - We have to , as the input is taken in this component itself , we can just set the values back in the main component
   const { selectedNetwork, onNetworkSelect, filteredChains, dialogTitle } =
     props;
 
@@ -44,10 +41,6 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
 
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
   return (
@@ -76,7 +69,6 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
       <DialogContent className="rounded-xl bg-gradient p-6 border-0">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
-          {/* <DialogDescription>{dialogDescription}</DialogDescription> */}
         </DialogHeader>
         <Command>
           <div></div>
@@ -84,10 +76,7 @@ const SquidNetworkModal = ({ props }: { props: NetworkModalProps }) => {
           <DialogClose>
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup
-                // heading={commandHeading}
-                className="text-white text-left mt-4"
-              >
+              <CommandGroup className="text-white text-left mt-4">
                 {filteredChains &&
                   filteredChains.map((network) => (
                     <CommandItem

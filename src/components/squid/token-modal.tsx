@@ -44,8 +44,6 @@ const SquidTokenModal = ({
 }) => {
   const { selectedToken, onTokenSelect, filteredTokens, dialogTitle } = props;
 
-  // DO WE WANT TO MANAGE ENTIRE LOGIC OF TOKEN SELECTIONS WITHIN THIS COMPONENT?
-
   const handleSelection = (token: Token) => {
     console.log(token);
     onTokenSelect(token);
@@ -86,17 +84,13 @@ const SquidTokenModal = ({
       <DialogContent className="rounded-xl bg-gradient p-6 border-0">
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
-          {/* <DialogDescription>{dialogDescription}</DialogDescription> */}
         </DialogHeader>
         <Command>
           <CommandInput placeholder="Search for a network..." />
           <DialogClose>
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup
-                // heading={commandHeading}
-                className="text-white text-left mt-4 "
-              >
+              <CommandGroup className="text-white text-left mt-4 ">
                 {filteredTokens &&
                   filteredTokens.map((token, index) => (
                     <CommandItem
