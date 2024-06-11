@@ -230,6 +230,7 @@ enum InteractionType {
   BRIDGE_ONFT
   BRIDGE_OFT
   GAS_REFUEL
+  SQUID_BRIDGE
 }
 
 enum Role {

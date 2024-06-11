@@ -1,6 +1,6 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { darkTheme, getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { getSupportedChains } from "@/src/constants/config/chainsConfig";
+import { getSupportedChains } from "@/constants/config/chainsConfig";
 
 const customChains = getSupportedChains();
 

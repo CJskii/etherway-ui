@@ -31,7 +31,12 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["ipfs.io"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
   },
   transpilePackages: ["@0xsquid/widget"],
 };

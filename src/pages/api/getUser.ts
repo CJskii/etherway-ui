@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getUser } from "@/prisma/src/get/userData";
+import { getUser } from "@/../prisma/src/get/userData";
 
 export default async function handler(
   req: NextApiRequest,

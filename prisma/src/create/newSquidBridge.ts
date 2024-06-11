@@ -1,27 +1,27 @@
 import { InteractionType, ContractType } from "@prisma/client";
 import { prisma } from "../../client";
-import { getClaimData } from "../get/claimData";
 
-type ClaimV1Interaction = {
+type BridgeInteraction = {
   ethAddress: string;
   contractType: ContractType;
   interactionType: InteractionType;
   chainId?: number;
-  points: number;
+  amount?: number;
 };
 
-export async function claimV1Interaction({
+const SQUID_BRIDGE_MULTIPLIER = 0;
+
+export async function squidBridge({
   ethAddress,
   contractType,
   interactionType,
-  points,
-}: ClaimV1Interaction) {
-  const claimData = await getClaimData({ ethAddress: ethAddress });
-  if (claimData) {
-    console.log("Already Claimed !!");
-    return null;
+  chainId,
+  amount,
+}: BridgeInteraction) {
+  if (!amount) {
+    throw new Error("Missing amount");
   }
-
+  const points = amount * SQUID_BRIDGE_MULTIPLIER;
   const interaction = await prisma.interaction.create({
     data: {
       type: interactionType as InteractionType,
@@ -32,6 +32,7 @@ export async function claimV1Interaction({
           ethereumAddress: ethAddress.toLowerCase(),
         },
       },
+      chainId,
     },
   });
   return interaction;

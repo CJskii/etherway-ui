@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Layout } from "@/src/components/dashboard/layout";
-import HeadComponent from "@/src/components/head-component";
-import { verifySubscription } from "@/src/utils/api/email/verify";
-import { Typography } from "@/src/components/ui/typography";
+import { Layout } from "@/components/dashboard/layout";
+import HeadComponent from "@/components/head-component";
+import { verifySubscription } from "@/utils/api/email/verify";
+import { Typography } from "@/components/ui/typography";
 import { toast } from "sonner";
 
 const VerifyEmail = () => {

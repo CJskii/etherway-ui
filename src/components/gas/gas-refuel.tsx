@@ -19,8 +19,8 @@ import { useAccount, useSwitchChain } from "wagmi";
 import HowItWorks from "./how-it-works";
 import { toast } from "sonner";
 import { ContractType, InteractionType } from "@prisma/client";
-import { updateInteractionData } from "@/src/utils/api/interactions";
-import { handleAPIError } from "@/src/utils/api/handleError";
+import { updateInteractionData } from "@/utils/api/interactions";
+import { handleAPIError } from "@/utils/api/handleError";
 
 const Gas = ({
   contractProvider,

@@ -6,7 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/src/components/ui/table";
+} from "@/components/ui/table";
 import milkyWay from "@/assets/dashboard/milkyway.svg";
 import network1 from "@/assets/dashboard/eth.svg";
 import network2 from "@/assets/dashboard/network2.svg";
@@ -19,11 +19,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/components/ui/select";
+} from "@/components/ui/select";
 
-import { Input } from "@/src/components/ui/input";
+import { Input } from "@/components/ui/input";
 import React from "react";
-import { Typography } from "@/src/components/ui/typography";
+import { Typography } from "@/components/ui/typography";
 
 const mockData = [
   {

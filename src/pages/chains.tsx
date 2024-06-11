@@ -2,19 +2,15 @@ import { activeChains } from "../constants/config/chainsConfig";
 import Image, { StaticImageData } from "next/image";
 import { useAccount } from "wagmi";
 import HeadComponent from "../components/head-component";
-import { Layout } from "@/src/components/dashboard/layout";
-import { Typography } from "@/src/components/ui/typography";
-import ellipseCurved from "@/assets/ellipse-curved.svg";
-import DashboardCard from "@/src/components/dashboard/dashboard-card";
-import { Card } from "@/src/components/ui/card";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/src/components/ui/avatar";
+import { Layout } from "@/components/dashboard/layout";
+import { Typography } from "@/components/ui/typography";
+import ellipseCurved from "@/../assets/ellipse-curved.svg";
+import DashboardCard from "@/components/dashboard/dashboard-card";
+import { Card } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
-import { cn } from "@/src/lib/utils";
-import { Button, buttonVariants } from "@/src/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 interface ChainDetailCardProps {
   name: string;

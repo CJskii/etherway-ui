@@ -1,15 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../prisma/client";
-import handleUser from "@/prisma/src/handlers/user";
+import handleUser from "@/../prisma/src/handlers/user";
 import { getServerSession } from "next-auth";
 import { getAuthOptions } from "../auth/[...nextauth]";
-import { getUser } from "@/prisma/src/get/userData";
+import { getUser } from "@/../prisma/src/get/userData";
 import { getCsrfToken } from "next-auth/react";
 import {
   fetchViewAllUserPoints,
   fetchViewUserPoints,
   refershViewTopUsers,
-} from "@/prisma/src/handlers/leaderboard";
+} from "@/../prisma/src/handlers/leaderboard";
 
 // POST /leaderboard -  refreshes the points , only done by Cron Job
 

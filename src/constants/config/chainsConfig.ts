@@ -38,6 +38,7 @@ import {
   avalancheFuji,
   blast,
   gnosis,
+  mainnet,
 } from "wagmi/chains";
 
 import { linea } from "../customChains/linea";
@@ -78,6 +79,9 @@ export const mainnetChains: Network[] = [
   {
     ...blast,
     iconUrl: "/chain-icons/blast.webp",
+  },
+  {
+    ...mainnet,
   },
   {
     ...inEVM,
@@ -158,12 +162,10 @@ export const mainnetChains: Network[] = [
   //   lzEndpointAddress: "0x4EE2F9B7cf3A68966c370F3eb2C16613d3235245",
   // },
 
-  // {
-  //   ...mantle,
-  //   iconUrl: "/chain-icons/mantle.svg",
-  //   remoteChainId: 181,
-  //   lzEndpointAddress: "0xb6319cC6c8c27A8F5dAF0dD3DF91EA35C4720dd7",
-  // },
+  {
+    ...mantle,
+    iconUrl: "/chain-icons/mantle.svg",
+  },
 
   // {
   //   ...metis,

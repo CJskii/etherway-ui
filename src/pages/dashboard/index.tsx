@@ -1,15 +1,15 @@
-import DashboardHome from "@/src/components/dashboard/dashboard-home";
-import DashboardLayout from "@/src/components/dashboard/layout";
+import DashboardHome from "@/components/dashboard/dashboard-home";
+import DashboardLayout from "@/components/dashboard/layout";
 // import Provider from "@/components/dashboard/provider";
-import { DashboardContainer } from "@/src/components/ui/Container";
-import { Footer } from "@/src/components/ui/footer";
-import image from "@/assets/under-construction.svg";
+import { DashboardContainer } from "@/components/ui/Container";
+import { Footer } from "@/components/ui/footer";
+import image from "@/../assets/under-construction.svg";
 import Image from "next/image";
-import { Typography } from "@/src/components/ui/typography";
-import { Button } from "@/src/components/ui/button";
-import { Layout } from "@/src/components/dashboard/layout";
+import { Typography } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/dashboard/layout";
 import Link from "next/link";
-import NewsletterSection from "../../components/homepage/newsletter-section";
+import NewsletterSection from "@/components/homepage/newsletter-section";
 
 export default function DashboardPage() {
   return (

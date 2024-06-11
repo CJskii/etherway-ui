@@ -3,8 +3,8 @@ import { getServerSession } from "next-auth";
 import { getAuthOptions } from "../auth/[...nextauth]";
 import { getCsrfToken } from "next-auth/react";
 import Mailjet from "node-mailjet";
-import { getVerifyEmailData } from "@/src/utils/helpers/getEmail";
-import { isValidEmail } from "@/src/utils/helpers/validators/isValidEmail";
+import { getVerifyEmailData } from "@/utils/helpers/getEmail";
+import { isValidEmail } from "@/utils/helpers/validators/isValidEmail";
 
 const mailjet = new Mailjet({
   apiKey: process.env.MAILJET_API_KEY,

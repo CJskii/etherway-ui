@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "@/src/components/ui/dialog";
+} from "@/components/ui/dialog";
 
 import {
   Command,
@@ -16,13 +16,13 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/src/components/ui/command";
+} from "@/components/ui/command";
 
 import { Typography } from "./ui/typography";
 
 import { CardContent } from "./ui/card";
 
-import { ExtendedNetwork } from "@/src/types/network";
+import { ExtendedNetwork } from "@/types/network";
 import Image from "next/image";
 import { Input } from "./ui/input";
 

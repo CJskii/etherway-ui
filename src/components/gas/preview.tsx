@@ -1,8 +1,8 @@
 import { IPreview } from "../../types/gas-refuel";
-import { Button } from "@/src/components/ui/button";
-import { Input } from "@/src/components/ui/input";
-import { Label } from "@/src/components/ui/label";
-import { Typography } from "@/src/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Typography } from "@/components/ui/typography";
 
 const Preview = ({
   nativeCurrencySymbol,

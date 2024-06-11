@@ -1,4 +1,4 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/src/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
 import { DashboardSidebar } from "../dashboard/sidebar";
 import { ThemeToggler } from "../ui/toggle-theme";
