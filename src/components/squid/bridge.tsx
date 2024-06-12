@@ -168,7 +168,6 @@ export const SquidBridge = () => {
     };
 
     const status = await getTxStatus(getStatusParams);
-    console.log(status);
 
     const tx = transactions?.find((tx) => tx.txHash === txHash);
     const txIndex = transactions?.findIndex((tx) => tx.txHash === txHash);

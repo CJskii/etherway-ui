@@ -9,7 +9,7 @@ type BridgeInteraction = {
   amount?: number;
 };
 
-const SQUID_BRIDGE_MULTIPLIER = 0;
+const SQUID_BRIDGE_MULTIPLIER = process.env.SQUID_BRIDGE_MULTIPLIER || 0;
 
 export async function squidBridge({
   ethAddress,
@@ -21,7 +21,7 @@ export async function squidBridge({
   if (!amount) {
     throw new Error("Missing amount");
   }
-  const points = amount * SQUID_BRIDGE_MULTIPLIER;
+  const points = amount * Number(SQUID_BRIDGE_MULTIPLIER);
   const interaction = await prisma.interaction.create({
     data: {
       type: interactionType as InteractionType,
