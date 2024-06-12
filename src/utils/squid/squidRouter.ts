@@ -8,7 +8,7 @@ import {
 import { Signer, ethers } from "ethers";
 import { ModalStatus } from "@/components/squid/status-modal";
 
-export const integratorId = process.env.SQUID_INTEGRATOR_ID || "";
+export const integratorId = process.env.NEXT_PUBLIC_SQUID_INTEGRATOR_ID || "";
 
 const squid = new Squid({
   baseUrl: "https://v2.api.squidrouter.com",
