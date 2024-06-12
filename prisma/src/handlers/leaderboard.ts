@@ -38,10 +38,14 @@ async function fetchViewAllUserPoints(limit?: number) {
 
 async function fetchViewUserPoints(userAddress: string) {
   try {
-    const data =
+    const data: Array<object> =
       await prisma.$queryRaw`SELECT * FROM UserPoints WHERE "user_address" = ${userAddress.toLowerCase()};`;
     console.log("Materialised View fetched for the user");
-    return data;
+    if (data.length > 0) {
+      return data[0];
+    } else {
+      return undefined;
+    }
   } catch (error) {
     console.log("Error");
   }
