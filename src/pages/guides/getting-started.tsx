@@ -3,7 +3,7 @@ import { Layout } from "@/components/dashboard/layout";
 import { Typography } from "@/components/ui/typography";
 import Link from "next/link";
 
-import { BellRing, Check } from "lucide-react";
+import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -85,7 +85,7 @@ const cardsData = [
       {
         title: "Cross-chain bridge",
         description: "The fastest way to move assets between blockchains",
-        url: "/dashboard/mint-nfts",
+        url: "/bridge",
         button: "secondary",
       },
     ],
@@ -97,7 +97,7 @@ const cardsData = [
       {
         title: "Airdrop Marketplace",
         description: "Discover latest airdrops and connect with projects",
-        url: "/dashboard/mint-nfts",
+        url: "/dashboard",
         button: "secondary",
       },
     ],
@@ -152,83 +152,6 @@ export function CardDemo({ className, ...props }: CardExtendedProps) {
   );
 }
 
-// const GettingStarted = () => {
-//   return (
-//     <Layout>
-//       <HeadComponent title="Etherway: Getting started" />
-//       <section className="py-10 sm:py-16 lg:py-24">
-//         <Typography variant="h1" className="text-center">
-//           Getting Started
-//         </Typography>
-
-//         <div className="pt-16">
-//           <Typography variant="h2" className="mt-8">
-//             Products
-//           </Typography>
-//           <div className="flex justify-start items-start gap-12">
-//             {/* <div>
-//               <Typography variant="blockquote" className="mt-8 text-2xl">
-//                 LayerZero <br></br>{" "}
-//                 <Typography variant={"muted"} className="text-sm">
-//                   ONFT
-//                 </Typography>
-//               </Typography>
-//               <Typography variant="paragraph" className="mt-4 text-2xl">
-//                 ONFT Mint
-//               </Typography>
-//               <Typography variant="paragraph" className="mt-4 text-2xl">
-//                 ONFT Bridge
-//               </Typography>
-//               <Typography variant="paragraph" className="mt-4 text-2xl">
-//                 OFT Mint & Bridge
-//               </Typography>
-//             </div> */}
-//             <div>{/* <CardDemo /> */}</div>
-//             {/* {cardsData.map((card, index) => (
-//               <div key={index}>
-//                 <Typography variant="blockquote" className="mt-8 text-2xl">
-//                   {card.title} <br></br>{" "}
-//                   <Typography variant={"muted"} className="text-sm">
-//                     {card.description}
-//                   </Typography>
-//                 </Typography>
-//                 {card.links.map((link, index) => (
-//                   <Link
-//                     href={link.url}
-//                     key={index}
-//                     className="flex flex-col justify-center items-start"
-//                   >
-//                     <Button variant={"etherway"} className="mt-4">
-//                       {link.title}
-//                     </Button>
-//                   </Link>
-//                 ))}
-//               </div>
-//             ))} */}
-
-//             {/* <div>
-//               <Typography variant="blockquote" className="mt-8 text-2xl">
-//                 Gas Refuel
-//               </Typography>
-//               <Typography variant="paragraph" className="mt-4 text-2xl">
-//                 Mint NFTs on Ethereum
-//               </Typography>
-//             </div>
-//             <div>
-//               <Typography variant="blockquote" className="mt-8 text-2xl">
-//                 Dashboard
-//               </Typography>
-//               <Typography variant="paragraph" className="mt-4 text-2xl">
-//                 Mint NFTs on Ethereum
-//               </Typography>
-//             </div> */}
-//           </div>
-//         </div>
-//       </section>
-//     </Layout>
-//   );
-// };
-
 const GettingStarted = () => {
   return (
     <Layout>
@@ -260,17 +183,6 @@ const GettingStarted = () => {
                     className="flex flex-col dark:bg-[#121419] bg-slate-100 justify-center items-start py-2 border-[1px] dark:hover:border-white/60 hover:border-black/70 dark:border-white/30 border-black/30 rounded-xl my-4"
                   >
                     <CardContent className="grid p-4">
-                      {/* <div className="flex justify-start items-center">
-                        <BellRing className="mr-2 h-4 w-4" />
-                        <div>
-                          <Typography variant="smallTitle" className="mt-4">
-                            {link.title}
-                          </Typography>
-                          <Typography variant="paragraph" className="mt-0">
-                            {link.description}
-                          </Typography>
-                        </div>
-                      </div> */}
                       <div
                         key={index}
                         className=" grid grid-cols-[25px_1fr] items-center pb-4 last:mb-0 last:pb-0"
@@ -291,8 +203,6 @@ const GettingStarted = () => {
               </div>
             ))}
           </div>
-
-          {/* <Footer /> */}
         </div>
       </section>
     </Layout>

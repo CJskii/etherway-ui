@@ -13,6 +13,8 @@ import layerzeroGroup from "@/../assets/homepage-background/layerzero-group.svg"
 import bridgeGroup from "@/../assets/homepage-background/bridge-group.svg";
 import refuelGroup from "@/../assets/homepage-background/refuel-group.svg";
 import { ChevronRight } from "lucide-react";
+import squidLogo from "@/../assets/squid-logo.svg";
+import axelarLogo from "@/../assets/axelar-logo.svg";
 
 const products = [
   {
@@ -160,6 +162,20 @@ export default function HeroSection() {
             <Image
               alt="hyperlane-logo"
               src={hyperlane}
+              className="mx-6"
+              width={160}
+              height={42}
+            />
+            <Image
+              src={squidLogo}
+              alt="squid-logo"
+              className="mx-6"
+              width={80}
+              height={42}
+            />
+            <Image
+              src={axelarLogo}
+              alt="axelar-logo"
               className="mx-6"
               width={160}
               height={42}
