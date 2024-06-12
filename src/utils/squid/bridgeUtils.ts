@@ -41,7 +41,6 @@ export const fetchRoute = async (
   try {
     const _route = await getSquidRoute(routeParams);
     if (_route) {
-      console.log(_route);
       setRoute(_route.route);
       if (_route.requestId) {
         setRequestId(_route.requestId);
