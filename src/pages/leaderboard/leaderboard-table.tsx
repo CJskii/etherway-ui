@@ -49,16 +49,10 @@ interface LeaderboardData {
   total_points: number;
 }
 
-// 0x2e6Ef714225Ae97647305fE6E3D23AdEBF95161f
-
 export default function LeaderboardTable() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardData[]>([]);
   const [userData, setUserData] = useState<LeaderboardData | null>(null);
-  // const account = useAccount();
-  const account = {
-    address: "0x2e6Ef714225Ae97647305fE6E3D23AdEBF95161f",
-    isConnected: true,
-  };
+  const account = useAccount();
   const [userProgress, setUserProgress] = useState(0);
 
   useEffect(() => {
