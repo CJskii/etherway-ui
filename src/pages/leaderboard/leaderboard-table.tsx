@@ -17,32 +17,6 @@ import {
 } from "@/utils/helpers/getLevel";
 import { Progress } from "@/components/ui/progress";
 
-export interface OldUserDataType {
-  ethereumAddress: string;
-  totalPoints: number;
-  inviteCount: number;
-  bridges: [
-    {
-      count: number;
-      createdAt: string;
-      ethereumAddress: string;
-      id: string;
-      layerzeroCount: number;
-      updatedAt: string;
-      wormholeCount: number;
-    },
-  ];
-  mints: [
-    {
-      count: number;
-      createdAt: string;
-      ethereumAddress: string;
-      id: string;
-      updatedAt: string;
-    },
-  ];
-}
-
 interface LeaderboardData {
   id: number;
   user_address: string;
