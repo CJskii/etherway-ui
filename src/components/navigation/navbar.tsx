@@ -51,6 +51,12 @@ const productLinks = [
         description:
           "Mint OFTs and enable cross-chain transfers with one seamless solution.",
       },
+      {
+        href: "layerzero/gas-refuel",
+        label: "Gas Refuel",
+        description:
+          "Get your transaction gas delivered cross-chain with ease.",
+      },
     ],
   },
   {
@@ -84,8 +90,8 @@ const otherLinks = [
     href: "/dashboard",
   },
   {
-    label: "Gas Refuel",
-    href: "/layerzero/gas-refuel",
+    label: "Bridge",
+    href: "/bridge",
   },
   {
     label: "Leaderboard",

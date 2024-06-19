@@ -3,8 +3,8 @@ import elipse2 from "@/../assets/ellipse6.svg";
 import globeDark from "@/../assets/globe-dark.svg";
 import globe from "@/../assets/globe.svg";
 import Image from "next/image";
-import { Typography } from "../ui/typography";
-import { Card } from "../ui/card";
+import { Typography } from "@/components/ui/typography";
+import { Card } from "@/components/ui/card";
 
 const stats = [
   {

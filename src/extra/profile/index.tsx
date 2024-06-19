@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import DashboardLayout from "@/components/dashboard/layout";
 import profile from "@/../assets/dashboard/profile.svg";
 import profileDark from "@/../assets/dashboard/profile-dark.svg";
+
 import { useAccount } from "wagmi";
 
 export default function ProfilePage() {

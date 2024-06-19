@@ -2,9 +2,9 @@ import base from "@/../assets/base-bg.svg";
 import polygonZkEvm from "@/../assets/polygon-bg.svg";
 import mintly from "@/../assets/homepage-background/mintly.svg";
 import Image from "next/image";
-import { Typography } from "../ui/typography";
-import { Card } from "../ui/card";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { Typography } from "@/components/ui/typography";
+import { Card } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const ongoingChains = [
   // {

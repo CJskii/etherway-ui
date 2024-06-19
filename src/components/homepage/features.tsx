@@ -4,8 +4,8 @@ import bgDark from "@/../assets/features-bg-dark.svg";
 import bgLight from "@/../assets/features-bg-light.svg";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Typography } from "../ui/typography";
-import { Card } from "../ui/card";
+import { Typography } from "@/components/ui/typography";
+import { Card } from "@/components/ui/card";
 
 const features = [
   {

@@ -31,7 +31,12 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["ipfs.io", "firebasestorage.googleapis.com", "pbs.twimg.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
   },
   transpilePackages: ["@0xsquid/widget"],
 };

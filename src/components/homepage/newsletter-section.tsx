@@ -1,6 +1,6 @@
-import { Typography } from "../ui/typography";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Typography } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { subscribeEmail } from "@/utils/api/email/subscribe";
 import { useAccount } from "wagmi";
 import { useState, ChangeEvent, useEffect } from "react";

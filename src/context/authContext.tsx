@@ -4,11 +4,8 @@ import { useRouter } from "next/router";
 import { adminPaths, admins, privatePaths } from "../constants/privatePaths";
 import { UserData, getUserData } from "@/utils/api/user";
 import { useAccount, useConfig } from "wagmi";
-import { getUserStakingStats } from "@/utils/contracts/handlers/handleStaking";
 import { useSession } from "next-auth/react";
-
-// import "react-toastify/dist/ReactToastify.css";
-// import en from "../public/en.svg";
+import { getPasses } from "@/utils/contracts/handlers/handlePassMint";
 
 interface AuthContextProps {
   currentUserData: React.MutableRefObject<UserData | undefined>;
@@ -88,23 +85,20 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         console.log("Private Path accessed");
 
         // // Add a check and see if the User has staked yet or not
-        const stakeInfo = await getUserStakingStats({
-          toAddress: currentUser,
-          config: config,
+        const ownsPass = await getPasses({
+          userAddress: currentUser,
+          wagmiConfig: config,
         });
 
-        console.log(stakeInfo);
-        if (stakeInfo) {
-          const { stakedAmount } = stakeInfo;
-          const hasStaked = Number(stakedAmount) > 0 ? true : false;
-
-          setAuthorized(hasStaked);
-          if (!hasStaked) {
-            console.log("Not Staked");
+        console.log(ownsPass);
+        if (ownsPass != undefined) {
+          setAuthorized(ownsPass);
+          if (!ownsPass) {
+            console.log("No pass owned");
             console.log("Access Restricted");
             setAuthorized(false);
             void router.push({
-              pathname: "/staking",
+              pathname: "/mint",
             });
           } else {
             console.log("Access Allowed");
@@ -115,7 +109,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           setAuthorized(false);
 
           void router.push({
-            pathname: "/staking",
+            pathname: "/mint",
           });
         }
       } else {

@@ -9,7 +9,7 @@ import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/dashboard/layout";
 import Link from "next/link";
-import NewsletterSection from "../../components/homepage/newsletter-section";
+import NewsletterSection from "@/components/homepage/newsletter-section";
 
 export default function DashboardPage() {
   return (
