@@ -41,9 +41,9 @@ const links: Links[] = [
     path: "/profile",
   },
   {
-    title: "Staking",
+    title: "Get access",
     icon: Shrub,
-    path: "/staking",
+    path: "/dashboard/pass",
   },
   {
     title: "Airdrop Hunter",
