@@ -65,6 +65,7 @@ model Project {
   network          Int[]
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
+  status           ProjectStatus  @default(PENDING)
   links            Link[]
   tasks            Task[]
   UserFavorites    UserProject[]
@@ -77,6 +78,7 @@ model Task {
   about        String
   instructions String
   projectId    Int
+  status       ProjectStatus @default(PENDING)
   steps        Step[]
   Project      Project        @relation(fields: [projectId], references: [id])
   UserTasks    UserTask[]
@@ -250,4 +252,9 @@ enum DiscordSupportTicketType {
   BUGS
   SCAM
   OTHER
+}
+
+enum ProjectStatus {
+  PENDING
+  APPROVED
 }
