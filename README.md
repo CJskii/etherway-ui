@@ -1,49 +1,57 @@
 ![Etherway Banner](./public/banner.png)
 
-# **Etherway**
+# **Etherway (CrossFarm)**
 
 Live at: [https://www.etherway.io/](https://www.etherway.io/)
 
-Etherway is a powerful platform designed to simplify interactions across multiple blockchain ecosystems. It supports cross-chain bridging and gas refueling with integrations on 17 mainnet chains and major cross-chain technologies.
+**Etherway** is a cross-chain platform designed specifically for airdrop farmers, enabling seamless cross-chain transactions, token swaps, and gas refueling across multiple mainnet chains. The platform supports major blockchain ecosystems and offers live performance tracking with a leaderboard for users to compete for rewards and earn incentives based on their interactions.
 
-## 🌟 **Features**
+## 🌟 **Key Features**
 
-- **Next.js & TypeScript**: Etherway is built with **Next.js** for a fast, scalable frontend and **TypeScript** to provide type safety and robust development tools.
-- **LayerZero V2 Integration**: Etherway seamlessly connects with **LayerZero V2** to enable **cross-chain messaging**, offering interoperability between different blockchain ecosystems.
-- **Hyperlane Integration**: With **Hyperlane**, Etherway supports advanced **interchain messaging**, allowing for secure communication across multiple blockchains.
-- **Polyhedra Integration**: Etherway includes **Polyhedra** to provide secure and reliable **cross-chain connectivity**, ensuring efficient asset, data, and message transfers across chains.
-- **Axelar & Squid Cross-Chain Bridging**: By integrating **Axelar** and **Squid**, Etherway provides a streamlined **cross-chain bridging** solution, making it easy to transfer assets across different blockchain networks.
-- **Gas Refuel**: Etherway simplifies gas refueling for cross-chain transactions, making it easy to interact with multiple chains without requiring native tokens for gas fees.
+- **Cross-Chain Transactions & Bridging**: Seamlessly execute cross-chain swaps and transfers across multiple blockchain networks, allowing easy participation in airdrops and multi-chain DeFi ecosystems. 
+
+- **Live Leaderboard & Incentives**: Monitor your performance with a **live leaderboard** that ranks user interactions and activities. The platform features an **incentive system** that rewards users based on their engagement and cross-chain transactions, increasing rewards with higher activity.
+
+- **LayerZero V2 Integration**: Leverages **LayerZero V2** to support **OFT (Omnichain Fungible Token) standard**, enabling secure and seamless cross-chain messaging. It also includes a **custom implementation of the ONFT (Omnichain Non-Fungible Token) standard** for NFTs, along with a **gas refuel** feature for simplifying gas management during cross-chain operations.
+
+- **Hyperlane Integration**: Supports **ERC20** and **ERC721 tokens** for advanced interchain messaging and secure asset transfers, providing a streamlined experience for cross-chain interaction.
+
+- **Axelar & Squid Cross-Chain Bridging**: Integrates **Axelar** and **Squid** to provide fast, reliable **cross-chain asset bridging**, facilitating effortless participation in multi-chain airdrop events and token transfers.
+
+- **Gas Refuel**: Simplifies gas management by automatically refueling gas tokens, eliminating the need for native chain tokens to pay for fees when performing cross-chain transactions.
+
 
 ## 🔧 **Relevant Technologies**
 
-Etherway is powered by the following key technologies:
+**Etherway** is built using a suite of cutting-edge tools and technologies:
 
-- **Web3 SDKs & Tools**:  
+- **Blockchain SDKs & Tools**:  
   - **Squid SDK** for cross-chain swaps.
-  - **LayerZero V2 Utilities**: for support with cross-chain messaging.
+  - **LayerZero V2** utilities for cross-chain messaging.
   - **Axelar** for decentralized cross-chain transfers.
-  - **Wagmi & Viem & Ethers.js**: for blockchain network interactions.
+  - **Wagmi, Viem & Ethers.js** for blockchain interactions.
 
-- **User Interface**:  
-  - **Radix UI**: for building accessible UI components.
-  - **TailwindCSS**: For modern, responsive design.
-  - **Shadcn-UI**: Custom component library built on TailwindCSS.
-  - **Lucide Icons**: for scalable iconography.
+- **Frontend & UI**:  
+  - **Next.js & TypeScript**: For fast, scalable frontend development with type safety.
+  - **TailwindCSS & Shadcn-UI**: For responsive design and custom UI components.
+  - **Radix UI**: For building accessible and modular UI components.
 
-- **Forms & State Management**:  
-  - **React Hook Form**: for easy form handling.
-  - **TanStack React Query**: for managing server state and caching.
-  - **Zod**: For schema validation.
+- **Authentication & State Management**:  
+  - **SIWE (Sign-In with Ethereum)** for Web3 authentication.
+  - **NextAuth** for session management.
+  - **TanStack React Query** for state and data management.
 
-- **Authentication**:  
-  - **SIWE (Sign-In with Ethereum)**: for Web3 authentication.
-  - **NextAuth**: for session management and authentication.
+- **Form Handling & Validation**:  
+  - **React Hook Form** for simple and efficient form management.
+  - **Zod** for schema validation.
 
-- **Utility & Performance**:  
-  - **Prisma**: as the ORM for interacting with databases.
-  - **Framer Motion**: For smooth animations.
-  - **Sharp**: For image optimization.
+- **Database & Optimization**:  
+  - **Prisma** as the ORM for database interactions.
+  - **Sharp** for image processing and optimization.
+
+## 📈 **Live Leaderboard**
+
+**Etherway** includes a **live leaderboard** to track and rank user engagement across the platform. Users are rewarded with leaderboard points based on their cross-chain interactions.
 
 ## 📃 **License**
 
