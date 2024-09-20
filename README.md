@@ -1,4 +1,4 @@
-![Etherway Banner](./public/images/banner.png)
+![Etherway Banner](./public/banner.png)
 
 # **Etherway**
 
